@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Hyperion Grabber</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_host">Hyperion Host</string>
+    <string name="pref_summary_host">Host your hyperion instance is running on</string>
+    <string name="pref_default_host">0.0.0.0</string>
+    <string name="pref_title_port">Hyperion Protobuf Port</string>
+    <string name="pref_summary_port">The protobuf port of your hyperion instance</string>
+    <string name="pref_default_port">19445</string>
+    <string name="pref_title_priority">Message Priority</string>
+    <string name="pref_summary_priority">Message priority channel to use</string>
+    <string name="pref_default_priority">50</string>
+
+    <string name="pref_title_framerate">Capture Rate</string>
+    <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
+    <string name="pref_default_framerate">30</string>
+    <string-array name="pref_list_framerate">
+        <item>10 fps</item>
+        <item>15 fps</item>
+        <item>24 fps</item>
+        <item>30 fps</item>
+        <item>60 fps</item>
+    </string-array>
+    <string-array name="pref_list_framerate_values">
+        <item>10</item>
+        <item>15</item>
+        <item>24</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+
+    <string name="settings">Settings</string>
+</resources>
