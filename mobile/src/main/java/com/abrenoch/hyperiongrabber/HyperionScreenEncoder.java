@@ -89,32 +89,6 @@ public class HyperionScreenEncoder implements Runnable  {
             e.printStackTrace();
         }
     }
-//
-//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-//    public HyperionScreenEncoder(final HyperionEncoderListener listener,
-//                                 final MediaProjection projection, final int width, final int height,
-//                                 final int density) {
-//
-////        super(muxer, listener, width, height);
-//        mListener = listener;
-//        mMediaProjection = projection;
-//        mDensity = density;
-//        mWidth = (int) Math.floor(width);
-//        mHeight = (int) Math.floor(height);
-//
-//        if (mWidth % 2 != 0) mWidth--;
-//        if (mHeight % 2 != 0) mHeight--;
-//
-//
-//        final HandlerThread thread = new HandlerThread(TAG);
-//        thread.start();
-//        mHandler = new Handler(thread.getLooper());
-//        try {
-//            prepare();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     public void run() {
@@ -174,7 +148,6 @@ public class HyperionScreenEncoder implements Runnable  {
         int w = mWidth;
         int h = mHeight;
 
-
         Log.w(TAG, "preparing codec: " +
                 String.valueOf(w) + "x" + String.valueOf(h) + "@" + String.valueOf(FRAME_RATE));
 
@@ -220,11 +193,7 @@ public class HyperionScreenEncoder implements Runnable  {
             int code = e.getErrorCode();
             Log.w("WARN", "ERROR CODE: " + String.valueOf(code));
             Log.w("WARN", e.getDiagnosticInfo());
-
         }
-
-
-
 
 
         mMediaCodec.start();
@@ -393,14 +362,11 @@ public class HyperionScreenEncoder implements Runnable  {
                 boolean local_request_draw;
                 double min_nano_time = 1e9 / FRAME_RATE;
 
-//                Log.d("DEBUG", "<<<");
-
                 synchronized (mSync) {
                     local_request_pause = mRequestPause;
                     local_request_draw = requestDraw;
 
                     if (!requestDraw) {
-//                        Log.d("DEBUG", "<<<<0");
                         try {
                             mSync.wait(intervals);
                             local_request_pause = mRequestPause;
@@ -412,15 +378,12 @@ public class HyperionScreenEncoder implements Runnable  {
                     }
                 }
                 if (mIsCapturing) {
-//                    Log.d("DEBUG", "<<<<1");
                     final int dequeueResult = mMediaCodec.dequeueOutputBuffer(new MediaCodec.BufferInfo(), 10000);
 
                     if (local_request_draw) {
-//                        Log.d("DEBUG", "<<<<<");
 
                         long now = System.nanoTime();
                         if (!local_request_pause && now - mLastFrame >= min_nano_time) {
-//                            Log.d("DEBUG", "<<<<<");
                             int SCALE = 3;
 
                             mSourceTexture.updateTexImage();
@@ -460,87 +423,7 @@ public class HyperionScreenEncoder implements Runnable  {
         private void scaleMatrix (int scale) {
             Matrix.scaleM(mTexMatrix, 0, scale, scale, 1);
         }
-
-//        private void sendImage(int scale) {
-//            if (mListener != null) {
-//                try {
-//                    mListener.sendFrame(savePixels(scale), mWidth / scale, mHeight / scale);
-//                } catch (final Exception e) {
-//                    Log.e(TAG, "sendImage exception:", e);
-//                }
-//            }
-//        }
-//
-//
-//        public byte[] savePixels(int scale){
-//            int w = mWidth / scale;
-//            int h = mHeight / scale;
-//            int b[]= new int[w*h];
-//            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-//
-//            IntBuffer ib = IntBuffer.wrap(b);
-//            ib.position(0);
-//            GLES20.glReadPixels(0, 0, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
-//
-//            for (int r = h - 1; r >= 0; r--) {
-//                for (int c = 0; c < w; c++) {
-//                    int pix = b[r * w + c];
-//                    bao.write((pix) & 0xff); // red
-//                    bao.write((pix >> 8) & 0xff); // green
-//                    bao.write((pix >> 16) & 0xff); // blue
-//                }
-//            }
-//
-//            return bao.toByteArray();
-//        }
-//
-//        private void saveImage(int scale) {
-//            Bitmap bmp = saveBMP(scale);
-//
-//            File myDir=new File("/sdcard/saved_images");
-//            myDir.mkdirs();
-//            String fname = String.valueOf(System.nanoTime()) + ".jpg";
-//            File file = new File(myDir, fname);
-//            if (file.exists ()) file.delete ();
-//            try {
-//                FileOutputStream out = new FileOutputStream(file);
-//                bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//                out.flush();
-//                out.close();
-//
-//                Log.d("DEBUG", "------------------------- " + fname);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        public Bitmap saveBMP(int scale){
-//            int w = mWidth / scale;
-//            int h = mHeight / scale;
-//            int b[]= new int[w*h];
-//            int bt[]= new int[w*h];
-//            IntBuffer ib = IntBuffer.wrap(b);
-//            ib.position(0);
-//            GLES20.glReadPixels(0, 0, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
-//
-//            for (int i = 0, k = 0; i < h; i++, k++) {
-//                for (int j = 0; j < w; j++) {
-//                    int pix = b[i * w + j];
-//                    int pb = (pix >> 16) & 0xff;
-//                    int pr = (pix << 16) & 0x00ff0000;
-//                    int pix1 = (pix & 0xff00ff00) | pr | pb;
-//                    bt[(h - k - 1) * w + j] = pix1;
-//                }
-//            }
-//
-//            return Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
-//        }
-
     }
-
-
-
 
 
     private void sendImage(int scale) {
@@ -552,7 +435,6 @@ public class HyperionScreenEncoder implements Runnable  {
             }
         }
     }
-
 
     public byte[] savePixels(int scale){
         int w = mWidth / scale;
