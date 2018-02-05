@@ -5,6 +5,3 @@ This application will send the content of an android screen to a hyperion instan
 
 Info about hyperion can be found on their website: 
 https://hyperion-project.org/
-
-The code for the media projection -> egl surface background service was was utilized from another project (which I am not associated with):
-https://github.com/BasinPei/RealtimeShare
