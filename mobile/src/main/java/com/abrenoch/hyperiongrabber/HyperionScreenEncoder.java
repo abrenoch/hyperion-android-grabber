@@ -42,11 +42,6 @@ public class HyperionScreenEncoder implements Runnable  {
     private static int FRAME_RATE;
     private final float SCALE;
 
-
-    // parameters for recording
-    private static final String MIME_TYPE = "video/avc";
-    private static final float BPP = 0.01f;
-
     protected final Object mSync = new Object();
 
     private int mWidth;
@@ -63,8 +58,7 @@ public class HyperionScreenEncoder implements Runnable  {
     private final Handler mHandler;
     private boolean mIsCapturing = false;
     private HyperionThread.HyperionThreadListener mListener;
-    private MediaCodec mMediaCodec;
-
+    private SurfaceTexture mSurfaceTexture;
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -72,7 +66,6 @@ public class HyperionScreenEncoder implements Runnable  {
                                  final MediaProjection projection, final int width, final int height,
                                  final int density, int framerate) {
 
-//        super(muxer, listener, width, height);
         mListener = listener;
         mMediaProjection = projection;
         mDensity = density;
@@ -104,33 +97,19 @@ public class HyperionScreenEncoder implements Runnable  {
         }
         final boolean isRunning = true;
         boolean localRequestStop;
-        boolean localRequestDrain;
         while (isRunning) {
             synchronized (mSync) {
                 localRequestStop = mRequestStop;
-                localRequestDrain = (mRequestDrain > 0);
-                if (localRequestDrain)
-                    mRequestDrain--;
             }
             if (localRequestStop) {
-//                drain();
-                // request stop recording
-//                signalEndOfInputStream();
-                // process output data again for EOS signale
-//                drain();
-                // release all related objects
                 release();
                 break;
             }
-            if (localRequestDrain) {
-//                drain();
-            } else {
-                synchronized (mSync) {
-                    try {
-                        mSync.wait();
-                    } catch (final InterruptedException e) {
-                        break;
-                    }
+            synchronized (mSync) {
+                try {
+                    mSync.wait();
+                } catch (final InterruptedException e) {
+                    break;
                 }
             }
         } // end of while
@@ -150,61 +129,14 @@ public class HyperionScreenEncoder implements Runnable  {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void prepare() throws IOException, MediaCodec.CodecException {
-        int w = mWidth;
-        int h = mHeight;
-
-        Log.w(TAG, "preparing codec: " +
-                String.valueOf(w) + "x" + String.valueOf(h) + "@" + String.valueOf(FRAME_RATE));
-
-        MediaCodecInfo codecInfo = selectCodec(MIME_TYPE);
-        assert codecInfo != null;
-
-        MediaCodecInfo.CodecCapabilities capabilitiesForType = codecInfo.getCapabilitiesForType(MIME_TYPE);
-        Log.d(TAG, "default format = " + capabilitiesForType.getDefaultFormat().toString());
-
-        // get video capabilities
-        MediaCodecInfo.VideoCapabilities videoCapabilities = capabilitiesForType.getVideoCapabilities();
-        if (videoCapabilities != null) {
-            if (!videoCapabilities.isSizeSupported(w,h)) {
-                Log.w(TAG, "PROBLEM WITH SUPPLIED RESOLUTION " +
-                        String.valueOf(w) + "x" + String.valueOf(h));
-                return;
-            }
-
-            Range<Double> rates = videoCapabilities.getSupportedFrameRatesFor(w,h);
-            if (rates == null) {
-                Log.w(TAG, "FAILED TO GET FRAME RATE INFO");
-                return;
-            } else if (!rates.contains((double) FRAME_RATE)) {
-                Log.w(TAG, "FRAME RATE " + String.valueOf(FRAME_RATE) +
-                        " NOT SUPPORTED FOR DIMENSIONS " + String.valueOf(w) + "x" + String.valueOf(h));
-                return;
-            }
-        }
-
-        final MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, w, h);
-        format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface); // API >= 18
-        format.setInteger(MediaFormat.KEY_BIT_RATE, calcBitRate(FRAME_RATE));
-        format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
-        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, FRAME_RATE);
-
-
-        try {
-
-            mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
-            mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-            mSurface = mMediaCodec.createInputSurface();
-        } catch (MediaCodec.CodecException e) {
-            int code = e.getErrorCode();
-            Log.w("WARN", "ERROR CODE: " + String.valueOf(code));
-            Log.w("WARN", e.getDiagnosticInfo());
-        }
-
-
-        mMediaCodec.start();
+        mSurfaceTexture = new SurfaceTexture(1651);
+        mSurfaceTexture.setDefaultBufferSize(mWidth, mHeight);
+        mSurface = new Surface(mSurfaceTexture);
 
         mIsCapturing = true;
+
         new Thread(mScreenCaptureTask, "ScreenCaptureThread").start();
+
         if (mListener != null) {
             try {
 //                mListener.onPrepared(this);
@@ -212,27 +144,6 @@ public class HyperionScreenEncoder implements Runnable  {
                 Log.e(TAG, "prepare:", e);
             }
         }
-    }
-
-    private static MediaCodecInfo selectCodec(String mimeType) {
-        int numCodecs = MediaCodecList.getCodecCount();
-        for (int i = 0; i < numCodecs; i++) {
-            MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
-            if (codecInfo.isEncoder()) {
-                String[] types = codecInfo.getSupportedTypes();
-                for (String type : types) {
-                    if (type.equalsIgnoreCase(mimeType))
-                        return codecInfo;
-                }
-            }
-        }
-        return null;
-    }
-
-    protected int calcBitRate(final int frameRate) {
-        final int bitrate = (int)(BPP * frameRate * mWidth * mHeight);
-        Log.i(TAG, String.format("bitrate=%5.2f[Mbps]", bitrate / 1024f / 1024f));
-        return bitrate;
     }
 
     //    @Override
@@ -271,15 +182,6 @@ public class HyperionScreenEncoder implements Runnable  {
             mSourceSurface = new Surface(mSourceTexture);
             mSourceTexture.setOnFrameAvailableListener(mOnFrameAvailableListener, mHandler);
             mEncoderSurface = new WindowSurface(getEglCore(), mSurface);
-
-
-
-            /* might be on to something with this here
-             *      seems to have a problem either drawing the new frames or receiving new ones
-             * */
-//            SurfaceTexture st = new SurfaceTexture(1651);
-//            st.setDefaultBufferSize(mWidth, mHeight);
-//            mEncoderSurface = new WindowSurface(getEglCore(), st);
 
             intervals = (long)(1000f / FRAME_RATE);
 
@@ -350,10 +252,6 @@ public class HyperionScreenEncoder implements Runnable  {
                 if (!mIsCapturing || mRequestStop) {
                     return false;
                 }
-//                mRequestDrain++;
-
-                //TODO: OR MAYBE SEND FRAME DATA HERE??
-
                 mSync.notifyAll();
             }
             return true;
@@ -383,8 +281,6 @@ public class HyperionScreenEncoder implements Runnable  {
                     }
                 }
                 if (mIsCapturing) {
-                    final int dequeueResult = mMediaCodec.dequeueOutputBuffer(new MediaCodec.BufferInfo(), 10000);
-
                     if (local_request_draw) {
 
                         long now = System.nanoTime();
@@ -392,6 +288,7 @@ public class HyperionScreenEncoder implements Runnable  {
 
                             mSourceTexture.updateTexImage();
                             mSourceTexture.getTransformMatrix(mTexMatrix);
+                            mSurfaceTexture.updateTexImage();
 
                             mEncoderSurface.makeCurrent();
 
@@ -399,7 +296,7 @@ public class HyperionScreenEncoder implements Runnable  {
                             mDrawer.drawFrame(mTexId, mTexMatrix);
 
                             sendImage((int) SCALE);
-//                            saveImage(SCALE);
+//                            saveImage((int) SCALE);
                             
                             mLastFrame = System.nanoTime();
 
@@ -411,10 +308,6 @@ public class HyperionScreenEncoder implements Runnable  {
 
                             frameAvailableSoon();
                         }
-                    }
-
-                    if (dequeueResult >= 0) {
-                        mMediaCodec.releaseOutputBuffer(dequeueResult, false /* render */);
                     }
 
                     queueEvent(this);

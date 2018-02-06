@@ -146,7 +146,7 @@ public class HyperionScreenService extends IntentService {
                 if (DEBUG) Log.v(TAG, "startRecording:");
 
                 new HyperionScreenEncoder(mHyperionThread.getReceiver(),
-                        projection, metrics.widthPixels / 10, metrics.heightPixels / 10,
+                        projection, metrics.widthPixels, metrics.heightPixels,
                         density, mFrameRate);
             }
         }
