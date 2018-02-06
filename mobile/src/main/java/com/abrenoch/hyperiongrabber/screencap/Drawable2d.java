@@ -2,9 +2,6 @@ package com.abrenoch.hyperiongrabber.screencap;
 
 import java.nio.FloatBuffer;
 
-/**
- * Created by BasinPei on 2017/5/27.
- */
 public class Drawable2d {
     /**
      * Simple triangle (roughly equilateral, 1.0 per side).
