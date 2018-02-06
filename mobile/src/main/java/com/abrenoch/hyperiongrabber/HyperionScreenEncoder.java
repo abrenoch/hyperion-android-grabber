@@ -33,24 +33,21 @@ import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.Random;
 
-/**
- * Created by BasinPei on 2017/5/27.
- */
 public class HyperionScreenEncoder implements Runnable  {
     private static final String TAG = "HyperionScreenEncoder";
 
     private static final int TARGET_HEIGHT = 60;
     private static final int TARGET_WIDTH = 60;
     private static final int TARGET_BIT_RATE = TARGET_HEIGHT * TARGET_WIDTH * 3;
+    private static int FRAME_RATE;
+    private final float SCALE;
 
+
+    // parameters for recording
+    private static final String MIME_TYPE = "video/avc";
     private static final float BPP = 0.01f;
 
-    private static final String MIME_TYPE = "video/avc";
-    // parameters for recording
-    private static final int FRAME_RATE = 60;
-    private static final int TEST_SURFACE_NAME = 42;
     protected final Object mSync = new Object();
-    private final float SCALE;
 
     private int mWidth;
     private int mHeight;
@@ -66,13 +63,14 @@ public class HyperionScreenEncoder implements Runnable  {
     private final Handler mHandler;
     private boolean mIsCapturing = false;
     private HyperionThread.HyperionThreadListener mListener;
-//    private HyperionEncoderListener mListener;
     private MediaCodec mMediaCodec;
+
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
                                  final MediaProjection projection, final int width, final int height,
-                                 final int density) {
+                                 final int density, int framerate) {
 
 //        super(muxer, listener, width, height);
         mListener = listener;
@@ -85,7 +83,7 @@ public class HyperionScreenEncoder implements Runnable  {
         if (mHeight % 2 != 0) mHeight--;
 
         SCALE = findScaleFactor();
-
+        FRAME_RATE = framerate;
 
         final HandlerThread thread = new HandlerThread(TAG);
         thread.start();

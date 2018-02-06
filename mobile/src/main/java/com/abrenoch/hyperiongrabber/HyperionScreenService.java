@@ -4,9 +4,11 @@ import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -36,6 +38,9 @@ public class HyperionScreenService extends IntentService {
 
     private static MediaProjection _mediaProjection;
 
+    private int mFrameRate;
+
+
 
     HyperionThreadBroadcaster mReceiver = new HyperionThreadBroadcaster() {
         @Override
@@ -55,16 +60,32 @@ public class HyperionScreenService extends IntentService {
         }
     };
 
+
+
     public HyperionScreenService() {
         super(TAG);
     }
 
     @Override
     public void onCreate() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String host = preferences.getString("hyperion_host", null);
+        String port = preferences.getString("hyperion_port", null);
+        String priority = preferences.getString("hyperion_priority", null);
+        String rate = preferences.getString("hyperion_framerate", null);
+
+        if (host == null || port == null) {
+            return;
+        }
+
+        if (rate == null) rate = "30";
+        if (priority == null) priority = "50";
+        mFrameRate = Integer.parseInt(rate);
+
         super.onCreate();
-        if (DEBUG) Log.v(TAG, "onCreate:");
+
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        mHyperionThread = new HyperionThread(mReceiver, "192.168.1.136", 19445);
+        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority));
         mHyperionThread.start();
     }
 
@@ -125,7 +146,8 @@ public class HyperionScreenService extends IntentService {
                 if (DEBUG) Log.v(TAG, "startRecording:");
 
                 new HyperionScreenEncoder(mHyperionThread.getReceiver(),
-                        projection, metrics.widthPixels / 10, metrics.heightPixels / 10, density);
+                        projection, metrics.widthPixels / 10, metrics.heightPixels / 10,
+                        density, mFrameRate);
             }
         }
     }

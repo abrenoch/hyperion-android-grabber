@@ -6,6 +6,8 @@ import java.io.IOException;
 class HyperionThread extends Thread {
     private String HOST;
     private int PORT;
+    private int PRIORITY;
+    private final int FRAME_DURATION = -1;
     private Hyperion mHyperion;
 
     HyperionScreenService.HyperionThreadBroadcaster mSender;
@@ -13,7 +15,7 @@ class HyperionThread extends Thread {
         @Override
         public void sendFrame(byte[] data, int width, int height) {
             HyperionProto.HyperionRequest req =
-                    Hyperion.setImageRequest(data, width, height, 50, -1);
+                    Hyperion.setImageRequest(data, width, height, PRIORITY, FRAME_DURATION);
             if (mHyperion != null && mHyperion.isConnected()) {
                 try {
                     mHyperion.sendRequest(req);
@@ -25,9 +27,10 @@ class HyperionThread extends Thread {
     };
 
     HyperionThread(HyperionScreenService.HyperionThreadBroadcaster listener, final String host,
-                   final int port){
+                   final int port, final int priority){
         HOST = host;
         PORT = port;
+        PRIORITY = priority;
         mSender = listener;
     }
 
