@@ -39,6 +39,10 @@ import java.util.Random;
 public class HyperionScreenEncoder implements Runnable  {
     private static final String TAG = "HyperionScreenEncoder";
 
+    private static final int TARGET_HEIGHT = 60;
+    private static final int TARGET_WIDTH = 60;
+    private static final int TARGET_BIT_RATE = TARGET_HEIGHT * TARGET_WIDTH * 3;
+
     private static final float BPP = 0.01f;
 
     private static final String MIME_TYPE = "video/avc";
@@ -46,6 +50,7 @@ public class HyperionScreenEncoder implements Runnable  {
     private static final int FRAME_RATE = 60;
     private static final int TEST_SURFACE_NAME = 42;
     protected final Object mSync = new Object();
+    private final float SCALE;
 
     private int mWidth;
     private int mHeight;
@@ -78,6 +83,8 @@ public class HyperionScreenEncoder implements Runnable  {
 
         if (mWidth % 2 != 0) mWidth--;
         if (mHeight % 2 != 0) mHeight--;
+
+        SCALE = findScaleFactor();
 
 
         final HandlerThread thread = new HandlerThread(TAG);
@@ -384,7 +391,6 @@ public class HyperionScreenEncoder implements Runnable  {
 
                         long now = System.nanoTime();
                         if (!local_request_pause && now - mLastFrame >= min_nano_time) {
-                            int SCALE = 3;
 
                             mSourceTexture.updateTexImage();
                             mSourceTexture.getTransformMatrix(mTexMatrix);
@@ -394,7 +400,7 @@ public class HyperionScreenEncoder implements Runnable  {
                             scaleMatrix(SCALE);
                             mDrawer.drawFrame(mTexId, mTexMatrix);
 
-                            sendImage(SCALE);
+                            sendImage((int) SCALE);
 //                            saveImage(SCALE);
                             
                             mLastFrame = System.nanoTime();
@@ -420,7 +426,7 @@ public class HyperionScreenEncoder implements Runnable  {
             }
         };
 
-        private void scaleMatrix (int scale) {
+        private void scaleMatrix (float scale) {
             Matrix.scaleM(mTexMatrix, 0, scale, scale, 1);
         }
     }
@@ -499,6 +505,16 @@ public class HyperionScreenEncoder implements Runnable  {
         }
 
         return Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
+    }
+
+    public float findScaleFactor() {
+        float step = (float) 0.2;
+        for (float i = 1; i < 100; i += step) {
+            if ((mWidth / i) * (mHeight / i) * 3 <= TARGET_BIT_RATE) {
+                return i;
+            }
+        }
+        return 1;
     }
 
     public interface HyperionEncoderListener {
