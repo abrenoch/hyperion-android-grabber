@@ -69,14 +69,21 @@ public class HyperionScreenEncoder implements Runnable  {
         mListener = listener;
         mMediaProjection = projection;
         mDensity = density;
+        FRAME_RATE = framerate;
+
         mWidth = (int) Math.floor(width);
         mHeight = (int) Math.floor(height);
-
         if (mWidth % 2 != 0) mWidth--;
         if (mHeight % 2 != 0) mHeight--;
 
         SCALE = findScaleFactor();
-        FRAME_RATE = framerate;
+
+        /*
+        *       TRY SETTING THE SCALED DIMENSIONS BEFORE ADJUSTING TO THE NEXT LOWEST EVEN NUMBER
+        * */
+
+//        mWidth = (int) (mWidth / SCALE);
+//        mHeight = (int) (mHeight / SCALE);
 
         final HandlerThread thread = new HandlerThread(TAG);
         thread.start();
@@ -129,6 +136,12 @@ public class HyperionScreenEncoder implements Runnable  {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void prepare() throws IOException, MediaCodec.CodecException {
+
+
+
+        /*
+        *   SCALING THIS SURFACE TEXTURE DOWN SEEMS TO CAUSE PROBLEMS?
+        * */
         mSurfaceTexture = new SurfaceTexture(1651);
         mSurfaceTexture.setDefaultBufferSize(mWidth, mHeight);
         mSurface = new Surface(mSurfaceTexture);
@@ -177,17 +190,25 @@ public class HyperionScreenEncoder implements Runnable  {
         protected void onStart() {
             mDrawer = new FullFrameRect(new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_EXT));
             mTexId = mDrawer.createTextureObject();
+
+            float w = mWidth / SCALE;
+            float h = mHeight / SCALE;
+
             mSourceTexture = new SurfaceTexture(mTexId);
-            mSourceTexture.setDefaultBufferSize(mWidth, mHeight);
+            mSourceTexture.setDefaultBufferSize((int) w, (int) h);
             mSourceSurface = new Surface(mSourceTexture);
             mSourceTexture.setOnFrameAvailableListener(mOnFrameAvailableListener, mHandler);
             mEncoderSurface = new WindowSurface(getEglCore(), mSurface);
 
             intervals = (long)(1000f / FRAME_RATE);
 
+
+
+
+
             display = mMediaProjection.createVirtualDisplay(
                     "Capturing Display",
-                    mWidth, mHeight, mDensity,
+                    (int) w, (int) h, mDensity,
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                     mSourceSurface, null, null);
 
@@ -297,7 +318,7 @@ public class HyperionScreenEncoder implements Runnable  {
 
                             sendImage((int) SCALE);
 //                            saveImage((int) SCALE);
-                            
+
                             mLastFrame = System.nanoTime();
 
                             mEncoderSurface.swapBuffers();
