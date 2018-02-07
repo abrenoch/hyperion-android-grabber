@@ -43,6 +43,8 @@ public class HyperionScreenEncoder implements Runnable  {
     private final float SCALE;
 
     protected final Object mSync = new Object();
+    private final int mWidthScaled;
+    private final int mHeightScaled;
 
     private int mWidth;
     private int mHeight;
@@ -77,6 +79,9 @@ public class HyperionScreenEncoder implements Runnable  {
         if (mHeight % 2 != 0) mHeight--;
 
         SCALE = findScaleFactor();
+
+        mWidthScaled = (int) (mWidth / SCALE);
+        mHeightScaled = (int) (mHeight / SCALE);
 
         /*
         *       TRY SETTING THE SCALED DIMENSIONS BEFORE ADJUSTING TO THE NEXT LOWEST EVEN NUMBER
@@ -137,13 +142,13 @@ public class HyperionScreenEncoder implements Runnable  {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void prepare() throws IOException, MediaCodec.CodecException {
 
-
-
         /*
         *   SCALING THIS SURFACE TEXTURE DOWN SEEMS TO CAUSE PROBLEMS?
+        *
+        *   will produce black frames if setDefaultBufferSize is not called
         * */
         mSurfaceTexture = new SurfaceTexture(1651);
-        mSurfaceTexture.setDefaultBufferSize(mWidth, mHeight);
+        mSurfaceTexture.setDefaultBufferSize(mWidthScaled, mHeightScaled);
         mSurface = new Surface(mSurfaceTexture);
 
         mIsCapturing = true;
@@ -191,11 +196,8 @@ public class HyperionScreenEncoder implements Runnable  {
             mDrawer = new FullFrameRect(new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_EXT));
             mTexId = mDrawer.createTextureObject();
 
-            float w = mWidth / SCALE;
-            float h = mHeight / SCALE;
-
             mSourceTexture = new SurfaceTexture(mTexId);
-            mSourceTexture.setDefaultBufferSize((int) w, (int) h);
+            mSourceTexture.setDefaultBufferSize(mWidthScaled, mHeightScaled);
             mSourceSurface = new Surface(mSourceTexture);
             mSourceTexture.setOnFrameAvailableListener(mOnFrameAvailableListener, mHandler);
             mEncoderSurface = new WindowSurface(getEglCore(), mSurface);
@@ -203,12 +205,9 @@ public class HyperionScreenEncoder implements Runnable  {
             intervals = (long)(1000f / FRAME_RATE);
 
 
-
-
-
             display = mMediaProjection.createVirtualDisplay(
                     "Capturing Display",
-                    (int) w, (int) h, mDensity,
+                    mWidthScaled, mHeightScaled, mDensity,
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                     mSourceSurface, null, null);
 
@@ -313,11 +312,11 @@ public class HyperionScreenEncoder implements Runnable  {
 
                             mEncoderSurface.makeCurrent();
 
-                            scaleMatrix(SCALE);
+//                            scaleMatrix(SCALE);
                             mDrawer.drawFrame(mTexId, mTexMatrix);
 
-                            sendImage((int) SCALE);
-//                            saveImage((int) SCALE);
+//                            sendImage();
+                            saveImage();
 
                             mLastFrame = System.nanoTime();
 
@@ -344,19 +343,19 @@ public class HyperionScreenEncoder implements Runnable  {
     }
 
 
-    private void sendImage(int scale) {
+    private void sendImage() {
         if (mListener != null) {
             try {
-                mListener.sendFrame(savePixels(scale), mWidth / scale, mHeight / scale);
+                mListener.sendFrame(savePixels(), mWidthScaled, mHeightScaled);
             } catch (final Exception e) {
                 Log.e(TAG, "sendImage exception:", e);
             }
         }
     }
 
-    public byte[] savePixels(int scale){
-        int w = mWidth / scale;
-        int h = mHeight / scale;
+    public byte[] savePixels(){
+        int w = mWidthScaled;
+        int h = mHeightScaled;
         int b[]= new int[w*h];
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
 
@@ -376,8 +375,8 @@ public class HyperionScreenEncoder implements Runnable  {
         return bao.toByteArray();
     }
 
-    private void saveImage(int scale) {
-        Bitmap bmp = saveBMP(scale);
+    private void saveImage() {
+        Bitmap bmp = saveBMP();
 
         File myDir=new File("/sdcard/saved_images");
         myDir.mkdirs();
@@ -397,9 +396,9 @@ public class HyperionScreenEncoder implements Runnable  {
         }
     }
 
-    public Bitmap saveBMP(int scale){
-        int w = mWidth / scale;
-        int h = mHeight / scale;
+    public Bitmap saveBMP(){
+        int w = mWidthScaled;
+        int h = mHeightScaled;
         int b[]= new int[w*h];
         int bt[]= new int[w*h];
         IntBuffer ib = IntBuffer.wrap(b);

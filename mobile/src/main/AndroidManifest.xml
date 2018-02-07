@@ -24,7 +24,9 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
-        <service android:name=".HyperionScreenService" android:exported="false" />
+        <service android:name=".HyperionScreenService"
+            android:launchMode="singleTask"
+            android:exported="false" />
     </application>
 
 </manifest>
