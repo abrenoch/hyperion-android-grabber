@@ -2,13 +2,20 @@ package com.abrenoch.hyperiongrabber;
 
 import android.annotation.TargetApi;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -27,8 +34,11 @@ public class HyperionScreenService extends IntentService {
     public static final String EXTRA_QUERY_RESULT_PAUSING = BASE + "EXTRA_QUERY_RESULT_PAUSING";
     public static final String EXTRA_QUERY_RESULT_RECORDING = BASE + "EXTRA_QUERY_RESULT_RECORDING";
 
+    private static final int NOTIFICATION_ID = 1;
+    private static final String NOTIFICATION_CHANNEL_ID = BASE + "NOTIFICATION";
 
     public static final String ACTION_RELEASE_RESOURCE = BASE + "ACTION_RELEASE_RESOURCE";
+    private static final int FOREGROUND_ID = 4568;
 
     private static Object sSync = new Object();
 
@@ -75,6 +85,7 @@ public class HyperionScreenService extends IntentService {
         String rate = preferences.getString("hyperion_framerate", null);
 
         if (host == null || port == null) {
+            Log.e(TAG, "HOST AND PORT SHOULD NOT BE EMPTY");
             return;
         }
 
@@ -93,7 +104,12 @@ public class HyperionScreenService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         if (DEBUG) Log.v(TAG, "onHandleIntent:intent=" + intent);
         final String action = intent.getAction();
+
+
         if (ACTION_START.equals(action)) {
+
+            startForeground(FOREGROUND_ID, getNotification());
+
             startScreenRecord(intent);
             updateStatus();
         } else if (ACTION_STOP.equals(action)) {
@@ -125,6 +141,50 @@ public class HyperionScreenService extends IntentService {
             Log.v(TAG, "sendBroadcast:isPausing=" + isPausing);
         sendBroadcast(result);
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        return START_STICKY ;
+    }
+
+    public Notification getNotification() {
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("Channel description");
+//            notificationChannel.enableLights(true);
+//            notificationChannel.setLightColor(null);
+//            notificationChannel.setVibrationPattern(null);
+            notificationChannel.enableVibration(false);
+            notificationChannel.setSound(null,null);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        Intent notificationIntent = new Intent(this, HyperionScreenService.class);
+        PendingIntent pendingIntent=PendingIntent.getActivity(this, 0,
+                notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setVibrate(null)
+                .setSound(null)
+                .setOngoing(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Content Title")
+                .setContentText("Content Text");
+
+        Notification n = builder.build();
+
+        notificationManager.notify(NOTIFICATION_ID, n);
+
+        return n;
+    }
+
 
     /**
      * start screen recording as .mp4 file

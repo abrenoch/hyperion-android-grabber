@@ -315,8 +315,8 @@ public class HyperionScreenEncoder implements Runnable  {
 //                            scaleMatrix(SCALE);
                             mDrawer.drawFrame(mTexId, mTexMatrix);
 
-//                            sendImage();
-                            saveImage();
+                            sendImage();
+//                            saveImage();
 
                             mLastFrame = System.nanoTime();
 
