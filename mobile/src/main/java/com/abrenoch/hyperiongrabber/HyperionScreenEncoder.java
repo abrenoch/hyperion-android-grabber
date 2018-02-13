@@ -93,6 +93,7 @@ public class HyperionScreenEncoder implements Runnable  {
         final HandlerThread thread = new HandlerThread(TAG);
         thread.start();
         mHandler = new Handler(thread.getLooper());
+
         try {
             prepare();
         } catch (IOException e) {
@@ -137,6 +138,10 @@ public class HyperionScreenEncoder implements Runnable  {
 //        super.release();
     }
 
+    public Handler getHandler() {
+        return mHandler;
+    }
+
     //    @Override
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -154,18 +159,14 @@ public class HyperionScreenEncoder implements Runnable  {
         mIsCapturing = true;
 
         new Thread(mScreenCaptureTask, "ScreenCaptureThread").start();
+    }
 
-        if (mListener != null) {
-            try {
-//                mListener.onPrepared(this);
-            } catch (final Exception e) {
-                Log.e(TAG, "prepare:", e);
-            }
-        }
+    public boolean isCapturing() {
+        return mIsCapturing;
     }
 
     //    @Override
-    void stopRecording() {
+    public void stopRecording() {
         synchronized (mSync) {
             mIsCapturing = false;
             mSync.notifyAll();
@@ -342,13 +343,14 @@ public class HyperionScreenEncoder implements Runnable  {
                     queueEvent(this);
                 } else {
                     releaseSelf();
+                    onStop();
                 }
             }
         };
 
-        private void scaleMatrix (float scale) {
-            Matrix.scaleM(mTexMatrix, 0, scale, scale, 1);
-        }
+//        private void scaleMatrix (float scale) {
+//            Matrix.scaleM(mTexMatrix, 0, scale, scale, 1);
+//        }
     }
 
 
