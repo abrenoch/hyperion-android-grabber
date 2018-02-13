@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
@@ -69,7 +70,7 @@ public class HyperionScreenService extends IntentService {
 
         }
     };
-
+    private HyperionScreenEncoder mHyperionEncoder;
 
 
     public HyperionScreenService() {
@@ -78,6 +79,15 @@ public class HyperionScreenService extends IntentService {
 
     @Override
     public void onCreate() {
+
+
+        super.onCreate();
+
+
+    }
+
+
+    private void prepare() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String host = preferences.getString("hyperion_host", null);
         String port = preferences.getString("hyperion_port", null);
@@ -93,7 +103,6 @@ public class HyperionScreenService extends IntentService {
         if (priority == null) priority = "50";
         mFrameRate = Integer.parseInt(rate);
 
-        super.onCreate();
 
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority));
@@ -108,6 +117,9 @@ public class HyperionScreenService extends IntentService {
 
         if (ACTION_START.equals(action)) {
 
+            prepare();
+
+
             startForeground(FOREGROUND_ID, getNotification());
 
             startScreenRecord(intent);
@@ -115,6 +127,7 @@ public class HyperionScreenService extends IntentService {
         } else if (ACTION_STOP.equals(action)) {
             stopScreenRecord();
             updateStatus();
+            getNotification();
         } else if (ACTION_QUERY_STATUS.equals(action)) {
             updateStatus();
         } else if (ACTION_PAUSE.equals(action)) {
@@ -130,9 +143,9 @@ public class HyperionScreenService extends IntentService {
 
     private void updateStatus() {
         final boolean isRecording, isPausing;
-        synchronized (sSync) {
+//        synchronized (sSync) {
             isPausing = false;
-        }
+//        }
         final Intent result = new Intent();
         result.setAction(ACTION_QUERY_STATUS_RESULT);
 //        result.putExtra(EXTRA_QUERY_RESULT_RECORDING, isRecording);
@@ -165,27 +178,51 @@ public class HyperionScreenService extends IntentService {
         }
 
         Intent notificationIntent = new Intent(this, HyperionScreenService.class);
-        PendingIntent pendingIntent;
+        String label = "STOP";
+
+        if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
+            label = "START";
+            notificationIntent.setAction(ACTION_START);
+        } else {
+            notificationIntent.setAction(ACTION_STOP);
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Action action = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            action = new Notification.Action.Builder(
+                    Icon.createWithResource(this, R.drawable.ic_launcher_foreground),
+                    label,
+                    pendingIntent
+            ).build();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            action = new Notification.Action.Builder(
+                    R.drawable.ic_launcher_foreground,
+                    label,
+                    pendingIntent
+            ).build();
+        }
+
         Notification n;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pendingIntent=PendingIntent.getForegroundService(this, 0,
-                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        String title = "CONTENT TITLE";
+        String body= "CONTENT BODY";
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-                    .setVibrate(null)
-                    .setSound(null)
                     .setOngoing(true)
-                    .setContentIntent(pendingIntent)
-                    .setPriority(Notification.PRIORITY_MAX)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Content Title")
-                    .setContentText("Content Text");
+                    .setContentTitle(title)
+                    .setContentText(body);
+
+            if (action != null) {
+                builder.addAction(action);
+            }
+
             n = builder.build();
         } else {
-            pendingIntent=PendingIntent.getService(this, 0,
-                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
-
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setVibrate(null)
                     .setSound(null)
@@ -193,15 +230,12 @@ public class HyperionScreenService extends IntentService {
                     .setContentIntent(pendingIntent)
                     .setPriority(Notification.PRIORITY_MAX)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Content Title")
-                    .setContentText("Content Text");
+                    .setContentTitle(title)
+                    .setContentText(body);
             n = builder.build();
         }
 
-
         notificationManager.notify(NOTIFICATION_ID, n);
-
-
 
         return n;
     }
@@ -214,7 +248,7 @@ public class HyperionScreenService extends IntentService {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void startScreenRecord(final Intent intent) {
-        synchronized (sSync) {
+//        synchronized (sSync) {
             final int resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
             // get MediaProjection
             final MediaProjection projection = mMediaProjectionManager.getMediaProjection(resultCode, intent);
@@ -226,11 +260,11 @@ public class HyperionScreenService extends IntentService {
 
                 if (DEBUG) Log.v(TAG, "startRecording:");
 
-                new HyperionScreenEncoder(mHyperionThread.getReceiver(),
+                mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
                         density, mFrameRate);
             }
-        }
+//        }
     }
 
     /**
@@ -238,6 +272,12 @@ public class HyperionScreenService extends IntentService {
      */
     private void stopScreenRecord() {
 //        if (DEBUG) Log.v(TAG, "stopScreenRecord:sMuxer=" + sMuxer);
+
+        releaseResource();
+        if (mHyperionEncoder != null) {
+            mHyperionEncoder.stopRecording();
+        }
+
         synchronized (sSync) {
 //            if (sMuxer != null) {
 //                sMuxer.stopRecording();
