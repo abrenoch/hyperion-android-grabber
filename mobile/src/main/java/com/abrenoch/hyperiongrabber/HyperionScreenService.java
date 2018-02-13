@@ -20,7 +20,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 public class HyperionScreenService extends IntentService {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String TAG = "HyperionScreenService";
 
     private static final String BASE = "com.abrenoch.hyperiongrabber.service.";
@@ -165,22 +165,43 @@ public class HyperionScreenService extends IntentService {
         }
 
         Intent notificationIntent = new Intent(this, HyperionScreenService.class);
-        PendingIntent pendingIntent=PendingIntent.getActivity(this, 0,
-                notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent;
+        Notification n;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setVibrate(null)
-                .setSound(null)
-                .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Content Title")
-                .setContentText("Content Text");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pendingIntent=PendingIntent.getForegroundService(this, 0,
+                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
-        Notification n = builder.build();
+            Notification.Builder builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+                    .setVibrate(null)
+                    .setSound(null)
+                    .setOngoing(true)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("Content Title")
+                    .setContentText("Content Text");
+            n = builder.build();
+        } else {
+            pendingIntent=PendingIntent.getService(this, 0,
+                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setVibrate(null)
+                    .setSound(null)
+                    .setOngoing(true)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("Content Title")
+                    .setContentText("Content Text");
+            n = builder.build();
+        }
+
 
         notificationManager.notify(NOTIFICATION_ID, n);
+
+
 
         return n;
     }

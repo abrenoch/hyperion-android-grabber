@@ -173,6 +173,12 @@ public class HyperionScreenEncoder implements Runnable  {
 //        super.stopRecording();
     }
 
+
+
+
+
+
+
     private boolean requestDraw;
     private final DrawTask mScreenCaptureTask = new DrawTask(null, 0);
 
@@ -217,6 +223,9 @@ public class HyperionScreenEncoder implements Runnable  {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         protected void onStop() {
+
+            Log.d("DEBUG","------------- drawable stop!! -----------");
+
             if (mDrawer != null) {
                 mDrawer.release();
                 mDrawer = null;
