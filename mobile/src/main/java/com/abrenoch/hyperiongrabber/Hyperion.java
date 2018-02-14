@@ -34,6 +34,11 @@ public class Hyperion {
         return mSocket.isConnected();
     }
 
+    public void disconnect() throws IOException {
+        if (isConnected()) {
+            mSocket.close();
+        }
+    }
 
     public void clear(int priority) throws IOException {
         sendRequest(clearRequest(priority));
@@ -64,9 +69,9 @@ public class Hyperion {
         setColor(color, priority, -1);
     }
     public void setColor(int color, int priority, int duration_ms) throws IOException {
-        sendRequest(makeColorRequest(color, priority, duration_ms));
+        sendRequest(setColorRequest(color, priority, duration_ms));
     }
-    public static HyperionRequest makeColorRequest(int color, int priority, int duration_ms) {
+    public static HyperionRequest setColorRequest(int color, int priority, int duration_ms) {
         ColorRequest colorRequest = ColorRequest.newBuilder()
                 .setRgbColor(color)
                 .setPriority(priority)

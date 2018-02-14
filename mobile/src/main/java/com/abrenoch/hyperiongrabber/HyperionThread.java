@@ -1,5 +1,7 @@
 package com.abrenoch.hyperiongrabber;
 
+import android.graphics.Color;
+
 import com.example.android.screencapture.HyperionProto;
 import java.io.IOException;
 
@@ -19,6 +21,30 @@ class HyperionThread extends Thread {
             if (mHyperion != null && mHyperion.isConnected()) {
                 try {
                     mHyperion.sendRequest(req);
+                } catch (IOException e) {
+                    mSender.onConnectionError(e.hashCode(), e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void clear() {
+            if (mHyperion != null && mHyperion.isConnected()) {
+                try {
+                    mHyperion.setColor(Color.BLACK, PRIORITY);
+                } catch (IOException e) {
+                    mSender.onConnectionError(e.hashCode(), e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void disconnect() {
+            if (mHyperion != null) {
+                try {
+                    mHyperion.disconnect();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -41,7 +67,7 @@ class HyperionThread extends Thread {
         try {
             mHyperion = new Hyperion(HOST, PORT);
         } catch (IOException e) {
-            mSender.onConnectionError(null);
+            mSender.onConnectionError(e.hashCode(), e.getMessage());
             e.printStackTrace();
         } finally {
             if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
@@ -52,5 +78,7 @@ class HyperionThread extends Thread {
 
     public interface HyperionThreadListener {
         void sendFrame(byte[] data, int width, int height);
+        void clear();
+        void disconnect();
     }
 }
