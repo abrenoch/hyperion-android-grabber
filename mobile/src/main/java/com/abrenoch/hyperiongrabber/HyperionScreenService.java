@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,13 +15,15 @@ import android.graphics.drawable.Icon;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-public class HyperionScreenService extends IntentService {
+public class HyperionScreenService extends Service {
     private static final boolean DEBUG = true;
     private static final String TAG = "HyperionScreenService";
 
@@ -39,7 +42,6 @@ public class HyperionScreenService extends IntentService {
     private static final String NOTIFICATION_CHANNEL_ID = BASE + "NOTIFICATION";
 
     public static final String ACTION_RELEASE_RESOURCE = BASE + "ACTION_RELEASE_RESOURCE";
-    private static final int FOREGROUND_ID = 4568;
 
     private static Object sSync = new Object();
 
@@ -60,7 +62,7 @@ public class HyperionScreenService extends IntentService {
         }
 
         @Override
-        public void onConnectionError(String error) {
+        public void onConnectionError(int errorID, String error) {
             Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e("ERROR", error);
         }
@@ -71,16 +73,17 @@ public class HyperionScreenService extends IntentService {
         }
     };
     private HyperionScreenEncoder mHyperionEncoder;
+    private NotificationManager mNotificationManager;
 
 
     public HyperionScreenService() {
-        super(TAG);
+//        super(TAG);
     }
 
     @Override
     public void onCreate() {
 
-
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         super.onCreate();
 
 
@@ -88,6 +91,9 @@ public class HyperionScreenService extends IntentService {
 
 
     private void prepare() {
+        if (DEBUG)
+            Log.v(TAG, "prepare::");
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String host = preferences.getString("hyperion_host", null);
         String port = preferences.getString("hyperion_port", null);
@@ -108,38 +114,37 @@ public class HyperionScreenService extends IntentService {
         mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority));
         mHyperionThread.start();
     }
-
-    @Override
-    protected void onHandleIntent(final Intent intent) {
-        if (DEBUG) Log.v(TAG, "onHandleIntent:intent=" + intent);
-        final String action = intent.getAction();
-
-
-        if (ACTION_START.equals(action)) {
-
-            prepare();
-
-
-            startForeground(FOREGROUND_ID, getNotification());
-
-            startScreenRecord(intent);
-            updateStatus();
-        } else if (ACTION_STOP.equals(action)) {
-            stopScreenRecord();
-            updateStatus();
-            getNotification();
-        } else if (ACTION_QUERY_STATUS.equals(action)) {
-            updateStatus();
-        } else if (ACTION_PAUSE.equals(action)) {
-            pauseScreenRecord();
-            updateStatus();
-        } else if (ACTION_RESUME.equals(action)) {
-            resumeScreenRecord();
-            updateStatus();
-        } else if (ACTION_RELEASE_RESOURCE.equals(action)) {
-            releaseResource();
-        }
-    }
+//
+//    @Override
+//    protected void onHandleIntent(final Intent intent) {
+//        if (DEBUG) Log.v(TAG, "onHandleIntent:intent=" + intent);
+//        final String action = intent.getAction();
+//
+//
+//        if (ACTION_START.equals(action)) {
+//
+//            prepare();
+//
+//
+//            startForeground(NOTIFICATION_ID, getNotification());
+//
+//            startScreenRecord(intent);
+//            updateStatus();
+//        } else if (ACTION_STOP.equals(action)) {
+//            stopScreenRecord();
+//            updateStatus();
+//        } else if (ACTION_QUERY_STATUS.equals(action)) {
+//            updateStatus();
+//        } else if (ACTION_PAUSE.equals(action)) {
+//            pauseScreenRecord();
+//            updateStatus();
+//        } else if (ACTION_RESUME.equals(action)) {
+//            resumeScreenRecord();
+//            updateStatus();
+//        } else if (ACTION_RELEASE_RESOURCE.equals(action)) {
+//            releaseResource();
+//        }
+//    }
 
     private void updateStatus() {
         final boolean isRecording, isPausing;
@@ -157,13 +162,42 @@ public class HyperionScreenService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (DEBUG)
+            Log.v(TAG, "onStartCommand::");
+
         super.onStartCommand(intent, flags, startId);
-        return START_STICKY ;
+
+//        synchronized (sSync) {
+//        }
+        final String action = intent.getAction();
+
+            switch (action) {
+                case ACTION_START:
+                    if (mHyperionThread == null) {
+                        prepare();
+                        startScreenRecord(intent);
+                        updateStatus();
+                        startForeground(NOTIFICATION_ID, getNotification());
+                    }
+                    break;
+                case ACTION_STOP:
+                    stopScreenRecord();
+                    break;
+            }
+
+
+        return START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     public Notification getNotification() {
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -174,17 +208,18 @@ public class HyperionScreenService extends IntentService {
 //            notificationChannel.setVibrationPattern(null);
             notificationChannel.enableVibration(false);
             notificationChannel.setSound(null,null);
-            notificationManager.createNotificationChannel(notificationChannel);
+            mNotificationManager.createNotificationChannel(notificationChannel);
         }
 
-        Intent notificationIntent = new Intent(this, HyperionScreenService.class);
-        String label = "STOP";
+        Intent notificationIntent = new Intent(this, this.getClass());
+        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        String label = "START";
 
         if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
-            label = "START";
-            notificationIntent.setAction(ACTION_START);
-        } else {
+            label = "STOP";
             notificationIntent.setAction(ACTION_STOP);
+        } else {
+            notificationIntent.setAction(ACTION_START);
         }
 
         PendingIntent pendingIntent = PendingIntent.getService(this, 0,
@@ -235,7 +270,7 @@ public class HyperionScreenService extends IntentService {
             n = builder.build();
         }
 
-        notificationManager.notify(NOTIFICATION_ID, n);
+//        mNotificationManager.notify(NOTIFICATION_ID, n);
 
         return n;
     }
@@ -271,12 +306,17 @@ public class HyperionScreenService extends IntentService {
      * stop screen recording
      */
     private void stopScreenRecord() {
-//        if (DEBUG) Log.v(TAG, "stopScreenRecord:sMuxer=" + sMuxer);
+        if (DEBUG) Log.v(TAG, "stopScreenRecord");
 
-        releaseResource();
+        mNotificationManager.cancel(NOTIFICATION_ID);
+
+
         if (mHyperionEncoder != null) {
+            if (DEBUG) Log.v(TAG, "stopScreenRecord:stopping encoder");
             mHyperionEncoder.stopRecording();
         }
+
+        releaseResource();
 
         synchronized (sSync) {
 //            if (sMuxer != null) {
@@ -314,6 +354,6 @@ public class HyperionScreenService extends IntentService {
     public interface HyperionThreadBroadcaster {
         void onResponse(String response);
         void onConnected();
-        void onConnectionError(String error);
+        void onConnectionError(int errorHash, String errorString);
     }
 }
