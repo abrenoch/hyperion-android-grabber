@@ -39,7 +39,6 @@ public class HyperionScreenService extends Service {
     public static final String EXTRA_QUERY_RESULT_RECORDING = BASE + "EXTRA_QUERY_RESULT_RECORDING";
 
     private static final int NOTIFICATION_ID = 1;
-    private static final String NOTIFICATION_CHANNEL_ID = BASE + "NOTIFICATION";
 
     public static final String ACTION_RELEASE_RESOURCE = BASE + "ACTION_RELEASE_RESOURCE";
 
@@ -196,83 +195,19 @@ public class HyperionScreenService extends Service {
     }
 
     public Notification getNotification() {
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel description");
-//            notificationChannel.enableLights(true);
-//            notificationChannel.setLightColor(null);
-//            notificationChannel.setVibrationPattern(null);
-            notificationChannel.enableVibration(false);
-            notificationChannel.setSound(null,null);
-            mNotificationManager.createNotificationChannel(notificationChannel);
-        }
-
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        String label = "START";
-
+        String label = "START GRABBER";
         if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
-            label = "STOP";
+            label = "STOP GRABBER";
             notificationIntent.setAction(ACTION_STOP);
         } else {
             notificationIntent.setAction(ACTION_START);
         }
 
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification.Action action = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            action = new Notification.Action.Builder(
-                    Icon.createWithResource(this, R.drawable.ic_launcher_foreground),
-                    label,
-                    pendingIntent
-            ).build();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            action = new Notification.Action.Builder(
-                    R.drawable.ic_launcher_foreground,
-                    label,
-                    pendingIntent
-            ).build();
-        }
-
-        Notification n;
-
-        String title = "CONTENT TITLE";
-        String body= "CONTENT BODY";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-                    .setOngoing(true)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(title)
-                    .setContentText(body);
-
-            if (action != null) {
-                builder.addAction(action);
-            }
-
-            n = builder.build();
-        } else {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setVibrate(null)
-                    .setSound(null)
-                    .setOngoing(true)
-                    .setContentIntent(pendingIntent)
-                    .setPriority(Notification.PRIORITY_MAX)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(title)
-                    .setContentText(body);
-            n = builder.build();
-        }
-
-//        mNotificationManager.notify(NOTIFICATION_ID, n);
-
-        return n;
+        HyperionNotification noti = new HyperionNotification(this, mNotificationManager);
+        noti.setAction(label, notificationIntent);
+        return noti.buildNotification();
     }
 
 
@@ -310,37 +245,12 @@ public class HyperionScreenService extends Service {
 
         mNotificationManager.cancel(NOTIFICATION_ID);
 
-
         if (mHyperionEncoder != null) {
             if (DEBUG) Log.v(TAG, "stopScreenRecord:stopping encoder");
             mHyperionEncoder.stopRecording();
         }
 
         releaseResource();
-
-        synchronized (sSync) {
-//            if (sMuxer != null) {
-//                sMuxer.stopRecording();
-//                sMuxer = null;
-//                // you should not wait here
-//            }
-        }
-    }
-
-    private void pauseScreenRecord() {
-        synchronized (sSync) {
-//            if (sMuxer != null) {
-//                sMuxer.pauseRecording();
-//            }
-        }
-    }
-
-    private void resumeScreenRecord() {
-        synchronized (sSync) {
-//            if (sMuxer != null) {
-//                sMuxer.resumeRecording();
-//            }
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
