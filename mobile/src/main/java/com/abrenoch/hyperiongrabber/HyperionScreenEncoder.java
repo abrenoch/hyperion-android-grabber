@@ -224,9 +224,6 @@ public class HyperionScreenEncoder implements Runnable  {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         protected void onStop() {
-
-            Log.d("DEBUG","------------- drawable stop!! -----------");
-
             if (mDrawer != null) {
                 mDrawer.release();
                 mDrawer = null;
@@ -247,6 +244,8 @@ public class HyperionScreenEncoder implements Runnable  {
             if (display != null) {
                 display.release();
             }
+            mListener.clear();
+            mListener.disconnect();
             if (mMediaProjection != null) {
                 //We don't release mMediaProjection in there.
                 //mMediaProjection.stop();
