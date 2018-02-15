@@ -30,6 +30,7 @@ public class HyperionScreenService extends Service {
     private static final String BASE = "com.abrenoch.hyperiongrabber.service.";
     public static final String ACTION_START = BASE + "ACTION_START";
     public static final String ACTION_STOP = BASE + "ACTION_STOP";
+    public static final String ACTION_EXIT = BASE + "ACTION_EXIT";
     public static final String ACTION_PAUSE = BASE + "ACTION_PAUSE";
     public static final String ACTION_RESUME = BASE + "ACTION_RESUME";
     public static final String ACTION_QUERY_STATUS = BASE + "ACTION_QUERY_STATUS";
@@ -39,6 +40,8 @@ public class HyperionScreenService extends Service {
     public static final String EXTRA_QUERY_RESULT_RECORDING = BASE + "EXTRA_QUERY_RESULT_RECORDING";
 
     private static final int NOTIFICATION_ID = 1;
+    private static final int NOTIFICATION_STAT_STOP_INTENT_ID = 2;
+    private static final int NOTIFICATION_EXIT_INTENT_ID = 3;
 
     public static final String ACTION_RELEASE_RESOURCE = BASE + "ACTION_RELEASE_RESOURCE";
 
@@ -182,8 +185,12 @@ public class HyperionScreenService extends Service {
                 case ACTION_STOP:
                     stopScreenRecord();
                     break;
+                case ACTION_EXIT:
+                    stopScreenRecord();
+                    stopForeground(true);
+                    stopSelf();
+                    break;
             }
-
 
         return START_STICKY;
     }
@@ -194,20 +201,34 @@ public class HyperionScreenService extends Service {
         return null;
     }
 
-    public Notification getNotification() {
+    private Intent buildStopStartButtons() {
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        String label = "START GRABBER";
         if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
-            label = "STOP GRABBER";
             notificationIntent.setAction(ACTION_STOP);
         } else {
             notificationIntent.setAction(ACTION_START);
         }
+        return notificationIntent;
+    }
 
-        HyperionNotification noti = new HyperionNotification(this, mNotificationManager);
-        noti.setAction(label, notificationIntent);
-        return noti.buildNotification();
+    private Intent buildExitButton() {
+        Intent notificationIntent = new Intent(this, this.getClass());
+        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        notificationIntent.setAction(ACTION_EXIT);
+        return notificationIntent;
+    }
+
+    public Notification getNotification() {
+        HyperionNotification notification = new HyperionNotification(this, mNotificationManager);
+        String label = "START GRABBER";
+        String label2 = "EXIT";
+        if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
+            label = "STOP GRABBER";
+        }
+        notification.setAction(NOTIFICATION_STAT_STOP_INTENT_ID, label, buildStopStartButtons());
+        notification.setAction(NOTIFICATION_EXIT_INTENT_ID, label2, buildExitButton());
+        return notification.buildNotification();
     }
 
 

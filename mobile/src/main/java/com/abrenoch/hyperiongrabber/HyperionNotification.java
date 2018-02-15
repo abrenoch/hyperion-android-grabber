@@ -29,8 +29,8 @@ public class HyperionNotification {
         }
     }
 
-    public void setAction(String label, Intent intent) {
-        PendingIntent pendingIntent = PendingIntent.getService(mContext, 0,
+    public void setAction(int code, String label, Intent intent) {
+        PendingIntent pendingIntent = PendingIntent.getService(mContext, code,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
