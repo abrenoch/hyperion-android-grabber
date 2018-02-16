@@ -1,21 +1,11 @@
 package com.abrenoch.hyperiongrabber;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,21 +16,12 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
-
-import java.io.File;
-
 public class MainActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener {
-
     private static final int REQUEST_MEDIA_PROJECTION = 1;
-    private static final int REQUEST_ACCESS_STORAGE = 2;
     private static final String TAG = "DEBUG";
     private Switch mSwitch;
     private boolean mRecorderRunning = false;
     private MediaProjectionManager mMediaProjectionManager;
-
-    private static final String BASE = "com.abrenoch.hyperiongrabber.service.";
-    private static final int NOTIFICATION_ID = 1;
-    private static final String NOTIFICATION_CHANNEL_ID = BASE + "NOTIFICATION";
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -71,17 +52,13 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
             if (resultCode != Activity.RESULT_OK) {
                 Log.i(TAG, "User cancelled");
                 Toast.makeText(this, "USER CANCELLED", Toast.LENGTH_SHORT).show();
-
                 if (mRecorderRunning) {
                     stopScreenRecorder();
                 }
-
                 mSwitch.setChecked(false);
                 return;
             }
-
             Log.i(TAG, "Starting screen capture");
-
             startScreenRecorder(resultCode, data);
             mRecorderRunning = true;
         }
@@ -113,36 +90,16 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(this, HyperionScreenService.class);
-            intent.setAction(HyperionScreenService.ACTION_START);
-            intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
-            intent.putExtras(data);
+        Intent intent = new Intent(this, HyperionScreenService.class);
+        intent.setAction(HyperionScreenService.ACTION_START);
+        intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
+        intent.putExtras(data);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-            } else {
-                startService(intent);
-            }
-
-            Log.i(TAG, "STARTED THE THING!!!!!");
-
-//            startForeground(12, getNotification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_ACCESS_STORAGE);
+            startService(intent);
         }
-    }
-
-    private void startGrabberService() {
-//        String path = Environment.getExternalStorageDirectory().getPath() + "/" + this.getPackageName() + "/RecordingScreen";
-//        File saveScreenCaptureDirectory = new File(path);
-//        if(!saveScreenCaptureDirectory.exists()){
-//            saveScreenCaptureDirectory.mkdirs();
-//        }
-        Intent i = new Intent(this, HyperionScreenService.class);
-        i.setAction(HyperionScreenService.ACTION_STOP);
-//        i.putExtra(HyperionScreenService.EXTRA_SET_OUTPUT_PATH, path + "/00.mp4") ;
-        this.startService(i);
     }
 
     public void stopScreenRecorder() {
@@ -151,59 +108,5 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
             intent.setAction(HyperionScreenService.ACTION_STOP);
             startService(intent);
         }
-    }
-
-    private boolean serviceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Notification getNotification() {
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel description");
-//            notificationChannel.enableLights(true);
-//            notificationChannel.setLightColor(null);
-//            notificationChannel.setVibrationPattern(null);
-            notificationChannel.enableVibration(false);
-            notificationChannel.setSound(null,null);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-
-        Intent notificationIntent = new Intent(this, HyperionScreenService.class);
-        PendingIntent pendingIntent;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pendingIntent=PendingIntent.getForegroundService(this, 0,
-                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
-        } else {
-            pendingIntent=PendingIntent.getService(this, 0,
-                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setVibrate(null)
-                .setSound(null)
-                .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Content Title")
-                .setContentText("Content Text");
-
-        Notification n = builder.build();
-
-        notificationManager.notify(NOTIFICATION_ID, n);
-
-        return n;
     }
 }
