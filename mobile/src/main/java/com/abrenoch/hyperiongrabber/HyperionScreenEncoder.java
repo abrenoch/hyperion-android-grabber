@@ -1,24 +1,18 @@
 package com.abrenoch.hyperiongrabber;
 
 import android.annotation.TargetApi;
-import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
-import android.media.MediaCodecList;
-import android.media.MediaFormat;
 import android.media.projection.MediaProjection;
 import android.opengl.EGLContext;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.util.Range;
 import android.view.Surface;
 
 import com.abrenoch.hyperiongrabber.screencap.EglTask;
@@ -27,11 +21,8 @@ import com.abrenoch.hyperiongrabber.screencap.Texture2dProgram;
 import com.abrenoch.hyperiongrabber.screencap.WindowSurface;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.IntBuffer;
-import java.util.Random;
 
 public class HyperionScreenEncoder implements Runnable  {
     private static final String TAG = "HyperionScreenEncoder";
@@ -40,9 +31,8 @@ public class HyperionScreenEncoder implements Runnable  {
     private static final int TARGET_WIDTH = 60;
     private static final int TARGET_BIT_RATE = TARGET_HEIGHT * TARGET_WIDTH * 3;
     private static int FRAME_RATE;
-    private final float SCALE;
 
-    protected final Object mSync = new Object();
+    private final Object mSync = new Object();
     private final int mWidthScaled;
     private final int mHeightScaled;
 
@@ -51,10 +41,7 @@ public class HyperionScreenEncoder implements Runnable  {
     private MediaProjection mMediaProjection;
     private final int mDensity;
 
-    protected volatile boolean mRequestPause;
-    protected volatile boolean mRequestStop;
-    private int mRequestDrain;
-
+    private volatile boolean mRequestStop;
 
     private Surface mSurface;
     private final Handler mHandler;
@@ -64,31 +51,23 @@ public class HyperionScreenEncoder implements Runnable  {
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
-                                 final MediaProjection projection, final int width, final int height,
-                                 final int density, int framerate) {
-
+    HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
+                          final MediaProjection projection, final int width, final int height,
+                          final int density, int frameRate) {
         mListener = listener;
         mMediaProjection = projection;
         mDensity = density;
-        FRAME_RATE = framerate;
+        FRAME_RATE = frameRate;
 
         mWidth = (int) Math.floor(width);
         mHeight = (int) Math.floor(height);
         if (mWidth % 2 != 0) mWidth--;
         if (mHeight % 2 != 0) mHeight--;
 
-        SCALE = findScaleFactor();
+        float scale = findScaleFactor();
 
-        mWidthScaled = (int) (mWidth / SCALE);
-        mHeightScaled = (int) (mHeight / SCALE);
-
-        /*
-        *       TRY SETTING THE SCALED DIMENSIONS BEFORE ADJUSTING TO THE NEXT LOWEST EVEN NUMBER
-        * */
-
-//        mWidth = (int) (mWidth / SCALE);
-//        mHeight = (int) (mHeight / SCALE);
+        mWidthScaled = (int) (mWidth / scale);
+        mHeightScaled = (int) (mHeight / scale);
 
         final HandlerThread thread = new HandlerThread(TAG);
         thread.start();
@@ -105,12 +84,10 @@ public class HyperionScreenEncoder implements Runnable  {
     public void run() {
         synchronized (mSync) {
             mRequestStop = false;
-            mRequestDrain = 0;
             mSync.notify();
         }
-        final boolean isRunning = true;
         boolean localRequestStop;
-        while (isRunning) {
+        while (true) {
             synchronized (mSync) {
                 localRequestStop = mRequestStop;
             }
@@ -125,27 +102,20 @@ public class HyperionScreenEncoder implements Runnable  {
                     break;
                 }
             }
-        } // end of while
+        }
         synchronized (mSync) {
             mRequestStop = true;
             mIsCapturing = false;
         }
     }
 
-    //    @Override
     protected void release() {
         mHandler.getLooper().quit();
-//        super.release();
     }
 
-    public Handler getHandler() {
-        return mHandler;
-    }
-
-    //    @Override
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void prepare() throws IOException, MediaCodec.CodecException {
+    private void prepare() throws IOException, MediaCodec.CodecException {
 
         /*
         *   SCALING THIS SURFACE TEXTURE DOWN SEEMS TO CAUSE PROBLEMS?
@@ -161,24 +131,16 @@ public class HyperionScreenEncoder implements Runnable  {
         new Thread(mScreenCaptureTask, "ScreenCaptureThread").start();
     }
 
-    public boolean isCapturing() {
+    boolean isCapturing() {
         return mIsCapturing;
     }
 
-    //    @Override
-    public void stopRecording() {
+    void stopRecording() {
         synchronized (mSync) {
             mIsCapturing = false;
             mSync.notifyAll();
         }
-//        super.stopRecording();
     }
-
-
-
-
-
-
 
     private boolean requestDraw;
     private final DrawTask mScreenCaptureTask = new DrawTask(null, 0);
@@ -193,7 +155,7 @@ public class HyperionScreenEncoder implements Runnable  {
         private FullFrameRect mDrawer;
         private final float[] mTexMatrix = new float[16];
 
-        public DrawTask(final EGLContext shared_context, final int flags) {
+        DrawTask(final EGLContext shared_context, final int flags) {
             super(shared_context, flags);
         }
 
@@ -210,7 +172,6 @@ public class HyperionScreenEncoder implements Runnable  {
             mEncoderSurface = new WindowSurface(getEglCore(), mSurface);
 
             intervals = (long)(1000f / FRAME_RATE);
-
 
             display = mMediaProjection.createVirtualDisplay(
                     "Capturing Display",
@@ -246,11 +207,6 @@ public class HyperionScreenEncoder implements Runnable  {
             }
             mListener.clear();
             mListener.disconnect();
-            if (mMediaProjection != null) {
-                //We don't release mMediaProjection in there.
-                //mMediaProjection.stop();
-                //mMediaProjection = null;
-            }
         }
 
         @Override
@@ -275,33 +231,27 @@ public class HyperionScreenEncoder implements Runnable  {
             }
         };
 
-        public boolean frameAvailableSoon() {
-//     if (DEBUG) Log.v(TAG, "frameAvailableSoon");
+        void frameAvailableSoon() {
             synchronized (mSync) {
                 if (!mIsCapturing || mRequestStop) {
-                    return false;
+                    return;
                 }
                 mSync.notifyAll();
             }
-            return true;
         }
 
         private long mLastFrame;
         private final Runnable mDrawTask = new Runnable() {
             @Override
             public void run() {
-                boolean local_request_pause;
                 boolean local_request_draw;
                 double min_nano_time = 1e9 / FRAME_RATE;
-
                 synchronized (mSync) {
-                    local_request_pause = mRequestPause;
                     local_request_draw = requestDraw;
 
                     if (!requestDraw) {
                         try {
                             mSync.wait(intervals);
-                            local_request_pause = mRequestPause;
                             local_request_draw = requestDraw;
                             requestDraw = false;
                         } catch (final InterruptedException e) {
@@ -311,34 +261,21 @@ public class HyperionScreenEncoder implements Runnable  {
                 }
                 if (mIsCapturing) {
                     if (local_request_draw) {
-
-                        long now = System.nanoTime();
-                        if (!local_request_pause && now - mLastFrame >= min_nano_time) {
-
+                        if (System.nanoTime() - mLastFrame >= min_nano_time) {
                             mSourceTexture.updateTexImage();
                             mSourceTexture.getTransformMatrix(mTexMatrix);
                             mSurfaceTexture.updateTexImage();
-
                             mEncoderSurface.makeCurrent();
-
-//                            scaleMatrix(SCALE);
                             mDrawer.drawFrame(mTexId, mTexMatrix);
-
                             sendImage();
-//                            saveImage();
-
                             mLastFrame = System.nanoTime();
-
                             mEncoderSurface.swapBuffers();
-
                             makeCurrent();
                             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
                             GLES20.glFlush();
-
                             frameAvailableSoon();
                         }
                     }
-
                     queueEvent(this);
                 } else {
                     releaseSelf();
@@ -346,12 +283,7 @@ public class HyperionScreenEncoder implements Runnable  {
                 }
             }
         };
-
-//        private void scaleMatrix (float scale) {
-//            Matrix.scaleM(mTexMatrix, 0, scale, scale, 1);
-//        }
     }
-
 
     private void sendImage() {
         if (mListener != null) {
@@ -363,7 +295,7 @@ public class HyperionScreenEncoder implements Runnable  {
         }
     }
 
-    public byte[] savePixels(){
+    private byte[] savePixels(){
         int w = mWidthScaled;
         int h = mHeightScaled;
         int b[]= new int[w*h];
@@ -385,62 +317,17 @@ public class HyperionScreenEncoder implements Runnable  {
         return bao.toByteArray();
     }
 
-    private void saveImage() {
-        Bitmap bmp = saveBMP();
-
-        File myDir=new File("/sdcard/saved_images");
-        myDir.mkdirs();
-        String fname = String.valueOf(System.nanoTime()) + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists ()) file.delete ();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-
-            Log.d("DEBUG", "------------------------- " + fname);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Bitmap saveBMP(){
-        int w = mWidthScaled;
-        int h = mHeightScaled;
-        int b[]= new int[w*h];
-        int bt[]= new int[w*h];
-        IntBuffer ib = IntBuffer.wrap(b);
-        ib.position(0);
-        GLES20.glReadPixels(0, 0, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
-
-        for (int i = 0, k = 0; i < h; i++, k++) {
-            for (int j = 0; j < w; j++) {
-                int pix = b[i * w + j];
-                int pb = (pix >> 16) & 0xff;
-                int pr = (pix << 16) & 0x00ff0000;
-                int pix1 = (pix & 0xff00ff00) | pr | pb;
-                bt[(h - k - 1) * w + j] = pix1;
-            }
-        }
-
-        return Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
-    }
-
-    public float findScaleFactor() {
+    private float findScaleFactor() {
         float step = (float) 0.2;
-        for (float i = 1; i < 100; i += step) {
-            if ((mWidth / i) * (mHeight / i) * 3 <= TARGET_BIT_RATE) {
+        for (float i = 1; i < 100; i += step)
+            if ((mWidth / i) * (mHeight / i) * 3 <= TARGET_BIT_RATE)
                 return i;
-            }
-        }
         return 1;
     }
 
-    public interface HyperionEncoderListener {
-        public void onPrepared(HyperionScreenEncoder encoder);
-        public void onStopped(HyperionScreenEncoder encoder);
-        public void sendFrame(byte[] data, int width, int height);
-    }
+//    public interface HyperionEncoderListener {
+//        public void onPrepared(HyperionScreenEncoder encoder);
+//        public void onStopped(HyperionScreenEncoder encoder);
+//        public void sendFrame(byte[] data, int width, int height);
+//    }
 }
