@@ -32,7 +32,7 @@ class HyperionThread extends Thread {
         public void clear() {
             if (mHyperion != null && mHyperion.isConnected()) {
                 try {
-                    mHyperion.setColor(Color.BLACK, PRIORITY);
+                    mHyperion.clear(PRIORITY);
                 } catch (IOException e) {
                     mSender.onConnectionError(e.hashCode(), e.getMessage());
                     e.printStackTrace();
