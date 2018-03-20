@@ -1,77 +1,32 @@
 package com.abrenoch.hyperiongrabber;
 
 import android.annotation.TargetApi;
-import android.graphics.SurfaceTexture;
+import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
+import android.media.Image;
+import android.media.ImageReader;
+import android.media.ImageReader.OnImageAvailableListener;
 import android.media.MediaCodec;
 import android.media.projection.MediaProjection;
-import android.opengl.EGLContext;
-import android.opengl.GLES20;
 import android.os.Build;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.view.Surface;
-
-import com.abrenoch.hyperiongrabber.screencap.EglTask;
-import com.abrenoch.hyperiongrabber.screencap.FullFrameRect;
-import com.abrenoch.hyperiongrabber.screencap.Texture2dProgram;
-import com.abrenoch.hyperiongrabber.screencap.WindowSurface;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
 
-public class HyperionScreenEncoder implements Runnable  {
+public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
+    private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
-
-    private static final int TARGET_HEIGHT = 60;
-    private static final int TARGET_WIDTH = 60;
-    private static final int TARGET_BIT_RATE = TARGET_HEIGHT * TARGET_WIDTH * 3;
-    private static int FRAME_RATE;
-
-    private final Object mSync = new Object();
-    private final int mWidthScaled;
-    private final int mHeightScaled;
-
-    private int mWidth;
-    private int mHeight;
-    private MediaProjection mMediaProjection;
-    private final int mDensity;
-
-    private volatile boolean mRequestStop;
-
-    private Surface mSurface;
-    private final Handler mHandler;
-    private boolean mIsCapturing = false;
-    private HyperionThread.HyperionThreadListener mListener;
-    private SurfaceTexture mSurfaceTexture;
-
+    private VirtualDisplay mVirtualDisplay;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
-                          final MediaProjection projection, final int width, final int height,
-                          final int density, int frameRate) {
-        mListener = listener;
-        mMediaProjection = projection;
-        mDensity = density;
-        FRAME_RATE = frameRate;
-
-        mWidth = (int) Math.floor(width);
-        mHeight = (int) Math.floor(height);
-        if (mWidth % 2 != 0) mWidth--;
-        if (mHeight % 2 != 0) mHeight--;
-
-        float scale = findScaleFactor();
-
-        mWidthScaled = (int) (mWidth / scale);
-        mHeightScaled = (int) (mHeight / scale);
-
-        final HandlerThread thread = new HandlerThread(TAG);
-        thread.start();
-        mHandler = new Handler(thread.getLooper());
+                           final MediaProjection projection, final int width, final int height,
+                           final int density, int frameRate) {
+        super(listener, projection, width, height, density, frameRate);
 
         try {
             prepare();
@@ -80,249 +35,116 @@ public class HyperionScreenEncoder implements Runnable  {
         }
     }
 
-    @Override
-    public void run() {
-        synchronized (mSync) {
-            mRequestStop = false;
-            mSync.notify();
-        }
-        boolean localRequestStop;
-        while (true) {
-            synchronized (mSync) {
-                localRequestStop = mRequestStop;
-            }
-            if (localRequestStop) {
-                release();
-                break;
-            }
-            synchronized (mSync) {
-                try {
-                    mSync.wait();
-                } catch (final InterruptedException e) {
-                    break;
-                }
-            }
-        }
-        synchronized (mSync) {
-            mRequestStop = true;
-            mIsCapturing = false;
-        }
-    }
-
-    protected void release() {
-        mHandler.getLooper().quit();
-    }
-
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void prepare() throws IOException, MediaCodec.CodecException {
-
-        /*
-        *   SCALING THIS SURFACE TEXTURE DOWN SEEMS TO CAUSE PROBLEMS?
-        *
-        *   will produce black frames if setDefaultBufferSize is not called
-        * */
-        mSurfaceTexture = new SurfaceTexture(1651);
-        mSurfaceTexture.setDefaultBufferSize(mWidthScaled, mHeightScaled);
-        mSurface = new Surface(mSurfaceTexture);
-
         mIsCapturing = true;
 
-        new Thread(mScreenCaptureTask, "ScreenCaptureThread").start();
+        mVirtualDisplay = mMediaProjection.createVirtualDisplay(
+                "Capturing Display",
+                mWidthScaled, mHeightScaled, mDensity,
+                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                null, displayCallback, null);
+
+        setImageReader();
     }
 
-    boolean isCapturing() {
-        return mIsCapturing;
+    @Override
+    public void stopRecording() {
+        Log.i(TAG, "stopRecording Called");
+        mIsCapturing = false;
+        mVirtualDisplay.release();
+        mHandler.getLooper().quit();
+        new Thread(clearAndDisconnect).start();
     }
 
-    void stopRecording() {
-        synchronized (mSync) {
-            mIsCapturing = false;
-            mSync.notifyAll();
-        }
-    }
-
-    private boolean requestDraw;
-    private final DrawTask mScreenCaptureTask = new DrawTask(null, 0);
-
-    private final class DrawTask extends EglTask {
-        private VirtualDisplay display;
-        private long intervals;
-        private int mTexId;
-        private SurfaceTexture mSourceTexture;
-        private Surface mSourceSurface;
-        private WindowSurface mEncoderSurface;
-        private FullFrameRect mDrawer;
-        private final float[] mTexMatrix = new float[16];
-
-        DrawTask(final EGLContext shared_context, final int flags) {
-            super(shared_context, flags);
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        protected void onStart() {
-            mDrawer = new FullFrameRect(new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_EXT));
-            mTexId = mDrawer.createTextureObject();
-
-            mSourceTexture = new SurfaceTexture(mTexId);
-            mSourceTexture.setDefaultBufferSize(mWidthScaled, mHeightScaled);
-            mSourceSurface = new Surface(mSourceTexture);
-            mSourceTexture.setOnFrameAvailableListener(mOnFrameAvailableListener, mHandler);
-            mEncoderSurface = new WindowSurface(getEglCore(), mSurface);
-
-            intervals = (long)(1000f / FRAME_RATE);
-
-            display = mMediaProjection.createVirtualDisplay(
-                    "Capturing Display",
-                    mWidthScaled, mHeightScaled, mDensity,
-                    DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                    mSourceSurface, null, null);
-
-            queueEvent(mDrawTask);
-        }
-
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        @Override
-        protected void onStop() {
-            if (mDrawer != null) {
-                mDrawer.release();
-                mDrawer = null;
-            }
-            if (mSourceSurface != null) {
-                mSourceSurface.release();
-                mSourceSurface = null;
-            }
-            if (mSourceTexture != null) {
-                mSourceTexture.release();
-                mSourceTexture = null;
-            }
-            if (mEncoderSurface != null) {
-                mEncoderSurface.release();
-                mEncoderSurface = null;
-            }
-            makeCurrent();
-            if (display != null) {
-                display.release();
-            }
+    private Runnable clearAndDisconnect  = new Runnable() {
+        public void run() {
             mListener.clear();
             mListener.disconnect();
         }
+    };
+
+    private VirtualDisplay.Callback displayCallback = new VirtualDisplay.Callback() {
+        @Override
+        public void onPaused() {
+            super.onPaused();
+            Log.i(TAG, "onPaused");
+            mIsCapturing = false;
+        }
 
         @Override
-        protected boolean onError(final Exception e) {
-            return false;
+        public void onResumed() {
+            super.onResumed();
+            Log.i(TAG, "onResumed");
+            mIsCapturing = true;
         }
 
         @Override
-        protected boolean processRequest(final int request, final int arg1, final Object arg2) {
-            return false;
+        public void onStopped() {
+            super.onStopped();
+            Log.i(TAG, "onStopped");
+            mIsCapturing = false;
         }
+    };
 
-        private final SurfaceTexture.OnFrameAvailableListener mOnFrameAvailableListener = new SurfaceTexture.OnFrameAvailableListener() {
-            @Override
-            public void onFrameAvailable(final SurfaceTexture surfaceTexture) {
-                if (mIsCapturing) {
-                    synchronized (mSync) {
-                        requestDraw = true;
-                        mSync.notifyAll();
-                    }
-                }
-            }
-        };
-
-        void frameAvailableSoon() {
-            synchronized (mSync) {
-                if (!mIsCapturing || mRequestStop) {
-                    return;
-                }
-                mSync.notifyAll();
-            }
-        }
-
-        private long mLastFrame;
-        private final Runnable mDrawTask = new Runnable() {
-            @Override
-            public void run() {
-                boolean local_request_draw;
-                double min_nano_time = 1e9 / FRAME_RATE;
-                synchronized (mSync) {
-                    local_request_draw = requestDraw;
-
-                    if (!requestDraw) {
-                        try {
-                            mSync.wait(intervals);
-                            local_request_draw = requestDraw;
-                            requestDraw = false;
-                        } catch (final InterruptedException e) {
-                            return;
-                        }
-                    }
-                }
-                if (mIsCapturing) {
-                    if (local_request_draw) {
-                        if (System.nanoTime() - mLastFrame >= min_nano_time) {
-                            mSourceTexture.updateTexImage();
-                            mSourceTexture.getTransformMatrix(mTexMatrix);
-                            mSurfaceTexture.updateTexImage();
-                            mEncoderSurface.makeCurrent();
-                            mDrawer.drawFrame(mTexId, mTexMatrix);
-                            sendImage();
-                            mLastFrame = System.nanoTime();
-                            mEncoderSurface.swapBuffers();
-                            makeCurrent();
-                            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-                            GLES20.glFlush();
-                            frameAvailableSoon();
-                        }
-                    }
-                    queueEvent(this);
-                } else {
-                    releaseSelf();
-                    onStop();
-                }
-            }
-        };
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
+    private void setImageReader() {
+        ImageReader imageReader = ImageReader.newInstance(mWidthScaled, mHeightScaled,
+                PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
+        imageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
+        mVirtualDisplay.setSurface(imageReader.getSurface());
     }
 
-    private void sendImage() {
-        if (mListener != null) {
-            try {
-                mListener.sendFrame(savePixels(), mWidthScaled, mHeightScaled);
-            } catch (final Exception e) {
-                Log.e(TAG, "sendImage exception:", e);
+    private OnImageAvailableListener imageAvailableListener = new OnImageAvailableListener() {
+        double min_nano_time = 1e9 / mFrameRate;
+        long lastFrame;
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onImageAvailable(ImageReader reader) {
+            if (mListener != null && isCapturing()) {
+                try {
+                    long now = System.nanoTime();
+                    Image img = reader.acquireLatestImage();
+                    if (img != null && now - lastFrame >= min_nano_time) {
+                        mListener.sendFrame(savePixels(img), mWidthScaled, mHeightScaled);
+                        lastFrame = now;
+                    } else if (img != null) {
+                        img.close();
+                    }
+                } catch (final Exception e) {
+                    Log.e(TAG, "sendImage exception:", e);
+                }
             }
         }
-    }
+    };
 
-    private byte[] savePixels(){
-        int w = mWidthScaled;
-        int h = mHeightScaled;
-        int b[]= new int[w*h];
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+    private byte[] savePixels(Image image){
+        Image.Plane plane = image.getPlanes()[0];
+        ByteBuffer buffer = plane.getBuffer();
 
-        IntBuffer ib = IntBuffer.wrap(b);
-        ib.position(0);
-        GLES20.glReadPixels(0, 0, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int pixelStride = plane.getPixelStride();
+        int rowPadding = plane.getRowStride() - width * pixelStride;
 
-        for (int r = h - 1; r >= 0; r--) {
-            for (int c = 0; c < w; c++) {
-                int pix = b[r * w + c];
-                bao.write((pix) & 0xff); // red
-                bao.write((pix >> 8) & 0xff); // green
-                bao.write((pix >> 16) & 0xff); // blue
+        ByteArrayOutputStream bao = new ByteArrayOutputStream(width * height * 3);
+
+        int offset = 0;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                bao.write(buffer.get(offset)); // R
+                bao.write(buffer.get(offset + 1)); // G
+                bao.write(buffer.get(offset + 2)); // B
+                offset += pixelStride;
             }
+            offset += rowPadding;
         }
+
+        image.close();
 
         return bao.toByteArray();
-    }
-
-    private float findScaleFactor() {
-        float step = (float) 0.2;
-        for (float i = 1; i < 100; i += step)
-            if ((mWidth / i) * (mHeight / i) * 3 <= TARGET_BIT_RATE)
-                return i;
-        return 1;
     }
 
 //    public interface HyperionEncoderListener {

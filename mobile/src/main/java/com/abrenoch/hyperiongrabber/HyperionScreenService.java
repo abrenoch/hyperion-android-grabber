@@ -27,18 +27,18 @@ public class HyperionScreenService extends Service {
     public static final String ACTION_STOP = BASE + "ACTION_STOP";
     public static final String ACTION_EXIT = BASE + "ACTION_EXIT";
     public static final String GET_STATUS = BASE + "ACTION_STATUS";
-    public static final String ACTION_QUERY_STATUS_RESULT = BASE + "ACTION_QUERY_STATUS_RESULT";
     public static final String EXTRA_RESULT_CODE = BASE + "EXTRA_RESULT_CODE";
-    public static final String EXTRA_QUERY_RESULT_PAUSING = BASE + "EXTRA_QUERY_RESULT_PAUSING";
     private static final int NOTIFICATION_ID = 1;
     private static final int NOTIFICATION_STAT_STOP_INTENT_ID = 2;
     private static final int NOTIFICATION_EXIT_INTENT_ID = 3;
 
+    private boolean OGL_GRABBER = false;
     private MediaProjectionManager mMediaProjectionManager;
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
     private int mFrameRate;
     private HyperionScreenEncoder mHyperionEncoder;
+    private HyperionScreenEncoderOGL mHyperionEncoderOGL;
     private NotificationManager mNotificationManager;
 
     HyperionThreadBroadcaster mReceiver = new HyperionThreadBroadcaster() {
@@ -73,6 +73,7 @@ public class HyperionScreenService extends Service {
         String port = preferences.getString("hyperion_port", null);
         String priority = preferences.getString("hyperion_priority", null);
         String rate = preferences.getString("hyperion_framerate", null);
+        OGL_GRABBER = preferences.getBoolean("ogl_grabber", false);
         if (host == null || port == null) {
             Log.e(TAG, "HOST AND PORT SHOULD NOT BE EMPTY");
             return;
@@ -85,12 +86,12 @@ public class HyperionScreenService extends Service {
         mHyperionThread.start();
     }
 
-    private void updateStatus() {
-        final Intent result = new Intent();
-        result.setAction(ACTION_QUERY_STATUS_RESULT);
-        result.putExtra(EXTRA_QUERY_RESULT_PAUSING, false);
-        sendBroadcast(result);
-    }
+//    private void updateStatus() {
+//        final Intent result = new Intent();
+//        result.setAction(ACTION_QUERY_STATUS_RESULT);
+//        result.putExtra(EXTRA_QUERY_RESULT_PAUSING, false);
+//        sendBroadcast(result);
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -134,7 +135,7 @@ public class HyperionScreenService extends Service {
     private Intent buildStopStartButtons() {
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
+        if (isCapturing()) {
             notificationIntent.setAction(ACTION_EXIT);
         } else {
             notificationIntent.setAction(ACTION_START);
@@ -153,7 +154,7 @@ public class HyperionScreenService extends Service {
         HyperionNotification notification = new HyperionNotification(this, mNotificationManager);
         String label = "START GRABBER";
         String label2 = "EXIT";
-        if (mHyperionEncoder != null && mHyperionEncoder.isCapturing()) {
+        if (isCapturing()) {
             label = "STOP GRABBER";
         }
         notification.setAction(NOTIFICATION_STAT_STOP_INTENT_ID, label, buildStopStartButtons());
@@ -171,20 +172,31 @@ public class HyperionScreenService extends Service {
             final int density = metrics.densityDpi;
             _mediaProjection = projection;
             if (DEBUG) Log.v(TAG, "startRecording:");
-            mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
-                    projection, metrics.widthPixels, metrics.heightPixels,
-                    density, mFrameRate);
+            if (OGL_GRABBER) {
+                mHyperionEncoderOGL = new HyperionScreenEncoderOGL(mHyperionThread.getReceiver(),
+                        projection, metrics.widthPixels, metrics.heightPixels,
+                        density, mFrameRate);
+                mHyperionEncoder = null;
+            } else {
+                mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
+                        projection, metrics.widthPixels, metrics.heightPixels,
+                        density, mFrameRate);
+                mHyperionEncoderOGL = null;
+            }
         }
     }
 
     private void stopScreenRecord() {
         if (DEBUG) Log.v(TAG, "stopScreenRecord");
         mNotificationManager.cancel(NOTIFICATION_ID);
-        if (mHyperionEncoder != null) {
+        if (currentEncoder() != null) {
             if (DEBUG) Log.v(TAG, "stopScreenRecord:stopping encoder");
-            mHyperionEncoder.stopRecording();
+            currentEncoder().stopRecording();
         }
         releaseResource();
+        if (mHyperionThread != null) {
+            mHyperionThread.interrupt();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -195,10 +207,23 @@ public class HyperionScreenService extends Service {
         }
     }
 
+    HyperionScreenEncoderBase currentEncoder() {
+        if (mHyperionEncoder != null) {
+            return mHyperionEncoder;
+        } else if (mHyperionEncoderOGL != null) {
+            return mHyperionEncoderOGL;
+        }
+        return null;
+    }
+
+    boolean isCapturing() {
+        return currentEncoder() != null && currentEncoder().isCapturing();
+    }
+
+
     private void notifyActivity() {
         Intent intent = new Intent(MainActivity.BROADCAST_FILTER);
-        intent.putExtra(MainActivity.BROADCAST_TAG,
-                mHyperionEncoder != null && mHyperionEncoder.isCapturing());
+        intent.putExtra(MainActivity.BROADCAST_TAG, isCapturing());
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
