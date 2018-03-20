@@ -21,10 +21,14 @@
     <string name="pref_title_priority">Message Priority</string>
     <string name="pref_summary_priority">Message priority channel to use</string>
     <string name="pref_default_priority">50</string>
-
+    <string name="pref_summary_boot">Start screen grabber when android boots</string>
+    <string name="pref_title_boot">Grab on Boot</string>
     <string name="pref_title_framerate">Capture Rate</string>
     <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
     <string name="pref_default_framerate">30</string>
+    <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
+    <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
+
     <string-array name="pref_list_framerate">
         <item>10 fps</item>
         <item>15 fps</item>
@@ -41,7 +45,6 @@
     </string-array>
 
     <string name="settings">Settings</string>
-
 
     <string name="toast_must_give_permission">Permission must be granted to record screen data.</string>
 </resources>

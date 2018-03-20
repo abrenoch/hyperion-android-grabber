@@ -43,4 +43,16 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_framerate" />
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="start_on_boot"
+        android:title="@string/pref_title_boot"
+        android:summary="@string/pref_summary_boot" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="ogl_grabber"
+        android:title="@string/pref_title_ogl_grabber"
+        android:summary="@string/pref_summary_ogl_grabber" />
+
 </PreferenceScreen>
