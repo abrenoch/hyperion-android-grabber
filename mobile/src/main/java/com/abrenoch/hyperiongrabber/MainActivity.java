@@ -16,23 +16,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener {
-    private static final int REQUEST_MEDIA_PROJECTION = 1;
+    public static final int REQUEST_MEDIA_PROJECTION = 1;
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
     private static final String TAG = "DEBUG";
     private Switch mSwitch;
     private boolean mRecorderRunning = false;
-    private MediaProjectionManager mMediaProjectionManager;
+    private static MediaProjectionManager mMediaProjectionManager;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mSwitch.setChecked(intent.getBooleanExtra(BROADCAST_TAG, false));
+            boolean checked = intent.getBooleanExtra(BROADCAST_TAG, false);
+            mSwitch.setChecked(checked);
+            setImageViews(checked);
         }
     };
 
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
         } else {
             stopScreenRecorder();
         }
+        setImageViews(isChecked);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -71,10 +76,11 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
                     stopScreenRecorder();
                 }
                 mSwitch.setChecked(false);
+                setImageViews(false);
                 return;
             }
             Log.i(TAG, "Starting screen capture");
-            startScreenRecorder(resultCode, data);
+            startScreenRecorder(resultCode, (Intent) data.clone());
             mRecorderRunning = true;
         }
     }
@@ -106,9 +112,17 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
         }
     }
 
-    public void makeToast(String text) {
-        Toast.makeText(this, text,
-                Toast.LENGTH_LONG).show();
+
+    private void setImageViews(boolean running) {
+        FadingImageView bottomImage = findViewById(R.id.imageView_lights);
+        ImageView buttonImage = findViewById(R.id.imageView_button);
+        if (running) {
+            buttonImage.setAlpha((float) 1);
+            bottomImage.setVisibility(View.VISIBLE);
+        } else {
+            buttonImage.setAlpha((float) 0.25);
+            bottomImage.setVisibility(View.GONE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -117,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
         intent.setAction(HyperionScreenService.ACTION_START);
         intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
         intent.putExtras(data);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
         } else {
