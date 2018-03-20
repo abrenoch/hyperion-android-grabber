@@ -18,6 +18,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.Objects;
+
 public class HyperionScreenService extends Service {
     private static final boolean DEBUG = false;
     private static final String TAG = "HyperionScreenService";
@@ -40,6 +42,7 @@ public class HyperionScreenService extends Service {
     private HyperionScreenEncoder mHyperionEncoder;
     private HyperionScreenEncoderOGL mHyperionEncoderOGL;
     private NotificationManager mNotificationManager;
+    private String mStartError = null;
 
     HyperionThreadBroadcaster mReceiver = new HyperionThreadBroadcaster() {
         @Override
@@ -66,24 +69,27 @@ public class HyperionScreenService extends Service {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void prepare() {
-        if (DEBUG) Log.v(TAG, "prepare::");
+    private boolean prepared() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String host = preferences.getString("hyperion_host", null);
         String port = preferences.getString("hyperion_port", null);
-        String priority = preferences.getString("hyperion_priority", null);
-        String rate = preferences.getString("hyperion_framerate", null);
+        String priority = preferences.getString("hyperion_priority", "50");
+        String rate = preferences.getString("hyperion_framerate", "30");
         OGL_GRABBER = preferences.getBoolean("ogl_grabber", false);
-        if (host == null || port == null) {
-            Log.e(TAG, "HOST AND PORT SHOULD NOT BE EMPTY");
-            return;
+        if (host == null || Objects.equals(host, "0.0.0.0") || Objects.equals(host, "")) {
+            mStartError = getResources().getString(R.string.error_empty_host);
+            return false;
         }
-        if (rate == null) rate = "30";
-        if (priority == null) priority = "50";
+        if (port == null || Objects.equals(port, "")) {
+            mStartError = getResources().getString(R.string.error_empty_port);
+            return false;
+        }
         mFrameRate = Integer.parseInt(rate);
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority));
         mHyperionThread.start();
+        mStartError = null;
+        return true;
     }
 
 //    private void updateStatus() {
@@ -103,10 +109,14 @@ public class HyperionScreenService extends Service {
             switch (action) {
                 case ACTION_START:
                     if (mHyperionThread == null) {
-                        prepare();
-                        startScreenRecord(intent);
-                        notifyActivity();
-                        startForeground(NOTIFICATION_ID, getNotification());
+                        boolean prepd = prepared();
+                        if (prepd) {
+                            startScreenRecord(intent);
+                            notifyActivity();
+                            startForeground(NOTIFICATION_ID, getNotification());
+                        } else {
+                            notifyActivity();
+                        }
                     }
                     break;
                 case ACTION_STOP:
@@ -220,10 +230,10 @@ public class HyperionScreenService extends Service {
         return currentEncoder() != null && currentEncoder().isCapturing();
     }
 
-
     private void notifyActivity() {
         Intent intent = new Intent(MainActivity.BROADCAST_FILTER);
         intent.putExtra(MainActivity.BROADCAST_TAG, isCapturing());
+        intent.putExtra(MainActivity.BROADCAST_ERROR, mStartError);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 

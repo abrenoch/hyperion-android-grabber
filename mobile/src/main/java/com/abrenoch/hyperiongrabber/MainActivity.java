@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
+    public static final String BROADCAST_ERROR = "SERVICE_ERROR";
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
     private static final String TAG = "DEBUG";
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean checked = intent.getBooleanExtra(BROADCAST_TAG, false);
+            String error = intent.getStringExtra(BROADCAST_ERROR);
+            if (error != null) {
+                Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+            }
             mSwitch.setChecked(checked);
             setImageViews(checked);
         }
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
         } else {
             stopScreenRecorder();
         }
-        setImageViews(isChecked);
+        // setImageViews(isChecked);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -111,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
             startService(intent);
         }
     }
-
 
     private void setImageViews(boolean running) {
         FadingImageView bottomImage = findViewById(R.id.imageView_lights);
