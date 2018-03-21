@@ -8,7 +8,7 @@
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
     <application
-        android:versionCode="1"
+        android:versionCode="2"
         android:versionName="ALPHA 2"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
