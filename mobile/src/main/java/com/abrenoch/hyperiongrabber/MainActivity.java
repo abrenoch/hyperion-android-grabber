@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -17,18 +18,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements ImageView.OnClickListener,
+        ImageView.OnFocusChangeListener {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
     public static final String BROADCAST_ERROR = "SERVICE_ERROR";
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
     private static final String TAG = "DEBUG";
-    private Switch mSwitch;
     private boolean mRecorderRunning = false;
     private static MediaProjectionManager mMediaProjectionManager;
 
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
             }
-            mSwitch.setChecked(checked);
             setImageViews(checked);
         }
     };
@@ -50,10 +48,15 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSwitch = findViewById(R.id.toggle);
-        mSwitch.setOnCheckedChangeListener(this);
         mMediaProjectionManager = (MediaProjectionManager)
                                         getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+
+        ImageView iv = findViewById(R.id.imageView_button);
+        iv.setOnClickListener(this);
+        iv.setOnFocusChangeListener(this);
+        iv.setFocusable(true);
+        iv.requestFocus();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
         checkForInstance();
@@ -61,14 +64,23 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (isChecked) {
+    public void onClick(View view) {
+        if (!mRecorderRunning) {
             startActivityForResult(mMediaProjectionManager.createScreenCaptureIntent(),
-                                        REQUEST_MEDIA_PROJECTION);
+                    REQUEST_MEDIA_PROJECTION);
         } else {
             stopScreenRecorder();
         }
-        // setImageViews(isChecked);
+        mRecorderRunning = !mRecorderRunning;
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean focused) {
+        if (focused) {
+            ((ImageView) view).setColorFilter(Color.argb(255, 0, 0, 150));
+        } else {
+            ((ImageView) view).setColorFilter(Color.argb(255, 0, 0, 0));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -80,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
                 if (mRecorderRunning) {
                     stopScreenRecorder();
                 }
-                mSwitch.setChecked(false);
                 setImageViews(false);
                 return;
             }
@@ -125,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements Switch.OnCheckedC
             bottomImage.setVisibility(View.VISIBLE);
         } else {
             buttonImage.setAlpha((float) 0.25);
-            bottomImage.setVisibility(View.GONE);
+            bottomImage.setVisibility(View.INVISIBLE);
         }
     }
 
