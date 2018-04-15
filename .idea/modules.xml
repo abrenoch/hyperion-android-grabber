@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HyperionGrabber.iml" filepath="$PROJECT_DIR$/HyperionGrabber.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hyperion-android-grabber.iml" filepath="$PROJECT_DIR$/hyperion-android-grabber.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/tv/tv.iml" filepath="$PROJECT_DIR$/tv/tv.iml" />
     </modules>
