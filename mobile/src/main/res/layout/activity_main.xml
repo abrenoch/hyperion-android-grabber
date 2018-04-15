@@ -28,7 +28,6 @@
             app:srcCompat="@drawable/ic_toggle_image_bottom" />
 
         <ImageView
-            android:id="@+id/imageView_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
