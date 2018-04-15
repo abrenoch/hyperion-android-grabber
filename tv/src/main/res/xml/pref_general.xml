@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_host"
+        android:inputType="textCapWords"
+        android:key="hyperion_host"
+        android:summary="@string/pref_summary_host"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_host" />
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_port"
+        android:hint="@string/pref_default_port"
+        android:maxLines="1"
+        android:key="hyperion_port"
+        android:summary="@string/pref_summary_port"
+        android:numeric="integer"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_port" />
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_priority"
+        android:hint="@string/pref_default_priority"
+        android:maxLines="1"
+        android:key="hyperion_priority"
+        android:summary="@string/pref_summary_priority"
+        android:numeric="integer"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_priority" />
+
+    <ListPreference
+        android:defaultValue="@string/pref_default_framerate"
+        android:entries="@array/pref_list_framerate"
+        android:entryValues="@array/pref_list_framerate_values"
+        android:key="hyperion_framerate"
+        android:summary="@string/pref_summary_framerate"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_framerate" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:enabled="false"
+        android:key="start_on_boot"
+        android:title="@string/pref_title_boot"
+        android:summary="@string/pref_summary_boot" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="ogl_grabber"
+        android:title="@string/pref_title_ogl_grabber"
+        android:summary="@string/pref_summary_ogl_grabber" />
+
+</PreferenceScreen>

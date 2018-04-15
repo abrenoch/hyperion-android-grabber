@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">Hyperion Grabber</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <string name="pref_title_host">Hyperion Host</string>
+    <string name="pref_summary_host">Host your hyperion instance is running on</string>
+    <string name="pref_default_host">0.0.0.0</string>
+    <string name="pref_title_port">Hyperion Protobuf Port</string>
+    <string name="pref_summary_port">The protobuf port of your hyperion instance</string>
+    <string name="pref_default_port">19445</string>
+    <string name="pref_title_priority">Message Priority</string>
+    <string name="pref_summary_priority">Message priority channel to use</string>
+    <string name="pref_default_priority">50</string>
+    <string name="pref_summary_boot">Start screen grabber when android boots</string>
+    <string name="pref_title_boot">Grab on Boot</string>
+    <string name="pref_title_framerate">Capture Rate</string>
+    <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
+    <string name="pref_default_framerate">30</string>
+    <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
+    <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
+
+    <string-array name="pref_list_framerate">
+        <item>10 fps</item>
+        <item>15 fps</item>
+        <item>24 fps</item>
+        <item>30 fps</item>
+        <item>60 fps</item>
+    </string-array>
+    <string-array name="pref_list_framerate_values">
+        <item>10</item>
+        <item>15</item>
+        <item>24</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+
+    <string name="error_empty_host">Host setting should not be empty</string>
+    <string name="error_empty_port">Port setting should not be empty</string>
+
+    <string name="toast_must_give_permission">Permission must be granted to record screen data.</string>
 </resources>
