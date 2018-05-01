@@ -35,6 +35,7 @@ public class HyperionScreenService extends Service {
     private static final int NOTIFICATION_EXIT_INTENT_ID = 3;
 
     private boolean OGL_GRABBER = false;
+    private boolean RECONNECT = false;
     private MediaProjectionManager mMediaProjectionManager;
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
@@ -54,6 +55,7 @@ public class HyperionScreenService extends Service {
         public void onConnectionError(int errorID, String error) {
             Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e("ERROR", error);
+            if (RECONNECT == true) Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
         }
 
 //        @Override
@@ -76,6 +78,8 @@ public class HyperionScreenService extends Service {
         String priority = preferences.getString("hyperion_priority", "50");
         String rate = preferences.getString("hyperion_framerate", "30");
         OGL_GRABBER = preferences.getBoolean("ogl_grabber", false);
+        RECONNECT = preferences.getBoolean("reconnect", false);
+        String delay = preferences.getString("delay", "5000");
         if (host == null || Objects.equals(host, "0.0.0.0") || Objects.equals(host, "")) {
             mStartError = getResources().getString(R.string.error_empty_host);
             return false;
@@ -86,7 +90,7 @@ public class HyperionScreenService extends Service {
         }
         mFrameRate = Integer.parseInt(rate);
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority));
+        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority), RECONNECT,  Integer.parseInt(delay));
         mHyperionThread.start();
         mStartError = null;
         return true;
