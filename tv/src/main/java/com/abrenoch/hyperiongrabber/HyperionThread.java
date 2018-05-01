@@ -10,6 +10,8 @@ class HyperionThread extends Thread {
     private int PORT;
     private int PRIORITY;
     private final int FRAME_DURATION = -1;
+    private boolean RECONNECT = false;
+    private int RECONNECT_DELAY = 5000;
     private Hyperion mHyperion;
 
     HyperionScreenService.HyperionThreadBroadcaster mSender;
@@ -53,10 +55,12 @@ class HyperionThread extends Thread {
     };
 
     HyperionThread(HyperionScreenService.HyperionThreadBroadcaster listener, final String host,
-                   final int port, final int priority){
+                   final int port, final int priority, final boolean reconnect, final int delay){
         HOST = host;
         PORT = port;
         PRIORITY = priority;
+        RECONNECT = reconnect;
+        RECONNECT_DELAY = delay;
         mSender = listener;
     }
 
@@ -64,16 +68,22 @@ class HyperionThread extends Thread {
 
     @Override
     public void run(){
-        try {
-            mHyperion = new Hyperion(HOST, PORT);
-        } catch (IOException e) {
-            mSender.onConnectionError(e.hashCode(), e.getMessage());
-            e.printStackTrace();
-        } finally {
-            if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
-                mSender.onConnected();
+        do {
+            try {
+                mHyperion = new Hyperion(HOST, PORT);
+                if (RECONNECT) { sleep(RECONNECT_DELAY); };
+            } catch (InterruptedException e) {
+                RECONNECT = false;
+                Thread.currentThread().interrupt();
+            } catch (IOException e) {
+                mSender.onConnectionError(e.hashCode(), e.getMessage());
+                e.printStackTrace();
+            } finally {
+                if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
+                    mSender.onConnected();
+                }
             }
-        }
+        } while (RECONNECT);
     }
 
     public interface HyperionThreadListener {
