@@ -13,8 +13,6 @@
     <string name="pref_title_priority">Message Priority</string>
     <string name="pref_summary_priority">Message priority channel to use</string>
     <string name="pref_default_priority">50</string>
-    <string name="pref_summary_boot">Start screen grabber when android boots</string>
-    <string name="pref_title_boot">Grab on Boot</string>
     <string name="pref_titel_reconnect">Reconnect</string>
     <string name="pref_summary_reconnect">Automatic reconnect to hyperion on lost connection</string>
     <string name="pref_title_reconnect_delay">Reconnect delay</string>
