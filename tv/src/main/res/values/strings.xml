@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">Hyperion Grabber</string>
+    <string name="pref_title">Settings</string>
 
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-
+    <!-- Connection settings -->
+    <string name="pref_group_connection">Connection</string>
     <string name="pref_title_host">Hyperion Host</string>
     <string name="pref_summary_host">Host your hyperion instance is running on</string>
     <string name="pref_default_host">0.0.0.0</string>
@@ -16,11 +15,24 @@
     <string name="pref_default_priority">50</string>
     <string name="pref_summary_boot">Start screen grabber when android boots</string>
     <string name="pref_title_boot">Grab on Boot</string>
+    <string name="pref_titel_reconnect">Reconnect</string>
+    <string name="pref_summary_reconnect">Automatic reconnect to hyperion on lost connection</string>
+    <string name="pref_title_reconnect_delay">Reconnect delay</string>
+    <string name="pref_summary_reconnect_delay">Try reconnect after a certain number of milliseconds</string>
+    <string name="pref_default_reconnect_delay">5000</string>
+
+    <!-- Capturing settings -->
+    <string name="pref_group_capturing">Capturing</string>
     <string name="pref_title_framerate">Capture Rate</string>
     <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
     <string name="pref_default_framerate">30</string>
     <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
     <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
+
+    <!-- General settings -->
+    <string name="pref_group_general">General</string>
+    <string name="pref_summary_boot">Start screen grabber when android boots</string>
+    <string name="pref_title_boot">Grab on Boot</string>
 
     <string-array name="pref_list_framerate">
         <item>10 fps</item>
