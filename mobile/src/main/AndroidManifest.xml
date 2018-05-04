@@ -8,11 +8,11 @@
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
     <uses-feature
-        android:name="android.hardware.microphone"
-        android:required="false" />
+        android:name="android.hardware.touchscreen"
+        android:required="true" />
 
     <application
-        android:versionCode="2"
+        android:versionCode="1002"
         android:versionName="ALPHA 2"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
