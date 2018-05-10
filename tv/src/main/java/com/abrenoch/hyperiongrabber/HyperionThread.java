@@ -11,7 +11,7 @@ class HyperionThread extends Thread {
     private int PRIORITY;
     private final int FRAME_DURATION = -1;
     private boolean RECONNECT = false;
-    private int RECONNECT_DELAY = 5000;
+    private int RECONNECT_DELAY;
     private Hyperion mHyperion;
 
     HyperionScreenService.HyperionThreadBroadcaster mSender;
@@ -26,6 +26,14 @@ class HyperionThread extends Thread {
                 } catch (IOException e) {
                     mSender.onConnectionError(e.hashCode(), e.getMessage());
                     e.printStackTrace();
+                    if (RECONNECT) {
+                        reconnectDelay(RECONNECT_DELAY);
+                        try {
+                            mHyperion = new Hyperion(HOST, PORT);
+                        } catch (IOException i) {
+                            i.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -60,7 +68,7 @@ class HyperionThread extends Thread {
         PORT = port;
         PRIORITY = priority;
         RECONNECT = reconnect;
-        RECONNECT_DELAY = delay;
+        RECONNECT_DELAY = delay * 1000;
         mSender = listener;
     }
 
@@ -71,16 +79,16 @@ class HyperionThread extends Thread {
         do {
             try {
                 mHyperion = new Hyperion(HOST, PORT);
-                if (RECONNECT) { sleep(RECONNECT_DELAY); };
-            } catch (InterruptedException e) {
-                RECONNECT = false;
-                Thread.currentThread().interrupt();
             } catch (IOException e) {
                 mSender.onConnectionError(e.hashCode(), e.getMessage());
                 e.printStackTrace();
+                if (RECONNECT) {
+                    reconnectDelay(RECONNECT_DELAY);
+                }
             } finally {
                 if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
                     mSender.onConnected();
+                    break;
                 }
             }
         } while (RECONNECT);
