@@ -15,9 +15,9 @@
     <string name="pref_default_priority">50</string>
     <string name="pref_titel_reconnect">Reconnect</string>
     <string name="pref_summary_reconnect">Automatic reconnect to hyperion on lost connection</string>
-    <string name="pref_title_reconnect_delay">Reconnect delay</string>
-    <string name="pref_summary_reconnect_delay">Try reconnect after a certain number of milliseconds</string>
-    <string name="pref_default_reconnect_delay">5000</string>
+    <string name="pref_title_reconnect_delay">Reconnect Delay</string>
+    <string name="pref_summary_reconnect_delay">The number of seconds to wait before trying to reconnect</string>
+    <string name="pref_default_reconnect_delay">5</string>
 
     <!-- Capturing settings -->
     <string name="pref_group_capturing">Capturing</string>
