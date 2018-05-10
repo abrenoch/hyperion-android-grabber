@@ -93,6 +93,15 @@ class HyperionThread extends Thread {
             }
         } while (RECONNECT);
     }
+    
+    public void reconnectDelay(long t) {
+    try {
+        Thread.sleep(t);
+        } catch (InterruptedException e) {
+            RECONNECT = false;
+            Thread.currentThread().interrupt();
+        }
+    }
 
     public interface HyperionThreadListener {
         void sendFrame(byte[] data, int width, int height);
