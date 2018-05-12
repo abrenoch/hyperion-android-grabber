@@ -16,8 +16,8 @@
         android:required="true" />
 
     <application
-        android:versionCode="2003"
-        android:versionName="ALPHA 2"
+        android:versionCode="2004"
+        android:versionName="ALPHA 3"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
