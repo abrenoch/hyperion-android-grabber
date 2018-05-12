@@ -1,48 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/pref_title">
 
-    <EditTextPreference
-        android:capitalize="words"
-        android:defaultValue="@string/pref_default_host"
-        android:inputType="textCapWords"
-        android:key="hyperion_host"
-        android:summary="@string/pref_summary_host"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_title_host" />
+    <PreferenceCategory
+        android:title="@string/pref_group_connection">
 
-    <EditTextPreference
-        android:defaultValue="@string/pref_default_port"
-        android:hint="@string/pref_default_port"
-        android:maxLines="1"
-        android:key="hyperion_port"
-        android:summary="@string/pref_summary_port"
-        android:numeric="integer"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_title_port" />
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="@string/pref_default_host"
+            android:inputType="textCapWords"
+            android:key="hyperion_host"
+            android:summary="@string/pref_summary_host"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_host" />
 
-    <EditTextPreference
-        android:defaultValue="@string/pref_default_priority"
-        android:hint="@string/pref_default_priority"
-        android:maxLines="1"
-        android:key="hyperion_priority"
-        android:summary="@string/pref_summary_priority"
-        android:numeric="integer"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_title_priority" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_port"
+            android:hint="@string/pref_default_port"
+            android:maxLines="1"
+            android:key="hyperion_port"
+            android:summary="@string/pref_summary_port"
+            android:numeric="integer"
+            android:inputType="phone"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_port" />
 
-    <ListPreference
-        android:defaultValue="@string/pref_default_framerate"
-        android:entries="@array/pref_list_framerate"
-        android:entryValues="@array/pref_list_framerate_values"
-        android:key="hyperion_framerate"
-        android:summary="@string/pref_summary_framerate"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_framerate" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_priority"
+            android:hint="@string/pref_default_priority"
+            android:maxLines="1"
+            android:key="hyperion_priority"
+            android:summary="@string/pref_summary_priority"
+            android:numeric="integer"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_priority" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="reconnect"
+            android:summary="@string/pref_summary_reconnect"
+            android:title="@string/pref_titel_reconnect" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_reconnect_delay"
+            android:dependency="reconnect"
+            android:hint="@string/pref_default_reconnect_delay"
+            android:key="delay"
+            android:maxLines="1"
+            android:numeric="integer"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_summary_reconnect_delay"
+            android:title="@string/pref_title_reconnect_delay" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_group_capturing">
+
+        <ListPreference
+            android:defaultValue="@string/pref_default_framerate"
+            android:entries="@array/pref_list_framerate"
+            android:entryValues="@array/pref_list_framerate_values"
+            android:key="hyperion_framerate"
+            android:summary="@string/pref_summary_framerate"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_framerate" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="ogl_grabber"
+            android:title="@string/pref_title_ogl_grabber"
+            android:summary="@string/pref_summary_ogl_grabber" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_group_general">
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -51,10 +91,6 @@
         android:title="@string/pref_title_boot"
         android:summary="@string/pref_summary_boot" />
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="ogl_grabber"
-        android:title="@string/pref_title_ogl_grabber"
-        android:summary="@string/pref_summary_ogl_grabber" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
