@@ -1,3 +1,9 @@
+## [v0.3-alpha]
+### Changes
+- Leanback launcher support (tv build)
+- Revised layout (tv build)
+- Reconnect if connection is lost to hyperion server (tv build)
+
 ## [v0.2-alpha]
 ### Changes
 - App Icon
