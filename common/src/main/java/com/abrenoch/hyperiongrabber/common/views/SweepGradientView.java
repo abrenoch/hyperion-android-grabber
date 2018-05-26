@@ -7,8 +7,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.SweepGradient;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.RotateDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,8 +18,8 @@ import android.view.View;
 public class SweepGradientView extends View{
 
     Paint paint;
-    final int[] colors = {Color.RED, Color.GREEN};
-    final float[] positions = {0f, 1f};
+    final int[] colors = {Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED};
+    final float[] positions = {0f, 1/6f, 2/6f, 3/6f, 4/6f, 5/6f, 6/6f};
 
     SweepGradient gradient;
 
