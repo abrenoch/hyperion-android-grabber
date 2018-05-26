@@ -7,6 +7,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.SweepGradient;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RotateDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,8 +29,7 @@ public class SweepGradientView extends View{
 
     Matrix gradientMatrix = new Matrix();
 
-    float rotate = 100f;
-
+    float rotate = 0f;
 
     public SweepGradientView(Context context) {
         this(context, null);
@@ -42,7 +43,6 @@ public class SweepGradientView extends View{
         super(context, attrs, defStyleAttr);
 
         paint = new Paint();
-
         paint.setShader(gradient);
     }
 
@@ -50,17 +50,14 @@ public class SweepGradientView extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
 
-        gradientMatrix.setRotate(rotate +=1f);
+        gradientMatrix.postRotate(rotate++, viewBounds.width()/2, viewBounds.height()/2);
         gradient.setLocalMatrix(gradientMatrix);
 
         paint.setShader(gradient);
-        canvas.drawRect(viewBounds,paint);
+        canvas.drawRect(viewBounds, paint);
+        gradientMatrix.reset();
         invalidate();
-
-
-
 
     }
 
@@ -68,9 +65,7 @@ public class SweepGradientView extends View{
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         viewBounds.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
-        gradient = new SweepGradient(viewBounds.centerX(), viewBounds.centerY(), colors, positions);
-        gradient.setLocalMatrix(gradientMatrix);
-        paint.setShader(gradient);
 
+        gradient = new SweepGradient(viewBounds.centerX(), viewBounds.centerY(), colors, positions);
     }
 }
