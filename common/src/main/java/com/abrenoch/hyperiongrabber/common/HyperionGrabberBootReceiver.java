@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.common;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;

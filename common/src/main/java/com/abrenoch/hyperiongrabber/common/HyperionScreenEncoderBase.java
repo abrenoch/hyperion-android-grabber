@@ -1,8 +1,10 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.common;
 
 import android.media.projection.MediaProjection;
 import android.os.Handler;
 import android.os.HandlerThread;
+
+import com.abrenoch.hyperiongrabber.common.HyperionThread;
 
 public class HyperionScreenEncoderBase {
     private static final String TAG = "HyperionScreenEncoderBase";

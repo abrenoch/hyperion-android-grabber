@@ -1,7 +1,8 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.common;
 
 import android.graphics.Color;
 
+import com.abrenoch.hyperiongrabber.common.Hyperion;
 import com.example.android.screencapture.HyperionProto;
 import java.io.IOException;
 
@@ -10,6 +11,8 @@ class HyperionThread extends Thread {
     private int PORT;
     private int PRIORITY;
     private final int FRAME_DURATION = -1;
+    private boolean RECONNECT = false;
+    private int RECONNECT_DELAY;
     private Hyperion mHyperion;
 
     HyperionScreenService.HyperionThreadBroadcaster mSender;
@@ -24,6 +27,14 @@ class HyperionThread extends Thread {
                 } catch (IOException e) {
                     mSender.onConnectionError(e.hashCode(), e.getMessage());
                     e.printStackTrace();
+                    if (RECONNECT) {
+                        reconnectDelay(RECONNECT_DELAY);
+                        try {
+                            mHyperion = new Hyperion(HOST, PORT);
+                        } catch (IOException i) {
+                            i.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -53,10 +64,12 @@ class HyperionThread extends Thread {
     };
 
     HyperionThread(HyperionScreenService.HyperionThreadBroadcaster listener, final String host,
-                   final int port, final int priority){
+                   final int port, final int priority, final boolean reconnect, final int delay){
         HOST = host;
         PORT = port;
         PRIORITY = priority;
+        RECONNECT = reconnect;
+        RECONNECT_DELAY = delay * 1000;
         mSender = listener;
     }
 
@@ -64,15 +77,30 @@ class HyperionThread extends Thread {
 
     @Override
     public void run(){
-        try {
-            mHyperion = new Hyperion(HOST, PORT);
-        } catch (IOException e) {
-            mSender.onConnectionError(e.hashCode(), e.getMessage());
-            e.printStackTrace();
-        } finally {
-            if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
-                mSender.onConnected();
+        do {
+            try {
+                mHyperion = new Hyperion(HOST, PORT);
+            } catch (IOException e) {
+                mSender.onConnectionError(e.hashCode(), e.getMessage());
+                e.printStackTrace();
+                if (RECONNECT) {
+                    reconnectDelay(RECONNECT_DELAY);
+                }
+            } finally {
+                if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
+                    mSender.onConnected();
+                    break;
+                }
             }
+        } while (RECONNECT);
+    }
+    
+    public void reconnectDelay(long t) {
+    try {
+        Thread.sleep(t);
+        } catch (InterruptedException e) {
+            RECONNECT = false;
+            Thread.currentThread().interrupt();
         }
     }
 

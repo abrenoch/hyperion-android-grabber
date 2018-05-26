@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.common;
 
 import com.example.android.screencapture.HyperionProto.ClearRequest;
 import com.example.android.screencapture.HyperionProto.ColorRequest;

@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.mobile;
 
 import android.annotation.TargetApi;
 import android.content.Intent;

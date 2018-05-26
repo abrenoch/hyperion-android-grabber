@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.protobuf'
+
+apply from: project(':common').projectDir.absolutePath + '/variables.gradle'
+
 
 buildscript {
     repositories {
@@ -20,14 +22,10 @@ repositories {
     }
 }
 
-sourceSets {
-    main.java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/java"
-}
-
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.abrenoch.hyperiongrabber"
+        applicationId "com.abrenoch.hyperiongrabber.tv"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 2004
@@ -45,43 +43,12 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:support-vector-drawable:26.1.0'
-    implementation 'com.android.support:leanback-v17:26.1.0'
-    implementation 'com.android.support:preference-leanback-v17:26.1.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
     implementation project(path: ':common')
 
-}
+    implementation 'com.android.support:appcompat-v7:26.1.0'
 
-protobuf {
-    protoc {
-        // You still need protoc like in the non-Android case
-        artifact = 'com.google.protobuf:protoc:3.0.0'
-    }
-    plugins {
-        javalite {
-            // The codegen for lite comes as a separate artifact
-            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
-        }
-    }
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                // In most cases you don't need the full Java output
-                // if you use the lite output.
-                remove java
-            }
-            task.plugins {
-                javalite {}
-            }
-        }
-    }
+
+    implementation 'com.android.support:leanback-v17:26.1.0'
+    implementation 'com.android.support:preference-leanback-v17:26.1.0'
 }

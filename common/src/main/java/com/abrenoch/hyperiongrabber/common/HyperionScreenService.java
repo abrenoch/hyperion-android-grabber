@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.common;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -18,9 +18,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.abrenoch.hyperiongrabber.common.HyperionThread;
+
 import java.util.Objects;
 
 public class HyperionScreenService extends Service {
+    public static final String BROADCAST_ERROR = "SERVICE_ERROR";
+    public static final String BROADCAST_TAG = "SERVICE_STATUS";
+    public static final String BROADCAST_FILTER = "SERVICE_FILTER";
     private static final boolean DEBUG = false;
     private static final String TAG = "HyperionScreenService";
 
@@ -235,9 +240,9 @@ public class HyperionScreenService extends Service {
     }
 
     private void notifyActivity() {
-        Intent intent = new Intent(MainActivity.BROADCAST_FILTER);
-        intent.putExtra(MainActivity.BROADCAST_TAG, isCapturing());
-        intent.putExtra(MainActivity.BROADCAST_ERROR, mStartError);
+        Intent intent = new Intent(BROADCAST_FILTER);
+        intent.putExtra(BROADCAST_TAG, isCapturing());
+        intent.putExtra(BROADCAST_ERROR, mStartError);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 

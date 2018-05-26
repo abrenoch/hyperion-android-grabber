@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.mobile;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -21,12 +21,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.mobile.R;
+
 public class MainActivity extends AppCompatActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
-    public static final String BROADCAST_ERROR = "SERVICE_ERROR";
-    public static final String BROADCAST_TAG = "SERVICE_STATUS";
-    public static final String BROADCAST_FILTER = "SERVICE_FILTER";
     private static final String TAG = "DEBUG";
     private boolean mRecorderRunning = false;
     private static MediaProjectionManager mMediaProjectionManager;
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            boolean checked = intent.getBooleanExtra(BROADCAST_TAG, false);
-            String error = intent.getStringExtra(BROADCAST_ERROR);
+            boolean checked = intent.getBooleanExtra(HyperionScreenService.BROADCAST_TAG, false);
+            String error = intent.getStringExtra(HyperionScreenService.BROADCAST_ERROR);
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
             }
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         iv.requestFocus();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
+                mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
         checkForInstance();
     }
 

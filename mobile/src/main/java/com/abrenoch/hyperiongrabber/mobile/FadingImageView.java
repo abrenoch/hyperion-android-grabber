@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.mobile;
 
 import android.content.Context;
 import android.content.res.Resources;

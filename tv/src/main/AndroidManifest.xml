@@ -37,16 +37,7 @@
             android:name=".SettingsActivity"
             android:exported="true"
             android:theme="@style/LeanbackPreferences" />
-        <service android:name=".HyperionScreenService"
-            android:launchMode="singleTask"
-            android:exported="false" />
-        <receiver
-            android:name=".HyperionGrabberBootReceiver"
-            android:label="HyperionGrabberBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+
     </application>
 
 </manifest>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.abrenoch.hyperiongrabber.MainActivity">
 
-    <com.abrenoch.hyperiongrabber.FadingImageView
+    <com.abrenoch.hyperiongrabber.mobile.FadingImageView
         android:id="@+id/imageView_lights"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

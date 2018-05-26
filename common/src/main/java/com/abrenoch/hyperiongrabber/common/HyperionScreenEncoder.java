@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.common;
 
 import android.annotation.TargetApi;
 import android.graphics.PixelFormat;

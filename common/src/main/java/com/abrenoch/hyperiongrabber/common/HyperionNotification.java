@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.common;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

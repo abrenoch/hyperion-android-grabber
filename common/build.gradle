@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
-
 apply plugin: 'com.google.protobuf'
+
+//apply from: project(':common').projectDir.absolutePath + '/variables.gradle'
+
 
 buildscript {
     repositories {
@@ -45,11 +47,9 @@ android {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:support-vector-drawable:26.1.0'
-    implementation 'com.android.support:leanback-v17:26.1.0'
-    implementation 'com.android.support:preference-leanback-v17:26.1.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.protobuf:protobuf-lite:3.0.0'
