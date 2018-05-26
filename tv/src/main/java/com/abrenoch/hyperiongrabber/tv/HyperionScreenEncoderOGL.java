@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber;
+package com.abrenoch.hyperiongrabber.tv;
 
 import android.annotation.TargetApi;
 import android.graphics.SurfaceTexture;
@@ -9,8 +9,6 @@ import android.media.projection.MediaProjection;
 import android.opengl.EGLContext;
 import android.opengl.GLES20;
 import android.os.Build;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Surface;

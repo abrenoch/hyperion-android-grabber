@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/mobile" />
             <option value="$PROJECT_DIR$/tv" />
           </set>
