@@ -52,4 +52,5 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$android_support_version"
     implementation "com.android.support:leanback-v17:$android_support_version"
     implementation "com.android.support:preference-leanback-v17:$android_support_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 }
