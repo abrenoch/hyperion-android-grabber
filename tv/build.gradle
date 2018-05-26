@@ -40,15 +40,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':common')
-
     implementation 'com.android.support:appcompat-v7:26.1.0'
-
-
     implementation 'com.android.support:leanback-v17:26.1.0'
     implementation 'com.android.support:preference-leanback-v17:26.1.0'
 }
