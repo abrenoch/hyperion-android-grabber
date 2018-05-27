@@ -30,7 +30,7 @@ public class NetworkScanner {
     }
 
 
-    /** Scan the local subnet for running Hyperion Servers
+    /** Scan the next ip address in the list of addresses to try
      *
      * @return the hostname (or an ip represented as String) when a Hyperion server was found
      */
@@ -39,7 +39,7 @@ public class NetworkScanner {
     public String tryNext(){
 
         if (!hasNextAttempt()){
-            throw new IllegalStateException("No more ups to try");
+            throw new IllegalStateException("No more ip addresses to try");
         }
 
         Socket socket = new Socket();
@@ -62,6 +62,10 @@ public class NetworkScanner {
 
     }
 
+    /** An indication of how many of the total ip's have been tried
+     *
+     * @return progress in in the range [0.0 .. 1.0]
+     */
     public float getProgress() {
         if (ipsToTry.length == 0){
             return 1f;
@@ -70,6 +74,9 @@ public class NetworkScanner {
         return lastTriedIndex / (float)ipsToTry.length;
     }
 
+    /** True if not all up's have been tried yet
+     *
+     */
     public boolean hasNextAttempt(){
         return ipsToTry.length > 0 && lastTriedIndex + 1 < ipsToTry.length;
     }
