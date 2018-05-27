@@ -1,12 +1,11 @@
-package com.abrenoch.hyperiongrabber.common;
+package com.abrenoch.hyperiongrabber.common.network;
 
-import android.graphics.Color;
-
-import com.abrenoch.hyperiongrabber.common.Hyperion;
+import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
 import com.example.android.screencapture.HyperionProto;
+
 import java.io.IOException;
 
-class HyperionThread extends Thread {
+public class HyperionThread extends Thread {
     private String HOST;
     private int PORT;
     private int PRIORITY;
@@ -63,8 +62,8 @@ class HyperionThread extends Thread {
         }
     };
 
-    HyperionThread(HyperionScreenService.HyperionThreadBroadcaster listener, final String host,
-                   final int port, final int priority, final boolean reconnect, final int delay){
+    public HyperionThread(HyperionScreenService.HyperionThreadBroadcaster listener, final String host,
+                          final int port, final int priority, final boolean reconnect, final int delay){
         HOST = host;
         PORT = port;
         PRIORITY = priority;

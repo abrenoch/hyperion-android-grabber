@@ -4,7 +4,7 @@ import android.media.projection.MediaProjection;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import com.abrenoch.hyperiongrabber.common.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 
 public class HyperionScreenEncoderBase {
     private static final String TAG = "HyperionScreenEncoderBase";
