@@ -59,6 +59,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageView_lights"
         app:layout_constraintTop_toBottomOf="@+id/imageView_lights"
+
         app:srcCompat="@drawable/ic_power_black_72dp" />
 
     <android.support.v7.widget.AppCompatImageButton
@@ -66,8 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0.5"
-        android:background="@android:color/transparent"
-        android:contentDescription="TODO"
+        android:background="@drawable/round_rectangle_background"
         android:focusable="true"
 
         app:layout_constraintBottom_toTopOf="@+id/imageView_lights"
@@ -75,6 +75,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/power_toggle"
         app:layout_constraintTop_toBottomOf="@+id/imageView_lights"
+
         app:srcCompat="@drawable/ic_settings_black_72dp" />
 
 </android.support.constraint.ConstraintLayout>
