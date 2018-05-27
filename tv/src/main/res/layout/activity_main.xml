@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abrenoch.hyperiongrabber.MainActivity">
+    tools:context="com.abrenoch.hyperiongrabber.tv.MainActivity">
 
-    <com.abrenoch.hyperiongrabber.FadingImageView
+    <com.abrenoch.hyperiongrabber.tv.FadingImageView
         android:id="@+id/imageView_lights"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
         app:srcCompat="@drawable/ic_toggle_image_top"
         android:focusable="true" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:focusable="true"
-        android:src="@drawable/ic_settings_black_24dp"
+        app:srcCompat="@drawable/ic_settings_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

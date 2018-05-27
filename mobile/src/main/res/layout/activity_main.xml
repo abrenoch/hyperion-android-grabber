@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abrenoch.hyperiongrabber.MainActivity">
+    tools:context="com.abrenoch.hyperiongrabber.mobile.MainActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.abrenoch.hyperiongrabber.FadingImageView
+        <com.abrenoch.hyperiongrabber.mobile.FadingImageView
             android:id="@+id/imageView_lights"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_toggle_image_bottom" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_toggle_image_middle" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/imageView_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
