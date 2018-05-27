@@ -18,7 +18,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.abrenoch.hyperiongrabber.common.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 
 import java.util.Objects;
 

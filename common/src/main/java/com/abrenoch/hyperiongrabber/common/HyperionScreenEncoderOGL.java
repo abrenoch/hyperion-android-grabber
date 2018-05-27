@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Surface;
 
+import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 import com.abrenoch.hyperiongrabber.common.screencap.EglTask;
 import com.abrenoch.hyperiongrabber.common.screencap.FullFrameRect;
 import com.abrenoch.hyperiongrabber.common.screencap.Texture2dProgram;
