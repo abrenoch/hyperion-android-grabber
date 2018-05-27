@@ -9,24 +9,8 @@
     <com.abrenoch.hyperiongrabber.common.views.SweepGradientView
         android:id="@+id/sweepGradientView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.abrenoch.hyperiongrabber.tv.FadingImageView
-        android:id="@+id/imageView_lights"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_toggle_image_bottom" />
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
@@ -50,15 +34,16 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="12dp"
         android:adjustViewBounds="true"
-        android:alpha="0.25"
         android:clickable="true"
 
         android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/imageView_lights"
+        app:layout_constraintBottom_toTopOf="@+id/sweepGradientView"
         app:layout_constraintEnd_toStartOf="@+id/settingsButton"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView_lights"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_lights"
+        app:layout_constraintStart_toEndOf="@+id/sweepGradientView"
+        app:layout_constraintTop_toBottomOf="@+id/sweepGradientView"
+
+        android:background="@drawable/image_button_background"
 
         app:srcCompat="@drawable/ic_power_black_72dp" />
 
@@ -66,15 +51,14 @@
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.5"
-        android:background="@drawable/round_rectangle_background"
+        android:background="@drawable/image_button_background"
         android:focusable="true"
 
-        app:layout_constraintBottom_toTopOf="@+id/imageView_lights"
-        app:layout_constraintEnd_toStartOf="@+id/imageView_lights"
+        app:layout_constraintBottom_toTopOf="@+id/sweepGradientView"
+        app:layout_constraintEnd_toStartOf="@+id/sweepGradientView"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/power_toggle"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_lights"
+        app:layout_constraintTop_toBottomOf="@+id/sweepGradientView"
 
         app:srcCompat="@drawable/ic_settings_black_72dp" />
 
