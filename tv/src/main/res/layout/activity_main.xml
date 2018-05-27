@@ -7,9 +7,9 @@
     tools:context="com.abrenoch.hyperiongrabber.tv.MainActivity">
 
     <com.abrenoch.hyperiongrabber.common.views.SweepGradientView
+        android:id="@+id/sweepGradientView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
     <com.abrenoch.hyperiongrabber.tv.FadingImageView
         android:id="@+id/imageView_lights"
@@ -44,39 +44,38 @@
         app:srcCompat="@drawable/ic_toggle_image_middle" />
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/imageView_button"
+        android:id="@+id/power_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
         android:adjustViewBounds="true"
         android:alpha="0.25"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_toggle_image_top"
-        android:focusable="true" />
+
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_lights"
+        app:layout_constraintEnd_toStartOf="@+id/settingsButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageView_lights"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_lights"
+        app:srcCompat="@drawable/ic_power_black_72dp" />
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="24dp"
         android:alpha="0.5"
         android:background="@android:color/transparent"
         android:contentDescription="TODO"
-        android:scaleX="2"
-        android:scaleY="2"
         android:focusable="true"
-        app:srcCompat="@drawable/ic_settings_black_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        app:layout_constraintBottom_toTopOf="@+id/imageView_lights"
+        app:layout_constraintEnd_toStartOf="@+id/imageView_lights"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/power_toggle"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_lights"
+        app:srcCompat="@drawable/ic_settings_black_72dp" />
 
 </android.support.constraint.ConstraintLayout>
 
