@@ -8,11 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
-import com.abrenoch.hyperiongrabber.mobile.R;
+import com.abrenoch.hyperiongrabber.common.network.NetworkScanner;
 
 public class MainActivity extends AppCompatActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
         checkForInstance();
+
+        new HyperionScannerTask().execute();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -171,4 +174,39 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         }
         return false;
     }
+
+    private static class HyperionScannerTask extends AsyncTask<Void, Float, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            Log.d("Hyperion scanner", "starting scan");
+            NetworkScanner networkScanner = new NetworkScanner();
+
+            String result;
+            while (networkScanner.hasNextAttempt()){
+                result = networkScanner.tryNext();
+
+                if (result != null){
+                    return result;
+                }
+
+                publishProgress(networkScanner.getProgress());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Float... values) {
+            Log.d("Hyperion scanner", "scan progress: " + values[0]);
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.d("Hyperion scanner", "scan result: " + result);
+        }
+    }
+
+
 }
