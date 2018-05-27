@@ -36,6 +36,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean checked = intent.getBooleanExtra(BROADCAST_TAG, false);
+            mRecorderRunning = checked;
             String error = intent.getStringExtra(BROADCAST_ERROR);
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
@@ -48,6 +49,10 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // assume the recorder is not running until we are notified otherwise
+        mRecorderRunning = false;
+
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         mMediaProjectionManager = (MediaProjectionManager)
@@ -64,8 +69,12 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         ib.setOnFocusChangeListener(this);
         ib.setFocusable(true);
 
+        setImageViews(mRecorderRunning);
+
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
+
+        // request an update on the running status
         checkForInstance();
     }
 
