@@ -147,7 +147,7 @@ public class NetworkScanner {
             return ipsToTry;
         } catch (Exception e){
             // for now eat exceptions
-            Log.e("HYPERION SCANNER", "Error parsing ip", e);
+            Log.e("HYPERION SCANNER", "Error while building list of subnet ip", e);
             return new String[]{};
         }
     }
