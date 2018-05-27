@@ -140,12 +140,9 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
 
     private void setImageViews(boolean running) {
         View rainbow = findViewById(R.id.sweepGradientView);
-        ImageView buttonImage = findViewById(R.id.power_toggle);
         if (running) {
-            buttonImage.setAlpha((float) 1);
             rainbow.setVisibility(View.VISIBLE);
         } else {
-            buttonImage.setAlpha((float) 0.25);
             rainbow.setVisibility(View.INVISIBLE);
         }
     }
