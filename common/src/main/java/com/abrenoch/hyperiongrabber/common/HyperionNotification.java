@@ -35,13 +35,13 @@ public class HyperionNotification {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mAction = new Notification.Action.Builder(
-                    Icon.createWithResource(mContext, R.drawable.ic_launcher_foreground),
+                    Icon.createWithResource(mContext, R.drawable.ic_notification_icon),
                     label,
                     pendingIntent
             ).build();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             mAction = new Notification.Action.Builder(
-                    R.drawable.ic_launcher_foreground,
+                    R.drawable.ic_notification_icon,
                     label,
                     pendingIntent
             ).build();
@@ -52,7 +52,7 @@ public class HyperionNotification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder = new Notification.Builder(mContext, NOTIFICATION_CHANNEL_ID)
                     .setOngoing(true)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
             if (mAction != null) {
@@ -65,7 +65,7 @@ public class HyperionNotification {
                     .setSound(null)
                     .setOngoing(true)
                     .setPriority(Notification.PRIORITY_MAX)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
             return builder.build();
