@@ -23,6 +23,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
     private VirtualDisplay mVirtualDisplay;
+    private ImageReader mImageReader;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
@@ -92,10 +93,10 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
-        ImageReader imageReader = ImageReader.newInstance(mWidthScaled, mHeightScaled,
+        mImageReader = ImageReader.newInstance(mWidthScaled, mHeightScaled,
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
-        imageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
-        mVirtualDisplay.setSurface(imageReader.getSurface());
+        mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
+        mVirtualDisplay.setSurface(mImageReader.getSurface());
     }
 
     private OnImageAvailableListener imageAvailableListener = new OnImageAvailableListener() {
