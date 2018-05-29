@@ -30,7 +30,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.NetworkScanActivity"></activity>
     </application>
 
 </manifest>

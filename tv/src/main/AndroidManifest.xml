@@ -24,6 +24,11 @@
             android:name=".SettingsActivity"
             android:exported="true"
             android:theme="@style/LeanbackPreferences" />
+        <activity
+            android:name="com.abrenoch.hyperiongrabber.tv.NetworkScanActivity"
+            android:theme="@style/Theme.Leanback.Onboarding"
+            />
+
 
     </application>
 

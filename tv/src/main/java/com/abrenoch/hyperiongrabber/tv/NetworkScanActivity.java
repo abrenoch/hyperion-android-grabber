@@ -1,11 +1,10 @@
-package com.abrenoch.hyperiongrabber.common.activities;
+package com.abrenoch.hyperiongrabber.tv;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.abrenoch.hyperiongrabber.common.R;
 
-public class NetworkScanActivity extends AppCompatActivity {
+public class NetworkScanActivity extends LeanbackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
