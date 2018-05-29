@@ -2,7 +2,6 @@ package com.abrenoch.hyperiongrabber.tv;
 
 import android.os.Bundle;
 
-import com.abrenoch.hyperiongrabber.common.R;
 
 public class NetworkScanActivity extends LeanbackActivity {
 
