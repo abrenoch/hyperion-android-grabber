@@ -19,6 +19,8 @@ import java.util.List;
 
 public class NetworkScanner {
     public static final int PORT = 19445;
+    /** The amount of milliseconds we try to connect to a given ip before giving up */
+    public static final int ATTEMPT_TIMEOUT_MS = 50;
 
     private final String[] ipsToTry;
     private int lastTriedIndex = -1;
@@ -46,7 +48,7 @@ public class NetworkScanner {
         String ip = ipsToTry[++lastTriedIndex];
         try {
             // timeout after 100ms, should be enough for local network
-            socket.connect(new InetSocketAddress(ip, PORT), 100);
+            socket.connect(new InetSocketAddress(ip, PORT), ATTEMPT_TIMEOUT_MS);
 
             if (socket.isConnected()){
                 socket.close();
