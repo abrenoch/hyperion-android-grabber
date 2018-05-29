@@ -27,39 +27,39 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Hi There!"
+        android:text="@string/scanner_title"
         android:textSize="28sp"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/icon_network_scan"
+        app:layout_constraintBottom_toTopOf="@+id/networkScanIcon"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintStart_toStartOf="@id/guideStart"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"/>
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/icon_network_scan"
+        android:id="@+id/networkScanIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintStart_toStartOf="@id/guideStart"
         app:layout_constraintTop_toBottomOf="@id/textView"
-        app:layout_constraintBottom_toTopOf="@id/textView2"
+        app:layout_constraintBottom_toTopOf="@id/scannerDescriptionText"
         app:srcCompat="@drawable/ic_network_scan"
         />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/scannerDescriptionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Hyperion Grabber can scan your network for running servers, so you won't have to fiddle with your remote to punch in an ip-address."
+        android:layout_marginTop="24dp"
+        android:text="@string/scanner_description"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/guideStart"
-        app:layout_constraintTop_toBottomOf="@+id/icon_network_scan" />
+        app:layout_constraintTop_toBottomOf="@+id/networkScanIcon" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -68,36 +68,39 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
 
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@id/startScanButton"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/guideStart"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/scannerDescriptionText"
         />
 
     <Button
-        android:id="@+id/button"
-        style="@style/Widget.Leanback.OnboardingStartButtonStyle"
+        android:id="@+id/startScanButton"
+        style="@style/Widget.Leanback.DetailsActionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Start scan"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:text="@string/scanner_start_scan_button"
+        android:onClick="onStartScanClick"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        app:layout_constraintBottom_toTopOf="@+id/manualSetupButton"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintStart_toStartOf="@id/guideStart"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
     <Button
-        android:id="@+id/button2"
-        style="@style/Base.TextAppearance.AppCompat.Button"
+        android:id="@+id/manualSetupButton"
+        style="@style/Widget.Leanback.DetailsActionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Manual setup"
+        android:text="@string/scanner_manual_setup_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintStart_toStartOf="@id/guideStart"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@id/startScanButton" />
 
 
 

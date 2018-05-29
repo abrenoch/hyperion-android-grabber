@@ -2,6 +2,16 @@
     <string name="app_name">Hyperion Grabber</string>
     <string name="pref_title">Settings</string>
 
+    <!-- Network scanner -->
+    <string name="scanner_title">Hi there!</string>
+    <string name="scanner_description">Hyperion Grabber can scan your network for running servers, so you won\'t have to fiddle with your remote to punch in an ip-address.</string>
+    <string name="scanner_start_scan_button">Start scan</string>
+    <string name="scanner_scan_in_progress_text">Scanning your local network for running hyperion servers %s</string>
+    <string name="scanner_scan_in_progress_button">Scanning…</string>
+    <string name="scanner_no_results">No results found %s</string>
+    <string name="scanner_retry_button">retry</string>
+    <string name="scanner_manual_setup_button">Manual setup</string>
+
     <!-- Connection settings -->
     <string name="pref_group_connection">Connection</string>
     <string name="pref_title_host">Hyperion Host</string>
