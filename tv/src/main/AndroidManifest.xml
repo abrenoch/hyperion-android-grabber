@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Leanback"
         android:banner="@drawable/banner"
         >
-        <activity android:name=".MainActivity"
+        <activity android:name=".activities.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             android:exported="true"
             android:theme="@style/LeanbackPreferences" />
         <activity
-            android:name="com.abrenoch.hyperiongrabber.tv.NetworkScanActivity"
+            android:name="com.abrenoch.hyperiongrabber.tv.activities.NetworkScanActivity"
             android:exported="true"
             android:theme="@style/MyOnboardingTheme"
             />

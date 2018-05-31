@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.tv.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.abrenoch.hyperiongrabber.common.util.HyperionScannerTask;
+import com.abrenoch.hyperiongrabber.tv.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

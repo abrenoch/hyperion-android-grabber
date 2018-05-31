@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.tv.activities;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.tv.R;
+import com.abrenoch.hyperiongrabber.tv.SettingsActivity;
 
 public class MainActivity extends LeanbackActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {

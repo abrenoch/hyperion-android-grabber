@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.tv.activities;
 
 import android.support.v4.app.FragmentActivity;
 

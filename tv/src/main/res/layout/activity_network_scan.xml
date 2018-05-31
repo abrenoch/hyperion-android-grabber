@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context=".NetworkScanActivity">
+    tools:context=".activities.NetworkScanActivity">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideStart"
