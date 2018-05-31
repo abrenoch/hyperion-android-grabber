@@ -9,10 +9,10 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
@@ -36,9 +36,12 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean checked = intent.getBooleanExtra(BROADCAST_TAG, false);
+            mRecorderRunning = checked;
             String error = intent.getStringExtra(BROADCAST_ERROR);
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+            } else if (checked){
+                Toast.makeText(getBaseContext(), getResources().getText(R.string.toast_service_started), Toast.LENGTH_LONG).show();
             }
             setImageViews(checked);
         }
@@ -48,12 +51,16 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // assume the recorder is not running until we are notified otherwise
+        mRecorderRunning = false;
+
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         mMediaProjectionManager = (MediaProjectionManager)
                                         getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
-        ImageView iv = findViewById(R.id.imageView_button);
+        ImageView iv = findViewById(R.id.power_toggle);
         iv.setOnClickListener(this);
         iv.setOnFocusChangeListener(this);
         iv.setFocusable(true);
@@ -64,8 +71,12 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         ib.setOnFocusChangeListener(this);
         ib.setFocusable(true);
 
+        setImageViews(mRecorderRunning);
+
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
+
+        // request an update on the running status
         checkForInstance();
     }
 
@@ -73,7 +84,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.imageView_button:
+            case R.id.power_toggle:
                 if (!mRecorderRunning) {
                     startActivityForResult(mMediaProjectionManager.createScreenCaptureIntent(),
                             REQUEST_MEDIA_PROJECTION);
@@ -95,7 +106,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             clr = Color.argb(255, 0, 0, 0);
         }
         switch (view.getId()) {
-            case R.id.imageView_button:
+            case R.id.power_toggle:
                 ((ImageView) view).setColorFilter(clr);
                 break;
             case R.id.settingsButton:
@@ -139,14 +150,11 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     }
 
     private void setImageViews(boolean running) {
-        FadingImageView bottomImage = findViewById(R.id.imageView_lights);
-        ImageView buttonImage = findViewById(R.id.imageView_button);
+        View rainbow = findViewById(R.id.sweepGradientView);
         if (running) {
-            buttonImage.setAlpha((float) 1);
-            bottomImage.setVisibility(View.VISIBLE);
+            rainbow.setVisibility(View.VISIBLE);
         } else {
-            buttonImage.setAlpha((float) 0.25);
-            bottomImage.setVisibility(View.INVISIBLE);
+            rainbow.setVisibility(View.INVISIBLE);
         }
     }
 
