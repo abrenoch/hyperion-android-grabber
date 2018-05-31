@@ -20,6 +20,7 @@ public class ScanResultActivity extends LeanbackActivity {
     @BindView(R.id.konfetti) KonfettiView konfettiView;
     @BindView(R.id.scanResultDescriptionText) TextView descriptionText;
     @BindView(R.id.scanResultHostName) TextView hostNameText;
+    @BindView(R.id.scanResultEmojiText) TextView emojiText;
 
 
     @Override
@@ -28,6 +29,7 @@ public class ScanResultActivity extends LeanbackActivity {
         setContentView(R.layout.activity_scan_result);
         ButterKnife.bind(this);
 
+        emojiText.setText("\uD83D\uDC4F"); // 👏
         descriptionText.setText(getResources().getString(R.string.scan_result_description, "\uD83C\uDF89"));
         hostNameText.setText("192.168.100.104");
 
@@ -62,7 +64,7 @@ public class ScanResultActivity extends LeanbackActivity {
                 .setDirection(0.0, 359.0)
                 .setSpeed(1f, 5f)
                 .setFadeOutEnabled(true)
-                .setTimeToLive(200L)
+                .setTimeToLive(400L)
                 .addShapes(Shape.RECT, Shape.CIRCLE)
                 .addSizes(new nl.dionsegijn.konfetti.models.Size(12, 5))
                 .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)

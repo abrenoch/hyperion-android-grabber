@@ -14,7 +14,7 @@
 
     <!-- Network Scanner result -->
     <string name="scan_result_title">And the winner is…</string>
-    <string name="scan_result_description">To celebrate, we have turned all your LED\'s purple %s</string>
+    <string name="scan_result_description">To celebrate, we have turned all your LEDs purple %s</string>
     <string name="scan_result_confirm_button_text">Love it!</string>
     <string name="scan_result_alternative_color_button_text">I hate purple</string>
 
