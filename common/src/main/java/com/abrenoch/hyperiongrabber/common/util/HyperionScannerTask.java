@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 
 
 public class HyperionScannerTask extends AsyncTask<Void, Float, String> {
-    WeakReference<Listener> weakListener;
+    private WeakReference<Listener> weakListener;
 
     public HyperionScannerTask(Listener listener){
         weakListener = new WeakReference<>(listener);
