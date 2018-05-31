@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 apply from: project(':common').projectDir.absolutePath + '/variables.gradle'
 
@@ -56,4 +57,9 @@ dependencies {
     implementation "com.android.support:leanback-v17:$android_support_version"
     implementation "com.android.support:preference-leanback-v17:$android_support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+
+    implementation 'nl.dionsegijn:konfetti:1.1.2'
+    // required for konfetti
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
 }

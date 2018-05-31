@@ -10,13 +10,14 @@
         android:required="true" />
 
     <application
-        android:theme="@style/Theme.Leanback"
         android:banner="@drawable/banner"
-        >
-        <activity android:name=".activities.MainActivity"
+        android:theme="@style/Theme.Leanback">
+        <activity
+            android:name=".activities.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,12 +26,12 @@
             android:exported="true"
             android:theme="@style/LeanbackPreferences" />
         <activity
-            android:name="com.abrenoch.hyperiongrabber.tv.activities.NetworkScanActivity"
+            android:name=".activities.NetworkScanActivity"
             android:exported="true"
-            android:theme="@style/MyOnboardingTheme"
-            />
-
-
+            android:theme="@style/MyOnboardingTheme" />
+        <activity
+            android:name=".activities.ScanResultActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>
