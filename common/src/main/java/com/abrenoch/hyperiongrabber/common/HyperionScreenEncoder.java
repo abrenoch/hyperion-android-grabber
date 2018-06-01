@@ -7,6 +7,7 @@ import android.hardware.display.VirtualDisplay;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.media.ImageWriter;
 import android.media.MediaCodec;
 import android.media.projection.MediaProjection;
 import android.os.Build;
@@ -72,21 +73,22 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         @Override
         public void onPaused() {
             super.onPaused();
-            Log.i(TAG, "onPaused");
             mIsCapturing = false;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
         @Override
         public void onResumed() {
             super.onResumed();
-            Log.i(TAG, "onResumed");
-            mIsCapturing = true;
+            if (!isCapturing()) {
+                mIsCapturing = true;
+                setImageReader();
+            }
         }
 
         @Override
         public void onStopped() {
             super.onStopped();
-            Log.i(TAG, "onStopped");
             mIsCapturing = false;
         }
     };
@@ -149,10 +151,4 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
         return bao.toByteArray();
     }
-
-//    public interface HyperionEncoderListener {
-//        public void onPrepared(HyperionScreenEncoder encoder);
-//        public void onStopped(HyperionScreenEncoder encoder);
-//        public void sendFrame(byte[] data, int width, int height);
-//    }
 }
