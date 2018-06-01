@@ -7,7 +7,6 @@ import android.hardware.display.VirtualDisplay;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.media.ImageWriter;
 import android.media.MediaCodec;
 import android.media.projection.MediaProjection;
 import android.os.Build;
