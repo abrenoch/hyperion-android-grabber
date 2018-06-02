@@ -30,7 +30,7 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
         String title = getString(R.string.guidedstep_basic_settings_title);
         String description = getString(R.string.guidedstep_basic_settings_description);
         String breadCrumb = getString(R.string.guidedstep_basic_settings_breadcrumb);
-        Drawable icon = getActivity().getDrawable(R.mipmap.ic_launcher);
+        Drawable icon = getActivity().getDrawable(R.drawable.ic_settings_ethernet_white_128dp);
         return new GuidanceStylist.Guidance(title, description, breadCrumb, icon);
     }
 
