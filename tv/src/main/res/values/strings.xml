@@ -3,7 +3,7 @@
 
     <!-- Strings related to guided sequence activity -->
     <string name="guidedstep_basic_settings_title">Connection settings</string>
-    <string name="guidedstep_basic_settings_description">Hello hyperion!</string>
+    <string name="guidedstep_basic_settings_description">Communication is key</string>
     <string name="guidedstep_basic_settings_breadcrumb">Step 1\/2</string>
     <string name="guidedstep_second_title">Connection test</string>
     <string name="guidedstep_second_description">let\'s see those lights shine</string>

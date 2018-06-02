@@ -29,8 +29,15 @@
         <item name="guidanceIconStyle">@style/Widget.Example.Leanback.GuidanceIconStyle</item>
     </style>
 
+    <style name="Widget.Hyperion_Grabber.GuidedActionItemDescriptionStyle" parent="Widget.Leanback.GuidedActionItemDescriptionStyle">
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
     <style name="Theme.Example.Leanback.GuidedStep.First">
-        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.FirstStepGuidanceIconStyle
-        </item>
+        <item name="guidedStepBackground">@color/colorPrimaryDark</item>
+        <item name="guidedActionsBackground">@color/colorPrimaryExtraDark</item>
+        <item name="guidedActionsBackgroundDark">@color/colorPrimarySuperDark</item>
+        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.FirstStepGuidanceIconStyle</item>
+
     </style>
 </resources>
