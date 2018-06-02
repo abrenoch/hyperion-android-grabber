@@ -1,6 +1,7 @@
 package com.abrenoch.hyperiongrabber.tv.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -58,10 +59,19 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
     public void onScannerCompleted(@Nullable String foundIpAddress) {
         isScanning = false;
 
+        foundIpAddress = "the.found.ip.address";
+
         if (foundIpAddress == null){
             startScanButton.setText(R.string.scanner_retry_button);
             manualSetupButton.requestFocus();
             descriptionText.setText(getString(R.string.scanner_no_results, "\uD83D\uDE29")); // 😩
+        } else {
+            Intent intent = new Intent(this, ScanResultActivity.class);
+            intent.putExtra(ScanResultActivity.EXTRA_RESULT_HOST_NAME, foundIpAddress);
+            intent.putExtra(ScanResultActivity.EXTRA_RESULT_PORT, "12345");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish(); // Finish the current activity
         }
     }
 

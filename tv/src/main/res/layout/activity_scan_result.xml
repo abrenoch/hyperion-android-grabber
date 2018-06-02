@@ -115,6 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/scan_result_alternative_color_button_text"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintStart_toStartOf="@id/guideStart"

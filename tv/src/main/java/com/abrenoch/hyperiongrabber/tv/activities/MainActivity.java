@@ -6,10 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -54,6 +56,27 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Do we have a valid server config?
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String host = preferences.getString("hyperion_host", null);
+        String port = preferences.getString("hyperion_port", null);
+
+        if (host == null || port == null){
+            // Start onboarding (setup)
+            Intent intent = new Intent(this, NetworkScanActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish(); // Finish the current activity
+            return;
+        }
+
+        initActivity();
+
+
+    }
+
+    // Prepare activity for display
+    private void initActivity() {
         // assume the recorder is not running until we are notified otherwise
         mRecorderRunning = false;
 

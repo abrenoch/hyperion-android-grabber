@@ -8,7 +8,6 @@
 
         <EditTextPreference
             android:capitalize="words"
-            android:defaultValue="@string/pref_default_host"
             android:inputType="textCapWords"
             android:key="hyperion_host"
             android:summary="@string/pref_summary_host"

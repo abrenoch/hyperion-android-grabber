@@ -22,7 +22,6 @@
     <string name="pref_group_connection">Connection</string>
     <string name="pref_title_host">Hyperion Host</string>
     <string name="pref_summary_host">Host your hyperion instance is running on</string>
-    <string name="pref_default_host">0.0.0.0</string>
     <string name="pref_title_port">Hyperion Protobuf Port</string>
     <string name="pref_summary_port">The protobuf port of your hyperion instance</string>
     <string name="pref_default_port">19445</string>
@@ -68,4 +67,5 @@
 
     <string name="toast_must_give_permission">Permission must be granted to record screen data.</string>
     <string name="toast_service_started">Press Back to close the app. Your screen content will continue to be sent to Hyperion</string>
+    <string name="error_no_host_name_extra">That\'s weird, expected a hostname here</string>
 </resources>
