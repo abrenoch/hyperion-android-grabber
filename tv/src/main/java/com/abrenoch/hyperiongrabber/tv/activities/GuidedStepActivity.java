@@ -25,9 +25,9 @@ import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidanceStylist.Guidance;
 import android.support.v17.leanback.widget.GuidedAction;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
 import com.abrenoch.hyperiongrabber.tv.R;
+import com.abrenoch.hyperiongrabber.tv.fragments.settings.BasicSettingsStepFragment;
 
 import java.util.List;
 
@@ -36,8 +36,7 @@ import java.util.List;
  */
 public class GuidedStepActivity extends FragmentActivity {
 
-    private static final int CONTINUE = 0;
-    private static final int BACK = 1;
+
     private static final int OPTION_CHECK_SET_ID = 10;
     private static final String[] OPTION_NAMES = {
             "Option A",
@@ -56,16 +55,8 @@ public class GuidedStepActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (null == savedInstanceState) {
-            GuidedStepSupportFragment.addAsRoot(this, new FirstStepFragment(), android.R.id.content);
+            GuidedStepSupportFragment.addAsRoot(this, new BasicSettingsStepFragment(), android.R.id.content);
         }
-    }
-
-    private static void addAction(List<GuidedAction> actions, long id, String title, String desc) {
-        actions.add(new GuidedAction.Builder()
-                .id(id)
-                .title(title)
-                .description(desc)
-                .build());
     }
 
     private static void addCheckedAction(List<GuidedAction> actions, Context context,
@@ -79,44 +70,7 @@ public class GuidedStepActivity extends FragmentActivity {
         actions.add(guidedAction);
     }
 
-    public static class FirstStepFragment extends GuidedStepSupportFragment {
-        @Override
-        public int onProvideTheme() {
-            return R.style.Theme_Example_Leanback_GuidedStep_First;
-        }
-
-        @Override
-        @NonNull
-        public Guidance onCreateGuidance(@NonNull Bundle savedInstanceState) {
-            String title = getString(R.string.guidedstep_first_title);
-            String breadcrumb = getString(R.string.guidedstep_first_breadcrumb);
-            String description = getString(R.string.guidedstep_first_description);
-            Drawable icon = getActivity().getDrawable(R.mipmap.ic_launcher);
-            return new Guidance(title, description, breadcrumb, icon);
-        }
-
-        @Override
-        public void onCreateActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {
-            addAction(actions, CONTINUE,
-                    getResources().getString(R.string.guidedstep_continue),
-                    getResources().getString(R.string.guidedstep_letsdoit));
-            addAction(actions, BACK,
-                    getResources().getString(R.string.guidedstep_cancel),
-                    getResources().getString(R.string.guidedstep_nevermind));
-        }
-
-        @Override
-        public void onGuidedActionClicked(GuidedAction action) {
-            FragmentManager fm = getFragmentManager();
-            if (action.getId() == CONTINUE) {
-                GuidedStepSupportFragment.add(fm, new SecondStepFragment());
-            } else {
-                getActivity().finishAfterTransition();
-            }
-        }
-    }
-
-    public static class SecondStepFragment extends GuidedStepSupportFragment {
+    public static class ConfigurationTestStepFragment extends GuidedStepSupportFragment {
 
         @Override
         @NonNull
@@ -141,7 +95,7 @@ public class GuidedStepActivity extends FragmentActivity {
         @Override
         public void onCreateActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {
             String desc = getResources().getString(R.string.guidedstep_action_description);
-            actions.add(new GuidedAction.Builder()
+            actions.add(new GuidedAction.Builder(getContext())
                     .title(getResources().getString(R.string.guidedstep_action_title))
                     .description(desc)
                     .multilineDescription(true)
@@ -159,48 +113,8 @@ public class GuidedStepActivity extends FragmentActivity {
 
         @Override
         public void onGuidedActionClicked(GuidedAction action) {
-            FragmentManager fm = getFragmentManager();
-            ThirdStepFragment next = ThirdStepFragment.newInstance(getSelectedActionPosition() - 1);
-            GuidedStepSupportFragment.add(fm, next);
-        }
+            getActivity().finishAfterTransition();
 
-    }
-
-    public static class ThirdStepFragment extends GuidedStepSupportFragment {
-        private final static String ARG_OPTION_IDX = "arg.option.idx";
-
-        public static ThirdStepFragment newInstance(final int option) {
-            final ThirdStepFragment f = new ThirdStepFragment();
-            final Bundle args = new Bundle();
-            args.putInt(ARG_OPTION_IDX, option);
-            f.setArguments(args);
-            return f;
-        }
-
-        @Override
-        @NonNull
-        public Guidance onCreateGuidance(Bundle savedInstanceState) {
-            String title = getString(R.string.guidedstep_third_title);
-            String breadcrumb = getString(R.string.guidedstep_third_breadcrumb);
-            String description = getString(R.string.guidedstep_third_command)
-                    + OPTION_NAMES[getArguments().getInt(ARG_OPTION_IDX)];
-            Drawable icon = getActivity().getDrawable(R.mipmap.ic_launcher);
-            return new Guidance(title, description, breadcrumb, icon);
-        }
-
-        @Override
-        public void onCreateActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {
-            addAction(actions, CONTINUE, "Done", "All finished");
-            addAction(actions, BACK, "Back", "Forgot something...");
-        }
-
-        @Override
-        public void onGuidedActionClicked(GuidedAction action) {
-            if (action.getId() == CONTINUE) {
-                getActivity().finishAfterTransition();
-            } else {
-                getFragmentManager().popBackStack();
-            }
         }
 
     }
