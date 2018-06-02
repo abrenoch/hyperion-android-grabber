@@ -69,7 +69,7 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
 
     @Override
     public void onCreateButtonActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {
-        actions.add(contunueAction());
+        actions.add(continueAction());
         actions.add(backAction());
     }
 
@@ -93,7 +93,11 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
 
             } catch (AssertionError ignored) {}
 
+            return;
+
         }
+
+        super.onGuidedActionClicked(action);
     }
 
 

@@ -19,7 +19,14 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
     }
 
-    protected fun contunueAction(): GuidedAction {
+    /** Default implementation handles backAction only*/
+    override fun onGuidedActionClicked(action: GuidedAction) {
+        if (action.id == BACK) {
+            finishGuidedStepSupportFragments()
+        }
+    }
+
+    protected fun continueAction(): GuidedAction {
         return GuidedAction.Builder(context)
                 .id(CONTINUE)
                 .title(getString(R.string.guidedstep_continue))
