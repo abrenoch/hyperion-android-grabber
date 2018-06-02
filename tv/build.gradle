@@ -27,7 +27,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.abrenoch.hyperiongrabber.tv"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 2004
         versionName "ALPHA 3"
