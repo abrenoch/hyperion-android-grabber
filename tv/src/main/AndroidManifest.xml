@@ -32,7 +32,9 @@
         <activity
             android:name=".activities.ScanResultActivity"
             android:exported="true"/>
-        <activity android:name=".activities.GuidedStepActivity" />
+        <activity
+            android:name=".activities.GuidedStepActivity"
+            android:parentActivityName=".activities.MainActivity" />
 
     </application>
 

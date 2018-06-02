@@ -55,7 +55,12 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initIfConfigured();
 
+
+    }
+
+    private void initIfConfigured() {
         // Do we have a valid server config?
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String host = preferences.getString("hyperion_host", null);
@@ -66,12 +71,18 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             Intent intent = new Intent(this, NetworkScanActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish(); // Finish the current activity
+            //finish(); // Finish the current activity
             return;
         }
 
         initActivity();
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        initIfConfigured();
 
     }
 
