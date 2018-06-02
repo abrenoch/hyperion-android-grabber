@@ -33,9 +33,15 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
 
     }
 
-    public void onStartScanClick(View v){
-        if (!isScanning){
-            new HyperionScannerTask(this).execute();
+    public void onClick(View v){
+        if (v.getId() == R.id.startScanButton){
+            if (!isScanning){
+                new HyperionScannerTask(this).execute();
+            }
+
+        } else if (v.getId() == R.id.manualSetupButton){
+            Intent intent = new Intent(this, GuidedStepActivity.class);
+            startActivity(intent);
         }
 
     }

@@ -12,4 +12,25 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="Widget.Example.Leanback.GuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Widget.Example.Leanback.FirstStepGuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="Widget.Example.Leanback.SecondStepGuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
+        <item name="android:padding">24dp</item>
+    </style>
+
+    <style name="Theme.Example.Leanback.GuidedStep" parent="Theme.Leanback.GuidedStep">
+        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.GuidanceIconStyle</item>
+    </style>
+
+    <style name="Theme.Example.Leanback.GuidedStep.First">
+        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.FirstStepGuidanceIconStyle
+        </item>
+    </style>
 </resources>

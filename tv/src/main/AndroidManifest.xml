@@ -32,6 +32,8 @@
         <activity
             android:name=".activities.ScanResultActivity"
             android:exported="true"/>
+        <activity android:name=".activities.GuidedStepActivity" />
+
     </application>
 
 </manifest>
