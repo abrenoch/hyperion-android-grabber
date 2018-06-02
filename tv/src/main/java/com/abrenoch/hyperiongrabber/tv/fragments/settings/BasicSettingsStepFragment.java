@@ -1,12 +1,12 @@
 package com.abrenoch.hyperiongrabber.tv.fragments.settings;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidedAction;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.text.InputType;
 
 import com.abrenoch.hyperiongrabber.tv.R;
@@ -88,7 +88,8 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 });
 
                 FragmentActivity activity = getActivity();
-                NavUtils.navigateUpFromSameTask(activity);
+                activity.setResult(Activity.RESULT_OK);
+                finishGuidedStepSupportFragments();
 
             } catch (AssertionError ignored) {}
 

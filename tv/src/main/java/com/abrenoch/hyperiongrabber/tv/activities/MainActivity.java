@@ -29,6 +29,7 @@ import com.abrenoch.hyperiongrabber.tv.SettingsActivity;
 public class MainActivity extends LeanbackActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
+    public static final int REQUEST_INITIAL_SETUP = 2;
     public static final String BROADCAST_ERROR = "SERVICE_ERROR";
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
@@ -51,39 +52,36 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initIfConfigured();
+
+        if (!initIfConfigured()){
+            startSetup();
+        }
 
 
     }
 
-    private void initIfConfigured() {
+    /** @return whether the activity was initialized */
+    private boolean initIfConfigured() {
         // Do we have a valid server config?
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String host = preferences.getString("hyperion_host", null);
         String port = preferences.getString("hyperion_port", null);
 
         if (host == null || port == null){
-            // Start onboarding (setup)
-            Intent intent = new Intent(this, NetworkScanActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            //finish(); // Finish the current activity
-            return;
+            return false;
         }
 
         initActivity();
+        return true;
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        initIfConfigured();
-
+    private void startSetup() {
+        // Start onboarding (setup)
+        Intent intent = new Intent(this, NetworkScanActivity.class);
+        startActivityForResult(intent, REQUEST_INITIAL_SETUP);
     }
 
     // Prepare activity for display
@@ -116,7 +114,6 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         checkForInstance();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -154,6 +151,17 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_INITIAL_SETUP){
+            if (resultCode == RESULT_OK){
+                if (!initIfConfigured()){
+                    startSetup();
+                }
+            } else {
+                finish();
+            }
+
+            return;
+        }
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
             if (resultCode != Activity.RESULT_OK) {
                 Toast.makeText(this, R.string.toast_must_give_permission, Toast.LENGTH_SHORT).show();

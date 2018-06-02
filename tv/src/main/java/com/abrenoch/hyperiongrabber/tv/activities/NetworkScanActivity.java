@@ -30,7 +30,19 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network_scan);
         ButterKnife.bind(this);
+        // only if back was pressed on this Activity will we not be configured when we finish
+        setResult(RESULT_OK);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MainActivity.REQUEST_INITIAL_SETUP){
+            if (resultCode == RESULT_OK){
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
     }
 
     public void onClick(View v){
@@ -41,11 +53,16 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
 
         } else if (v.getId() == R.id.manualSetupButton){
             Intent intent = new Intent(this, GuidedStepActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, MainActivity.REQUEST_INITIAL_SETUP);
         }
 
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
+    }
 
     @SuppressLint("StringFormatInvalid")
     @Override
