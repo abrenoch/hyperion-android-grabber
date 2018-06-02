@@ -59,7 +59,9 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
     public void onScannerCompleted(@Nullable String foundIpAddress) {
         isScanning = false;
 
+        //todo: remove these testing overrides
         foundIpAddress = "the.found.ip.address";
+        int foundPort = 12345;
 
         if (foundIpAddress == null){
             startScanButton.setText(R.string.scanner_retry_button);
@@ -68,7 +70,8 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
         } else {
             Intent intent = new Intent(this, ScanResultActivity.class);
             intent.putExtra(ScanResultActivity.EXTRA_RESULT_HOST_NAME, foundIpAddress);
-            intent.putExtra(ScanResultActivity.EXTRA_RESULT_PORT, "12345");
+
+            intent.putExtra(ScanResultActivity.EXTRA_RESULT_PORT, String.valueOf(foundPort));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish(); // Finish the current activity
