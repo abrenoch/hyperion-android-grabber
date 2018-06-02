@@ -16,16 +16,16 @@
 
 package com.abrenoch.hyperiongrabber.tv.activities;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidanceStylist.Guidance;
 import android.support.v17.leanback.widget.GuidedAction;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import com.abrenoch.hyperiongrabber.tv.R;
 
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Activity that showcases different aspects of GuidedStepFragments.
  */
-public class GuidedStepActivity extends Activity {
+public class GuidedStepActivity extends FragmentActivity {
 
     private static final int CONTINUE = 0;
     private static final int BACK = 1;
@@ -56,7 +56,7 @@ public class GuidedStepActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (null == savedInstanceState) {
-            GuidedStepFragment.addAsRoot(this, new FirstStepFragment(), android.R.id.content);
+            GuidedStepSupportFragment.addAsRoot(this, new FirstStepFragment(), android.R.id.content);
         }
     }
 
@@ -79,7 +79,7 @@ public class GuidedStepActivity extends Activity {
         actions.add(guidedAction);
     }
 
-    public static class FirstStepFragment extends GuidedStepFragment {
+    public static class FirstStepFragment extends GuidedStepSupportFragment {
         @Override
         public int onProvideTheme() {
             return R.style.Theme_Example_Leanback_GuidedStep_First;
@@ -109,14 +109,14 @@ public class GuidedStepActivity extends Activity {
         public void onGuidedActionClicked(GuidedAction action) {
             FragmentManager fm = getFragmentManager();
             if (action.getId() == CONTINUE) {
-                GuidedStepFragment.add(fm, new SecondStepFragment());
+                GuidedStepSupportFragment.add(fm, new SecondStepFragment());
             } else {
                 getActivity().finishAfterTransition();
             }
         }
     }
 
-    public static class SecondStepFragment extends GuidedStepFragment {
+    public static class SecondStepFragment extends GuidedStepSupportFragment {
 
         @Override
         @NonNull
@@ -161,12 +161,12 @@ public class GuidedStepActivity extends Activity {
         public void onGuidedActionClicked(GuidedAction action) {
             FragmentManager fm = getFragmentManager();
             ThirdStepFragment next = ThirdStepFragment.newInstance(getSelectedActionPosition() - 1);
-            GuidedStepFragment.add(fm, next);
+            GuidedStepSupportFragment.add(fm, next);
         }
 
     }
 
-    public static class ThirdStepFragment extends GuidedStepFragment {
+    public static class ThirdStepFragment extends GuidedStepSupportFragment {
         private final static String ARG_OPTION_IDX = "arg.option.idx";
 
         public static ThirdStepFragment newInstance(final int option) {
