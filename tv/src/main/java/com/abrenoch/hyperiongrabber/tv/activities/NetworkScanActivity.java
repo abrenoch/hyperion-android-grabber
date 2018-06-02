@@ -52,7 +52,7 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
             }
 
         } else if (v.getId() == R.id.manualSetupButton){
-            Intent intent = new Intent(this, GuidedStepActivity.class);
+            Intent intent = new Intent(this, ManualSetupActivity.class);
             startActivityForResult(intent, MainActivity.REQUEST_INITIAL_SETUP);
         }
 

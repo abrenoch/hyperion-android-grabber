@@ -33,7 +33,7 @@
             android:name=".activities.ScanResultActivity"
             android:exported="true"/>
         <activity
-            android:name=".activities.GuidedStepActivity"
+            android:name=".activities.ManualSetupActivity"
             android:parentActivityName=".activities.MainActivity" />
 
     </application>

@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Activity that showcases different aspects of GuidedStepFragments.
  */
-public class GuidedStepActivity extends FragmentActivity {
+public class ManualSetupActivity extends FragmentActivity {
 
 
     private static final int OPTION_CHECK_SET_ID = 10;
