@@ -103,13 +103,13 @@
         android:layout_marginTop="32dp"
         android:text="@string/scan_result_confirm_button_text"
         android:onClick="onClick"
-        app:layout_constraintBottom_toTopOf="@+id/manualSetupButton"
+        app:layout_constraintBottom_toTopOf="@+id/changeColorButton"
         app:layout_constraintEnd_toEndOf="@id/guideEnd"
         app:layout_constraintStart_toStartOf="@id/guideStart"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
     <Button
-        android:id="@+id/manualSetupButton"
+        android:id="@+id/changeColorButton"
         style="@style/Widget.Leanback.DetailsActionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
