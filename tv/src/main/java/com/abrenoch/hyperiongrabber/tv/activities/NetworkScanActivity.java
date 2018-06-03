@@ -59,8 +59,7 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
     public void onScannerCompleted(@Nullable String foundIpAddress) {
         isScanning = false;
 
-        //todo: remove these testing overrides
-        foundIpAddress = "the.found.ip.address";
+        //todo: use port from scan result
         int foundPort = 12345;
 
         if (foundIpAddress == null){
