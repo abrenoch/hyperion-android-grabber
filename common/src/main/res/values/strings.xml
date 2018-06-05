@@ -28,7 +28,7 @@
     <string name="pref_title_priority">Message Priority</string>
     <string name="pref_summary_priority">Message priority channel to use</string>
     <string name="pref_default_priority">50</string>
-    <string name="pref_titel_reconnect">Reconnect</string>
+    <string name="pref_title_reconnect">Reconnect</string>
     <string name="pref_summary_reconnect">Automatic reconnect to hyperion on lost connection</string>
     <string name="pref_title_reconnect_delay">Reconnect Delay</string>
     <string name="pref_summary_reconnect_delay">The number of seconds to wait before trying to reconnect</string>

@@ -1,20 +1,18 @@
 package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v17.leanback.app.GuidedStepSupportFragment
 import android.support.v17.leanback.widget.GuidedAction
 import android.widget.Toast
-
+import com.abrenoch.hyperiongrabber.common.util.Preferences
 import com.abrenoch.hyperiongrabber.tv.R
 
 internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
-    lateinit var preferences: SharedPreferences
+    lateinit var preferences: Preferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
+        preferences = Preferences(context)
         super.onCreate(savedInstanceState)
 
     }
@@ -70,13 +68,6 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
     private fun notifyRequired(actionId: Long){
         showToast("Please enter ${findAction(actionId).title}")
-    }
-
-    /** Creates an editor, calls a lambda on it and persists the edits */
-    protected fun save(operation: (SharedPreferences.Editor) -> Unit){
-        val edit = preferences.edit()
-        operation.invoke(edit)
-        edit.apply()
     }
 
     companion object {

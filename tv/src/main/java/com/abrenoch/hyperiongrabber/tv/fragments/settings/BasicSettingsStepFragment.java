@@ -9,15 +9,20 @@ import android.support.v17.leanback.widget.GuidedAction;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
 
 import java.util.List;
 
-import kotlin.Unit;
-
 public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
     private static final long ACTION_HOST_NAME = 100L;
-    private static final long ACTION_PORT = 101L;
+    private static final long ACTION_PORT = 110L;
+    private static final long ACTION_RECONNECT = 120L;
+    private static final long ACTION_RECONNECT_DELAY = 130L;
+    private static final long ACTION_MESSAGE_PRIORITY = 140L;
+    private static final long ACTION_CAPTURE_RATE = 150L;
+
+    private Preferences prefs = getPreferences();
 
     @Override
     public int onProvideTheme() {
@@ -49,13 +54,13 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
         GuidedAction enterHost = new GuidedAction.Builder(getContext())
                 .id(ACTION_HOST_NAME)
                 .title(getString(R.string.pref_title_host))
-                .description(getPreferences().getString("hyperion_host", null))
+                .description(getPreferences().getString(R.string.pref_key_hyperion_host, null))
                 .descriptionEditable(true)
                 .build();
         GuidedAction enterPort = new GuidedAction.Builder(getContext())
                 .id(ACTION_PORT)
                 .title(getString(R.string.pref_title_port))
-                .description(getPreferences().getString("hyperion_port", "19445"))
+                .description(getPreferences().getString(R.string.pref_key_hyperion_port, "19445"))
                 .descriptionEditable(true)
                 .descriptionInputType(InputType.TYPE_CLASS_PHONE)
                 .descriptionEditInputType(InputType.TYPE_CLASS_PHONE)
@@ -81,11 +86,8 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 String host = assertValue(ACTION_HOST_NAME);
                 String port = assertValue(ACTION_PORT);
 
-                save(editor -> {
-                    editor.putString("hyperion_host", host);
-                    editor.putString("hyperion_port", port);
-                    return Unit.INSTANCE;
-                });
+                prefs.putString(R.string.pref_key_hyperion_host, host);
+                prefs.putString(R.string.pref_key_hyperion_port, port);
 
                 FragmentActivity activity = getActivity();
                 activity.setResult(Activity.RESULT_OK);
