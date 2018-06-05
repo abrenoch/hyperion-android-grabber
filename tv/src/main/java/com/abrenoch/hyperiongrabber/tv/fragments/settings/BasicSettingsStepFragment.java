@@ -12,6 +12,8 @@ import android.text.InputType;
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
@@ -22,7 +24,13 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
     private static final long ACTION_MESSAGE_PRIORITY = 140L;
     private static final long ACTION_CAPTURE_RATE = 150L;
 
-    private Preferences prefs = getPreferences();
+    private Preferences prefs;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        prefs = getPreferences();
+    }
 
     @Override
     public int onProvideTheme() {
@@ -66,9 +74,17 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 .descriptionEditInputType(InputType.TYPE_CLASS_PHONE)
                 .build();
 
+        GuidedAction reconnect = new GuidedAction.Builder(getContext())
+                .id(ACTION_RECONNECT)
+                .title(getString(R.string.pref_title_reconnect))
+                .checkSetId(GuidedAction.CHECKBOX_CHECK_SET_ID)
+                .checked(false)
+                .build();
+
         actions.add(stepInfo);
         actions.add(enterHost);
         actions.add(enterPort);
+        actions.add(reconnect);
 
     }
 
