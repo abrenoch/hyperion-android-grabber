@@ -23,6 +23,7 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
     private static final long ACTION_RECONNECT_DELAY = 130L;
     private static final long ACTION_MESSAGE_PRIORITY = 140L;
     private static final long ACTION_CAPTURE_RATE = 150L;
+    private static final int ACTION_CAPTURE_RATE_SET_ID = 1500;
 
     private Preferences prefs;
 
@@ -59,20 +60,21 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 .enabled(false)
                 .build();
 
-        GuidedAction enterHost = new GuidedAction.Builder(getContext())
-                .id(ACTION_HOST_NAME)
-                .title(getString(R.string.pref_title_host))
-                .description(getPreferences().getString(R.string.pref_key_hyperion_host, null))
-                .descriptionEditable(true)
-                .build();
-        GuidedAction enterPort = new GuidedAction.Builder(getContext())
-                .id(ACTION_PORT)
-                .title(getString(R.string.pref_title_port))
-                .description(getPreferences().getString(R.string.pref_key_hyperion_port, "19445"))
-                .descriptionEditable(true)
-                .descriptionInputType(InputType.TYPE_CLASS_PHONE)
-                .descriptionEditInputType(InputType.TYPE_CLASS_PHONE)
-                .build();
+        GuidedAction enterHost = unSignedNumberAction(
+                ACTION_HOST_NAME,
+                getString(R.string.pref_title_host),
+                getPreferences().getString(R.string.pref_key_hyperion_host, null)
+        );
+        GuidedAction enterPort = unSignedNumberAction(
+                ACTION_PORT,
+                getString(R.string.pref_title_port),
+                getPreferences().getString(R.string.pref_key_hyperion_port, "19445")
+        );
+        GuidedAction priority = unSignedNumberAction(
+                ACTION_MESSAGE_PRIORITY,
+                getString(R.string.pref_title_priority),
+                getPreferences().getString(R.string.pref_key_hyperion_priority, "50")
+        );
 
         GuidedAction reconnect = new GuidedAction.Builder(getContext())
                 .id(ACTION_RECONNECT)
@@ -81,11 +83,45 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 .checked(false)
                 .build();
 
+        GuidedAction reconnectDelay = unSignedNumberAction(
+                ACTION_RECONNECT_DELAY,
+                getString(R.string.pref_title_reconnect_delay),
+                getPreferences().getString(R.string.pref_key_reconnect_delay, "5")
+        );
+
+        String[] frameRateOptions = getResources().getStringArray(R.array.pref_list_framerate_values);
+
+        GuidedAction captureRate = radioListAction(
+                ACTION_CAPTURE_RATE,
+                getString(R.string.pref_title_framerate),
+                getString(R.string.pref_summary_framerate),
+                ACTION_CAPTURE_RATE_SET_ID,
+                frameRateOptions,
+                getPreferences().getString(R.string.pref_key_hyperion_framerate, "30")
+
+        );
+
         actions.add(stepInfo);
         actions.add(enterHost);
         actions.add(enterPort);
+        actions.add(priority);
         actions.add(reconnect);
+        actions.add(reconnectDelay);
+        actions.add(captureRate);
 
+
+
+    }
+
+    @Override
+    public long onGuidedActionEditedAndProceed(GuidedAction action) {
+        if ((action.getDescriptionEditInputType() & InputType.TYPE_CLASS_NUMBER) != 0){
+            CharSequence description = action.getDescription();
+            if (description != null){
+                action.setDescription(description.toString().replaceAll("[^\\d]", ""));
+            }
+        }
+        return super.onGuidedActionEditedAndProceed(action);
     }
 
     @Override
@@ -95,7 +131,7 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
     }
 
     @Override
-    public void onGuidedActionClicked(GuidedAction action) {
+    public void onGuidedActionClicked(@NonNull GuidedAction action) {
         if (action.getId() == SettingsStepBaseFragment.CONTINUE) {
 
             try {

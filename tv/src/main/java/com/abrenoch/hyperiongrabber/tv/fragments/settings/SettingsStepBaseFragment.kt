@@ -3,6 +3,7 @@ package com.abrenoch.hyperiongrabber.tv.fragments.settings
 import android.os.Bundle
 import android.support.v17.leanback.app.GuidedStepSupportFragment
 import android.support.v17.leanback.widget.GuidedAction
+import android.text.InputType
 import android.widget.Toast
 import com.abrenoch.hyperiongrabber.common.util.Preferences
 import com.abrenoch.hyperiongrabber.tv.R
@@ -38,6 +39,37 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
                 .title(getString(R.string.guidedstep_cancel))
                 .description(R.string.guidedstep_nevermind)
                 .build()
+    }
+
+    protected fun unSignedNumberAction(id: Long, title: String, description: String?): GuidedAction {
+        return GuidedAction.Builder(context)
+                .id(id)
+                .title(title)
+                .description(description)
+                .descriptionEditable(true)
+                .descriptionInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED)
+                .descriptionEditInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED)
+                .build()
+
+    }
+
+    protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionValues: Array<String>, selected: String?): GuidedAction {
+        val subActions = optionValues.map {
+            GuidedAction.Builder(context)
+                    .checkSetId(setId)
+                    .title(it)
+                    .checked(it == selected)
+                    .build()
+        }
+
+
+        return GuidedAction.Builder(context)
+                .id(id)
+                .title(title)
+                .description(description)
+                .subActions(subActions)
+                .build()
+
     }
 
     /** makes sure a value is filled for the GuidedAction and
