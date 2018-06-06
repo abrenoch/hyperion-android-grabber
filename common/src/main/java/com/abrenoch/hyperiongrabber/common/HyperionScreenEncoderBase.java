@@ -54,6 +54,10 @@ public class HyperionScreenEncoderBase {
         throw new RuntimeException("Stub!");
     }
 
+    public void resumeRecording() {
+        throw new RuntimeException("Stub!");
+    }
+
     public float findScaleFactor() {
         float step = (float) 0.2;
         for (float i = 1; i < 100; i += step) {
