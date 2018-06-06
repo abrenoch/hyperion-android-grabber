@@ -137,9 +137,11 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
             try {
                 String host = assertValue(ACTION_HOST_NAME);
                 String port = assertValue(ACTION_PORT);
+                String frameRate = assertSubActionValue(ACTION_CAPTURE_RATE);
 
                 prefs.putString(R.string.pref_key_hyperion_host, host);
                 prefs.putString(R.string.pref_key_hyperion_port, port);
+                prefs.putString(R.string.pref_key_hyperion_framerate, frameRate);
 
                 FragmentActivity activity = getActivity();
                 activity.setResult(Activity.RESULT_OK);

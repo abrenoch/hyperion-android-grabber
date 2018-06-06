@@ -86,6 +86,21 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         }
     }
 
+    /** makes sure a value is filled for the GuidedAction and
+     * returns that value. If it is not filled, a toast is shown and this
+     * fun @throws a [AssertionError]
+     */
+    protected fun assertSubActionValue(actionId: Long): String {
+        with(findAction(actionId)){
+            val selected = subActions.find { it.isChecked }
+            if (selected == null) {
+                notifyRequired(actionId)
+                throw AssertionError("$actionId has no value")
+            }
+            return selected.title.toString()
+        }
+    }
+
     /** Returns empty string if not set */
     private fun stringValueForAction(actionId: Long): String =
         findAction(actionId).description?.toString() ?: ""
