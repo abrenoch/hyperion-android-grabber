@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.abrenoch.hyperiongrabber.common.network.NetworkScanner;
 import com.abrenoch.hyperiongrabber.common.util.HyperionScannerTask;
 import com.abrenoch.hyperiongrabber.tv.R;
 
@@ -59,9 +60,6 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
     public void onScannerCompleted(@Nullable String foundIpAddress) {
         isScanning = false;
 
-        //todo: use port from scan result
-        int foundPort = 12345;
-
         if (foundIpAddress == null){
             startScanButton.setText(R.string.scanner_retry_button);
             manualSetupButton.requestFocus();
@@ -70,7 +68,7 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
             Intent intent = new Intent(this, ScanResultActivity.class);
             intent.putExtra(ScanResultActivity.EXTRA_RESULT_HOST_NAME, foundIpAddress);
 
-            intent.putExtra(ScanResultActivity.EXTRA_RESULT_PORT, String.valueOf(foundPort));
+            intent.putExtra(ScanResultActivity.EXTRA_RESULT_PORT, String.valueOf(NetworkScanner.PORT));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish(); // Finish the current activity
