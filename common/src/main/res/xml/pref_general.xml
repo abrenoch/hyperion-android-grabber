@@ -86,7 +86,6 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:enabled="false"
         android:key="start_on_boot"
         android:title="@string/pref_title_boot"
         android:summary="@string/pref_summary_boot" />
