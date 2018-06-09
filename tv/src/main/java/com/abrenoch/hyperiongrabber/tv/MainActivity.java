@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.tv.wizard.WizardActivity;
 
 public class MainActivity extends LeanbackActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
@@ -56,6 +58,9 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         mRecorderRunning = false;
 
         setContentView(R.layout.activity_main);
+        if(!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.wizard_previously_started), false)) {
+            startActivity(new Intent(this, WizardActivity.class));
+        }
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         mMediaProjectionManager = (MediaProjectionManager)
                                         getSystemService(Context.MEDIA_PROJECTION_SERVICE);
