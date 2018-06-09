@@ -40,8 +40,6 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             String error = intent.getStringExtra(BROADCAST_ERROR);
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
-            } else if (checked){
-                Toast.makeText(getBaseContext(), getResources().getText(R.string.toast_service_started), Toast.LENGTH_LONG).show();
             }
             setImageViews(checked);
         }
