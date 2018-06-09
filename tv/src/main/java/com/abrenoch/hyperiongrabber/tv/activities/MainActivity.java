@@ -6,12 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
 import com.abrenoch.hyperiongrabber.tv.SettingsActivity;
 
@@ -66,9 +65,9 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     /** @return whether the activity was initialized */
     private boolean initIfConfigured() {
         // Do we have a valid server config?
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String host = preferences.getString("hyperion_host", null);
-        String port = preferences.getString("hyperion_port", null);
+        Preferences preferences = new Preferences(getApplicationContext());
+        String host = preferences.getString(R.string.pref_key_hyperion_host, null);
+        String port = preferences.getString(R.string.pref_key_hyperion_port, null);
 
         if (host == null || port == null){
             return false;

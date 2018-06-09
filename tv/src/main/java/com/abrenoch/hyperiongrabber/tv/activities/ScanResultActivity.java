@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.common.network.Hyperion;
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
 
 import java.io.IOException;
@@ -112,7 +112,7 @@ public class ScanResultActivity extends LeanbackActivity {
     /** Save scan result to SharedPreferences */
     private void saveResult() {
         Preferences prefs = new Preferences(getApplicationContext());
-        prefs.putString(R.string.pref_key_hyperion_port, hostName);
+        prefs.putString(R.string.pref_key_hyperion_host, hostName);
         prefs.putString(R.string.pref_key_hyperion_port, String.valueOf(port));
     }
 
