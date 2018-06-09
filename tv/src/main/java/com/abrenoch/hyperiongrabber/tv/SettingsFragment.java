@@ -14,7 +14,6 @@
 
 package com.abrenoch.hyperiongrabber.tv;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v17.preference.LeanbackPreferenceFragment;
@@ -22,7 +21,6 @@ import android.support.v17.preference.LeanbackSettingsFragment;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.Log;
 
 public class SettingsFragment extends LeanbackSettingsFragment
         implements DialogPreference.TargetFragment {
