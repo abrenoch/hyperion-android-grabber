@@ -63,7 +63,8 @@
     </string-array>
 
     <string name="error_empty_host">Host setting should not be empty</string>
-    <string name="error_empty_port">Port setting should not be empty</string>
+    <string name="error_empty_or_invalid_port">Port setting should contain a valid port number</string>
+    <string name="error_server_unreachable">Could not connect to the hyperion server. Check your settings and make sure hyperion is running</string>
 
     <string name="toast_must_give_permission">Permission must be granted to record screen data.</string>
     <string name="toast_service_started">Press Back to close the app. Your screen content will continue to be sent to Hyperion</string>
