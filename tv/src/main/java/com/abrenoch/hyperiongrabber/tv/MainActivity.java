@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
 
 public class MainActivity extends LeanbackActivity implements ImageView.OnClickListener,
@@ -160,15 +161,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
-        Intent intent = new Intent(this, HyperionScreenService.class);
-        intent.setAction(HyperionScreenService.ACTION_START);
-        intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
-        intent.putExtras(data);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            startService(intent);
-        }
+        BootActivity.startScreenRecorder(this, resultCode, data);
     }
 
     public void stopScreenRecorder() {
