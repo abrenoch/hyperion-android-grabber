@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:background="@drawable/pill_background"
-        android:drawablePadding="12dp"
+        android:drawablePadding="8dp"
         android:drawableStart="@drawable/ic_info_white_24dp"
         android:gravity="center"
         android:paddingBottom="8dp"
