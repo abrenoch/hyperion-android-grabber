@@ -190,6 +190,8 @@ public class HyperionScreenEncoderOGL extends HyperionScreenEncoderBase implemen
                         requestDraw = true;
                         mSync.notifyAll();
                     }
+                } else {
+                    requestDraw = false;
                 }
             }
         };
@@ -211,33 +213,28 @@ public class HyperionScreenEncoderOGL extends HyperionScreenEncoderBase implemen
                 double min_nano_time = 1e9 / mFrameRate;
                 synchronized (mSync) {
                     local_request_draw = requestDraw;
-
                     if (!requestDraw) {
                         try {
                             mSync.wait(intervals);
-                            local_request_draw = requestDraw;
-                            requestDraw = false;
                         } catch (final InterruptedException e) {
                             return;
                         }
                     }
                 }
                 if (mIsCapturing) {
-                    if (local_request_draw) {
-                        if (System.nanoTime() - mLastFrame >= min_nano_time) {
-                            mSourceTexture.updateTexImage();
-                            mSourceTexture.getTransformMatrix(mTexMatrix);
-                            mSurfaceTexture.updateTexImage();
-                            mEncoderSurface.makeCurrent();
-                            mDrawer.drawFrame(mTexId, mTexMatrix);
-                            sendImage();
-                            mLastFrame = System.nanoTime();
-                            mEncoderSurface.swapBuffers();
-                            makeCurrent();
-                            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-                            GLES20.glFlush();
-                            frameAvailableSoon();
-                        }
+                    if (local_request_draw && System.nanoTime() - mLastFrame >= min_nano_time) {
+                        mSourceTexture.updateTexImage();
+                        mSourceTexture.getTransformMatrix(mTexMatrix);
+                        mSurfaceTexture.updateTexImage();
+                        mEncoderSurface.makeCurrent();
+                        mDrawer.drawFrame(mTexId, mTexMatrix);
+                        sendImage();
+                        mLastFrame = System.nanoTime();
+                        mEncoderSurface.swapBuffers();
+                        makeCurrent();
+                        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+                        GLES20.glFlush();
+                        frameAvailableSoon();
                     }
                     queueEvent(this);
                 } else {
@@ -279,10 +276,4 @@ public class HyperionScreenEncoderOGL extends HyperionScreenEncoderBase implemen
 
         return bao.toByteArray();
     }
-
-//    public interface HyperionEncoderListener {
-//        public void onPrepared(HyperionScreenEncoder encoder);
-//        public void onStopped(HyperionScreenEncoder encoder);
-//        public void sendFrame(byte[] data, int width, int height);
-//    }
 }

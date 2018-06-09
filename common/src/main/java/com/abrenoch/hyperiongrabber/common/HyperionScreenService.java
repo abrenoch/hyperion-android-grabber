@@ -4,8 +4,10 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
@@ -69,6 +71,18 @@ public class HyperionScreenService extends Service {
 //        }
     };
 
+    BroadcastReceiver mWakeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (DEBUG) Log.v(TAG, "ACTION_SCREEN_ON intent received");
+            if (currentEncoder() != null && !isCapturing()) {
+                if (DEBUG) Log.v(TAG, "Encoder not grabbing, attempting to restart");
+                currentEncoder().resumeRecording();
+            }
+            notifyActivity();
+        }
+    };
+
     @Override
     public void onCreate() {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -123,6 +137,7 @@ public class HyperionScreenService extends Service {
                             startScreenRecord(intent);
                             notifyActivity();
                             startForeground(NOTIFICATION_ID, getNotification());
+                            registerReceiver(mWakeReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
                         } else {
                             notifyActivity();
                         }
@@ -135,6 +150,11 @@ public class HyperionScreenService extends Service {
                     notifyActivity();
                     break;
                 case ACTION_EXIT:
+                    try {
+                        unregisterReceiver(mWakeReceiver);
+                    } catch (Exception e) {
+                        if (DEBUG) Log.v(TAG, "Wake receiver not registered");
+                    }
                     stopScreenRecord();
                     stopForeground(true);
                     notifyActivity();
@@ -169,6 +189,7 @@ public class HyperionScreenService extends Service {
         return notificationIntent;
     }
 
+    // TODO: probably only need one button in here. Only one seems to work anyway...
     public Notification getNotification() {
         HyperionNotification notification = new HyperionNotification(this, mNotificationManager);
         String label = "START GRABBER";
