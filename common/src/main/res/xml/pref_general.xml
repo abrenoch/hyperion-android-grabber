@@ -2,6 +2,20 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/pref_title">
+    
+    <PreferenceCategory android:title="@string/pref_group_wizard">
+
+        <!-- TODO call individually TV or mobile Wizard-->
+        <Preference
+            android:key="connection_wizard"
+            android:summary="@string/pref_summary_wizard"
+            android:title="@string/pref_title_wizard" >
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.abrenoch.hyperiongrabber.tv.wizard.WizardActivity"
+                android:targetPackage="com.abrenoch.hyperiongrabber.tv" />
+        </Preference>
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/pref_group_connection">
