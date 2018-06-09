@@ -9,8 +9,27 @@
     <com.abrenoch.hyperiongrabber.common.views.SweepGradientView
         android:id="@+id/sweepGradientView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/grabberStartedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/pill_background"
+        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_info_white_24dp"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:text="@string/message_service_started"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
@@ -34,16 +53,16 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="12dp"
         android:adjustViewBounds="true"
-        android:clickable="true"
+        android:background="@drawable/image_button_background"
 
+        android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toTopOf="@+id/sweepGradientView"
         app:layout_constraintEnd_toStartOf="@+id/settingsButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/sweepGradientView"
-        app:layout_constraintTop_toBottomOf="@+id/sweepGradientView"
 
-        android:background="@drawable/image_button_background"
+        app:layout_constraintTop_toBottomOf="@+id/sweepGradientView"
 
         app:srcCompat="@drawable/ic_power_black_72dp" />
 
