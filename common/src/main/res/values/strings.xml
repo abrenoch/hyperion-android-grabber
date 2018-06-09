@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Hyperion Grabber</string>
     <string name="pref_title">Settings</string>
+    
+    <!-- Connection Wizard-->
+    <string name="pref_group_wizard">Connection Wizard</string>
+    <string name="pref_title_wizard">Run Wizard</string>
+    <string name="pref_summary_wizard">Start the Wizard to configure Hyperion Grabber</string>
 
     <!-- Connection settings -->
     <string name="pref_group_connection">Connection</string>
@@ -52,4 +57,47 @@
 
     <string name="toast_must_give_permission">Permission must be granted to record screen data.</string>
     <string name="toast_service_started">Press Back to close the app. Your screen content will continue to be sent to Hyperion</string>
+    
+    <!-- WIZARD -->
+
+    <!-- First Run (Introduction) -->
+    <string name="first_run_wizard_title">Welcome</string>
+    <string name="first_run_wizard_breadcrumb">Hyperion Grabber</string>
+    <string name="first_run_wizard_description">This appears to be the first time that you have run Hyperion Grabber. To help you get up and running quickly this wizard will take you through the configuration steps that are necessary to start Hyperion Grabber. You may close this wizard at any time and configure Hyperion Grabber manually in the preferences or start the Wizard again.</string>
+
+    <!-- First Step (Select server from list or manually input ip and port) -->
+    <string name="first_step_wizard_title">Hyperion Server</string>
+    <string name="first_step_wizard_breadcrumb">First Step</string>
+    <string name="first_step_wizard_description">Hyperion servers can be automatically identified on the network (via Zeroconf). Please select a Hyperion server from the found list. If the server can not be found, you can enter the connection information manually.</string>
+    <string name="first_step_title_manually">Manually</string>
+    <string name="first_step_title_ip">Hostname/IP</string>
+    <string name="first_step_toast_ip_invalid">Invalid Hostname or IP address</string>
+    <string name="first_step_title_port">Protocol Buffer Port</string>
+    <string name="first_step_toast_port_invalid">Invalid Protocol Buffer Port</string>
+
+    <!-- Second Step (Additional settings) -->
+    <string name="additional_step_wizard_title">Additional Settings</string>
+    <string name="additional_step_wizard_breadcrumb">Second Step</string>
+    <string name="additional_step_wizard_description">Almost finished. Just a few extra settings and you\'re done.</string>
+    <string name="additional_step_priority_title">Message Priority</string>
+    <string name="additional_step_reconnect_title">Reconnect</string>
+    <string name="additional_step_reconnect_description_enabled">Enabled</string>
+    <string name="additional_step_reconnect_description_disabled">Disabled</string>
+    <string name="additional_step_reconnect_enable">Enable</string>
+    <string name="additional_step_reconnect_disable">Disable</string>
+    <string name="additional_step_reconnect_delay_title">Reconnect Delay</string>
+    <string name="additional_step_framerate_title">Capture Rate</string>
+    <string name="additional_step_grabber_title">Grabber</string>
+    <string name="additional_step_grabber_media">MediaProjection</string>
+    <string name="additional_step_grabber_ogl">OpenGL</string>
+
+    <!-- Last Step (Final Words) -->
+    <string name="last_step_title">Complete</string>
+    <string name="last_step_breadcrumb">Finish</string>
+    <string name="last_step_description">That is all the information that is required for you to proceed. If you would like to change any of these settings in the future you can do so in the preferences dialog.</string>
+
+    <!-- General -->
+    <string name="wizard_previously_started">ARG_FIRST_RUN</string>
+
+    <!-- WIZARD -->
 </resources>
