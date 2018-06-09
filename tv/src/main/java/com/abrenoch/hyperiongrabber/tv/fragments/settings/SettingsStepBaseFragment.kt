@@ -47,8 +47,8 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
                 .title(title)
                 .description(description)
                 .descriptionEditable(true)
-                .descriptionInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED)
-                .descriptionEditInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED)
+                .descriptionInputType(InputType.TYPE_CLASS_NUMBER)
+                .descriptionEditInputType(InputType.TYPE_CLASS_NUMBER)
                 .build()
 
     }

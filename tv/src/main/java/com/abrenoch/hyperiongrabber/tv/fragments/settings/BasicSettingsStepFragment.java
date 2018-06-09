@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidedAction;
 import android.support.v4.app.FragmentActivity;
-import android.text.InputType;
 
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
@@ -109,19 +108,6 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
         actions.add(reconnectDelay);
         actions.add(captureRate);
 
-
-
-    }
-
-    @Override
-    public long onGuidedActionEditedAndProceed(GuidedAction action) {
-        if ((action.getDescriptionEditInputType() & InputType.TYPE_CLASS_NUMBER) != 0){
-            CharSequence description = action.getDescription();
-            if (description != null){
-                action.setDescription(description.toString().replaceAll("[^\\d]", ""));
-            }
-        }
-        return super.onGuidedActionEditedAndProceed(action);
     }
 
     @Override
