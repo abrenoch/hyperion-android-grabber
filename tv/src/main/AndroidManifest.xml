@@ -21,6 +21,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".wizard.WizardActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:exported="true"
             android:theme="@style/LeanbackPreferences" />
