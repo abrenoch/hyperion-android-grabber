@@ -10,29 +10,26 @@
         android:id="@+id/sweepGradientView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/grabberStartedIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/grabberStartedText"
-        app:layout_constraintEnd_toStartOf="@id/grabberStartedText"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/grabberStartedText"
-        android:layout_marginEnd="12dp"
-        app:srcCompat="@drawable/ic_info_white_24dp" />
+        android:visibility="visible" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/grabberStartedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        android:drawablePadding="12dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:drawableStart="@drawable/ic_info_white_24dp"
+        android:background="@drawable/pill_background"
         android:text="@string/message_service_started"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/grabberStartedIcon" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"

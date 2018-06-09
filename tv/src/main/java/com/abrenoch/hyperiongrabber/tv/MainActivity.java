@@ -1,5 +1,7 @@
 package com.abrenoch.hyperiongrabber.tv;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -41,7 +43,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
             }
-            setImageViews(checked);
+            setImageViews(checked, true);
         }
     };
 
@@ -69,7 +71,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         ib.setOnFocusChangeListener(this);
         ib.setFocusable(true);
 
-        setImageViews(mRecorderRunning);
+        setImageViews(mRecorderRunning, false);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
@@ -122,7 +124,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
                 if (mRecorderRunning) {
                     stopScreenRecorder();
                 }
-                setImageViews(false);
+                setImageViews(false, true);
                 return;
             }
             Log.i(TAG, "Starting screen capture");
@@ -147,12 +149,25 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         }
     }
 
-    private void setImageViews(boolean running) {
+    private void setImageViews(boolean running, boolean animated) {
         View rainbow = findViewById(R.id.sweepGradientView);
+        View message = findViewById(R.id.grabberStartedText);
         if (running) {
-            rainbow.setVisibility(View.VISIBLE);
+            if (animated){
+                fadeView(rainbow, true);
+                fadeView(message, true);
+            } else {
+                rainbow.setVisibility(View.VISIBLE);
+                message.setVisibility(View.VISIBLE);
+            }
         } else {
-            rainbow.setVisibility(View.INVISIBLE);
+            if (animated){
+                fadeView(rainbow, false);
+                fadeView(message, false);
+            } else {
+                rainbow.setVisibility(View.INVISIBLE);
+                message.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -186,5 +201,22 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             }
         }
         return false;
+    }
+
+    private void fadeView(View view, boolean visible){
+        float alpha = visible ? 1f : 0f;
+        int endVisibility = visible ? View.VISIBLE : View.INVISIBLE;
+        view.setVisibility(View.VISIBLE);
+        view.animate()
+                .alpha(alpha)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setVisibility(endVisibility);
+                    }
+                })
+                .start();
+
+
     }
 }
