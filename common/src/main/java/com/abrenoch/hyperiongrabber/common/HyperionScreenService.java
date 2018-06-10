@@ -9,23 +9,28 @@ import android.content.Intent;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.abrenoch.hyperiongrabber.common.network.Hyperion;
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class HyperionScreenService extends Service {
     public static final String BROADCAST_ERROR = "SERVICE_ERROR";
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String TAG = "HyperionScreenService";
 
     private static final String BASE = "com.abrenoch.hyperiongrabber.service.";
@@ -57,6 +62,9 @@ public class HyperionScreenService extends Service {
 
         @Override
         public void onConnectionError(int errorID, String error) {
+            stopScreenRecord();
+            mStartError = getResources().getString(R.string.error_server_unreachable);
+            notifyActivity();
             Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e("ERROR", error);
             if (RECONNECT) Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
@@ -78,23 +86,38 @@ public class HyperionScreenService extends Service {
     private boolean prepared() {
         Preferences prefs = new Preferences(getBaseContext());
         String host = prefs.getString(R.string.pref_key_hyperion_host, null);
-        String port = prefs.getString(R.string.pref_key_hyperion_port, null);
+        String portString = prefs.getString(R.string.pref_key_hyperion_port, null);
         String priority = prefs.getString(R.string.pref_key_hyperion_priority, "50");
         String rate = prefs.getString(R.string.pref_key_hyperion_framerate, "30");
         OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber, false);
         RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect, false);
         String delay = prefs.getString(R.string.pref_key_reconnect_delay, "5");
-        if (host == null || Objects.equals(host, "0.0.0.0") || Objects.equals(host, "")) {
+        if (TextUtils.isEmpty(host) || Objects.equals(host, "0.0.0.0")) {
             mStartError = getResources().getString(R.string.error_empty_host);
             return false;
         }
-        if (port == null || Objects.equals(port, "")) {
-            mStartError = getResources().getString(R.string.error_empty_port);
+        if (TextUtils.isEmpty(portString)) {
+            mStartError = getResources().getString(R.string.error_empty_or_invalid_port);
             return false;
         }
+
+        int portInt;
+        try {
+            portInt = Integer.parseInt(portString);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            mStartError = getResources().getString(R.string.error_empty_or_invalid_port);
+            return false;
+        }
+
+        if (!assertHostReachable(host, portInt)){
+            mStartError = getResources().getString(R.string.error_server_unreachable);
+            return false;
+        }
+
         mFrameRate = Integer.parseInt(rate);
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority), RECONNECT, Integer.parseInt(delay));
+        mHyperionThread = new HyperionThread(mReceiver, host, portInt, Integer.parseInt(priority), RECONNECT, Integer.parseInt(delay));
         mHyperionThread.start();
         mStartError = null;
         return true;
@@ -117,14 +140,7 @@ public class HyperionScreenService extends Service {
             switch (action) {
                 case ACTION_START:
                     if (mHyperionThread == null) {
-                        boolean prepd = prepared();
-                        if (prepd) {
-                            startScreenRecord(intent);
-                            notifyActivity();
-                            startForeground(NOTIFICATION_ID, getNotification());
-                        } else {
-                            notifyActivity();
-                        }
+                        tryStart(intent);
                     }
                     break;
                 case ACTION_STOP:
@@ -245,7 +261,39 @@ public class HyperionScreenService extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
-    public interface HyperionThreadBroadcaster {
+    private void tryStart(Intent intent){
+        new Thread(() -> { // need to be on a worker thread for network access
+            boolean prepd = prepared();
+            if (prepd) {
+                new Handler(Looper.getMainLooper()).post(() -> { // need to be on Main thread for starting the recorder
+                    startScreenRecord(intent);
+                    notifyActivity();
+                });
+                startForeground(NOTIFICATION_ID, getNotification());
+            } else {
+                notifyActivity();
+            }
+
+        }).start();
+
+    }
+
+    private boolean assertHostReachable(String host, int port){
+        try {
+            Hyperion hyperion = new Hyperion(host, port);
+            if (hyperion.isConnected()){
+                hyperion.disconnect();
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+        public interface HyperionThreadBroadcaster {
 //        void onResponse(String response);
         void onConnected();
         void onConnectionError(int errorHash, String errorString);
