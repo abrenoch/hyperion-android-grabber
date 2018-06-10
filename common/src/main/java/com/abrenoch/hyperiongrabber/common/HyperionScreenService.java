@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
@@ -260,11 +262,13 @@ public class HyperionScreenService extends Service {
     }
 
     private void tryStart(Intent intent){
-        new Thread(() -> {
+        new Thread(() -> { // need to be on a worker thread for network access
             boolean prepd = prepared();
             if (prepd) {
-                startScreenRecord(intent);
-                notifyActivity();
+                new Handler(Looper.getMainLooper()).post(() -> { // need to be on Main thread for starting the recorder
+                    startScreenRecord(intent);
+                    notifyActivity();
+                });
                 startForeground(NOTIFICATION_ID, getNotification());
             } else {
                 notifyActivity();
