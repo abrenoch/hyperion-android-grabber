@@ -59,11 +59,13 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 .enabled(false)
                 .build();
 
-        GuidedAction enterHost = unSignedNumberAction(
-                ACTION_HOST_NAME,
-                getString(R.string.pref_title_host),
-                getPreferences().getString(R.string.pref_key_hyperion_host, null)
-        );
+        GuidedAction enterHost = new GuidedAction.Builder(getContext())
+                .id(ACTION_HOST_NAME)
+                .title(getString(R.string.pref_title_host))
+                .description(getPreferences().getString(R.string.pref_key_hyperion_host, null))
+                .descriptionEditable(true)
+                .build();
+
         GuidedAction enterPort = unSignedNumberAction(
                 ACTION_PORT,
                 getString(R.string.pref_title_port),
@@ -124,10 +126,12 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 String host = assertValue(ACTION_HOST_NAME);
                 String port = assertValue(ACTION_PORT);
                 String frameRate = assertSubActionValue(ACTION_CAPTURE_RATE);
+                boolean reconnect = findActionById(ACTION_RECONNECT).isChecked();
 
                 prefs.putString(R.string.pref_key_hyperion_host, host);
                 prefs.putString(R.string.pref_key_hyperion_port, port);
                 prefs.putString(R.string.pref_key_hyperion_framerate, frameRate);
+                prefs.putBoolean(R.string.pref_key_reconnect, reconnect);
 
                 FragmentActivity activity = getActivity();
                 activity.setResult(Activity.RESULT_OK);
