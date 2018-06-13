@@ -16,5 +16,7 @@
     <string name="guidedstep_cancel">Cancel</string>
     <string name="guidedstep_required">Required</string>
     <string name="header_icon">Header icon</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
 
 </resources>

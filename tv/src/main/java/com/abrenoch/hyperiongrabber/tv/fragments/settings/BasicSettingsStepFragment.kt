@@ -10,7 +10,7 @@ import com.abrenoch.hyperiongrabber.tv.R
 
 internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
-    private var prefs: Preferences? = null
+    private lateinit var prefs: Preferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         return R.style.Theme_Example_Leanback_GuidedStep_First
     }
 
-    override fun onCreateGuidance(savedInstanceState: Bundle): GuidanceStylist.Guidance {
+    override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
         val title = getString(R.string.guidedstep_basic_settings_title)
         val description = getString(R.string.guidedstep_basic_settings_description)
         val breadCrumb = getString(R.string.guidedstep_basic_settings_breadcrumb)
@@ -58,11 +58,13 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 preferences.getString(R.string.pref_key_hyperion_priority, "50")
         )
 
+        val reconnectEnabled = preferences.getBoolean(R.string.pref_key_reconnect, true)
+
         val reconnect = GuidedAction.Builder(context)
                 .id(ACTION_RECONNECT)
                 .title(getString(R.string.pref_title_reconnect))
                 .checkSetId(GuidedAction.CHECKBOX_CHECK_SET_ID)
-                .checked(false)
+                .checked(reconnectEnabled)
                 .build()
 
         val reconnectDelay = unSignedNumberAction(
@@ -70,6 +72,18 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 getString(R.string.pref_title_reconnect_delay),
                 preferences.getString(R.string.pref_key_reconnect_delay, "5")
         )
+
+        val reconnectDescription =
+                if (reconnectEnabled){
+                    getString(R.string.enabled)
+                } else getString(R.string.disabled)
+
+        val reconnectGroup = GuidedAction.Builder(context)
+                .id(ACTION_RECONNECT_GROUP)
+                .title(getString(R.string.pref_title_reconnect))
+                .description(reconnectDescription)
+                .subActions(listOf(reconnect, reconnectDelay))
+                .build()
 
         val frameRateLabels = resources.getStringArray(R.array.pref_list_framerate)
         val frameRateValues = resources.getStringArray(R.array.pref_list_framerate_values)
@@ -89,8 +103,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         actions.add(enterHost)
         actions.add(enterPort)
         actions.add(priority)
-        actions.add(reconnect)
-        actions.add(reconnectDelay)
+        actions.add(reconnectGroup)
         actions.add(captureRate)
 
     }
@@ -109,10 +122,10 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, Int::class.java)
                 val reconnect = findActionById(ACTION_RECONNECT).isChecked
 
-                prefs!!.putString(R.string.pref_key_hyperion_host, host)
-                prefs!!.putString(R.string.pref_key_hyperion_port, port)
-                prefs!!.putInt(R.string.pref_key_hyperion_framerate, frameRate)
-                prefs!!.putBoolean(R.string.pref_key_reconnect, reconnect)
+                prefs.putString(R.string.pref_key_hyperion_host, host)
+                prefs.putString(R.string.pref_key_hyperion_port, port)
+                prefs.putInt(R.string.pref_key_hyperion_framerate, frameRate)
+                prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
 
                 val activity = activity
                 activity.setResult(Activity.RESULT_OK)
@@ -128,13 +141,29 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         super.onGuidedActionClicked(action)
     }
 
+    override fun onSubGuidedActionClicked(action: GuidedAction): Boolean {
+        if (action.id == ACTION_RECONNECT){
+            val newDescription = if(action.isChecked){
+                getString(R.string.enabled)
+            } else getString(R.string.disabled)
+
+            findActionById(ACTION_RECONNECT_GROUP)
+                    .description = newDescription
+            
+            return !action.isChecked
+        }
+
+        return super.onSubGuidedActionClicked(action)
+    }
+
     companion object {
         private const val ACTION_HOST_NAME = 100L
         private const val ACTION_PORT = 110L
-        private const val ACTION_RECONNECT = 120L
-        private const val ACTION_RECONNECT_DELAY = 130L
-        private const val ACTION_MESSAGE_PRIORITY = 140L
-        private const val ACTION_CAPTURE_RATE = 150L
+        private const val ACTION_RECONNECT_GROUP = 200L
+        private const val ACTION_RECONNECT = 210L
+        private const val ACTION_RECONNECT_DELAY = 220L
+        private const val ACTION_MESSAGE_PRIORITY = 300L
+        private const val ACTION_CAPTURE_RATE = 400L
         private const val ACTION_CAPTURE_RATE_SET_ID = 1500
     }
 
