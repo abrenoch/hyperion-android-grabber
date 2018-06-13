@@ -90,14 +90,16 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
                 getPreferences().getString(R.string.pref_key_reconnect_delay, "5")
         );
 
-        String[] frameRateOptions = getResources().getStringArray(R.array.pref_list_framerate_values);
+        String[] frameRateLabels = getResources().getStringArray(R.array.pref_list_framerate);
+        String[] frameRateValues = getResources().getStringArray(R.array.pref_list_framerate_values);
 
         GuidedAction captureRate = radioListAction(
                 ACTION_CAPTURE_RATE,
                 getString(R.string.pref_title_framerate),
                 getString(R.string.pref_summary_framerate),
                 ACTION_CAPTURE_RATE_SET_ID,
-                frameRateOptions,
+                frameRateLabels,
+                frameRateValues,
                 getPreferences().getString(R.string.pref_key_hyperion_framerate, "30")
 
         );
@@ -125,12 +127,12 @@ public class BasicSettingsStepFragment extends SettingsStepBaseFragment {
             try {
                 String host = assertValue(ACTION_HOST_NAME);
                 String port = assertValue(ACTION_PORT);
-                String frameRate = assertSubActionValue(ACTION_CAPTURE_RATE);
+                Integer frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, Integer.class);
                 boolean reconnect = findActionById(ACTION_RECONNECT).isChecked();
 
                 prefs.putString(R.string.pref_key_hyperion_host, host);
                 prefs.putString(R.string.pref_key_hyperion_port, port);
-                prefs.putString(R.string.pref_key_hyperion_framerate, frameRate);
+                prefs.putInt(R.string.pref_key_hyperion_framerate, frameRate);
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect);
 
                 FragmentActivity activity = getActivity();

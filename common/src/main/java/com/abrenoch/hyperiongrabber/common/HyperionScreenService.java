@@ -80,7 +80,7 @@ public class HyperionScreenService extends Service {
         String host = prefs.getString(R.string.pref_key_hyperion_host, null);
         String port = prefs.getString(R.string.pref_key_hyperion_port, null);
         String priority = prefs.getString(R.string.pref_key_hyperion_priority, "50");
-        String rate = prefs.getString(R.string.pref_key_hyperion_framerate, "30");
+        mFrameRate = prefs.getInt(R.string.pref_key_hyperion_framerate, 30);
         OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber, false);
         RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect, false);
         String delay = prefs.getString(R.string.pref_key_reconnect_delay, "5");
@@ -92,7 +92,6 @@ public class HyperionScreenService extends Service {
             mStartError = getResources().getString(R.string.error_empty_port);
             return false;
         }
-        mFrameRate = Integer.parseInt(rate);
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority), RECONNECT, Integer.parseInt(delay));
         mHyperionThread.start();

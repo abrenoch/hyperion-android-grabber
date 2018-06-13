@@ -19,6 +19,16 @@ class Preferences(context: Context) {
         edit.apply()
     }
 
+    fun getInt(@StringRes keyResourceId: Int, default: Int = 0): Int {
+        return preferences.getInt(resources.getString(keyResourceId), default)
+    }
+
+    fun putInt(@StringRes keyResourceId: Int, value: Int){
+        val edit = preferences.edit()
+        edit.putInt(resources.getString(keyResourceId), value)
+        edit.apply()
+    }
+
     fun getBoolean(@StringRes keyResourceId: Int, default: Boolean): Boolean =
         preferences.getBoolean(resources.getString(keyResourceId), default)
 

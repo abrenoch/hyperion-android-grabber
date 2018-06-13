@@ -1,5 +1,6 @@
 package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v17.leanback.app.GuidedStepSupportFragment
 import android.support.v17.leanback.widget.GuidedAction
@@ -53,12 +54,13 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
     }
 
-    protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionValues: Array<String>, selected: String?): GuidedAction {
-        val subActions = optionValues.map {
-            GuidedAction.Builder(context)
+    protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionLabels: Array<String>, optionValues: Array<String>, selected: String?): GuidedAction {
+        val subActions = optionLabels.zip(optionValues).map {
+            ValueGuidedAction.Companion.Builder(context)
                     .checkSetId(setId)
-                    .title(it)
-                    .checked(it == selected)
+                    .title(it.first)
+                    .value(it.second)
+                    .checked(it.second == selected)
                     .build()
         }
 
@@ -90,14 +92,19 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
      * returns that value. If it is not filled, a toast is shown and this
      * fun @throws a [AssertionError]
      */
-    protected fun assertSubActionValue(actionId: Long): String {
+    protected fun <T: Any> assertSubActionValue(actionId: Long, type: Class<T>): T {
         with(findAction(actionId)){
             val selected = subActions.find { it.isChecked }
+
+            if (selected is ValueGuidedAction){
+                return selected.value as T
+            }
+
             if (selected == null) {
                 notifyRequired(actionId)
                 throw AssertionError("$actionId has no value")
             }
-            return selected.title.toString()
+            return selected.title.toString() as T
         }
     }
 
@@ -121,4 +128,30 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         protected const val CONTINUE = -1303L
         protected const val BACK = -1304L
     }
+
+    class ValueGuidedAction : GuidedAction() {
+        var value: Any? = null
+
+        companion object {
+            class Builder(context: Context) : GuidedAction.BuilderBase<Builder>(context){
+                var value: Any? = null
+
+                fun value(value: Any?): Builder {
+                    this.value = value
+                    return this
+                }
+
+                fun build(): ValueGuidedAction{
+                    val action = ValueGuidedAction()
+                    applyValues(action)
+
+                    action.value = value
+                    return action
+                }
+
+            }
+        }
+    }
+
+
 }
