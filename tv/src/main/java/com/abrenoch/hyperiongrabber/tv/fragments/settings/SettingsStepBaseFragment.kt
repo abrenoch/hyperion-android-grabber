@@ -125,8 +125,8 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
     }
 
     companion object {
-        protected const val CONTINUE = -1303L
-        protected const val BACK = -1304L
+        const val CONTINUE = -1303L
+        const val BACK = -1304L
     }
 
     class ValueGuidedAction : GuidedAction() {
