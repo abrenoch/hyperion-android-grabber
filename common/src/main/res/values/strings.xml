@@ -2,6 +2,9 @@
     <string name="app_name">Hyperion Grabber</string>
     <string name="pref_title">Settings</string>
 
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+
     <!-- Network scanner -->
     <string name="scanner_title">Hi there!</string>
     <string name="scanner_description">Hyperion Grabber can scan your network for running servers, so you won\'t have to fiddle with your remote to punch in an ip-address.</string>
@@ -39,6 +42,9 @@
     <string name="pref_title_framerate">Capture Rate</string>
     <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
     <string name="pref_default_framerate">30</string>
+    <string name="pref_group_grabber">Grabber</string>
+    <string name="pref_title_media_grabber">MediaProjection</string>
+    <string name="pref_summary_media_grabber">The default grabber</string>
     <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
     <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
 

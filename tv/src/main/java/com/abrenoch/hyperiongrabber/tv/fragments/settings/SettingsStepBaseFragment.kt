@@ -11,10 +11,10 @@ import com.abrenoch.hyperiongrabber.tv.R
 
 internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
-    lateinit var preferences: Preferences
+    lateinit var prefs: Preferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        preferences = Preferences(context)
+        prefs = Preferences(context)
         super.onCreate(savedInstanceState)
 
     }
@@ -93,7 +93,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
      * fun @throws a [AssertionError]
      */
     protected fun <T: Any> assertSubActionValue(actionId: Long, type: Class<T>): T {
-        with(findAction(actionId)){
+        with(findActionById(actionId)){
             val selected = subActions.find { it.isChecked }
 
             if (selected is ValueGuidedAction){
@@ -108,20 +108,21 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         }
     }
 
+    protected fun notifyActionIdChanged(id: Long){
+        notifyActionChanged(findActionPositionById(id))
+    }
+
     /** Returns empty string if not set */
     private fun stringValueForAction(actionId: Long): String =
-        findAction(actionId).description?.toString() ?: ""
+        findActionById(actionId).description?.toString() ?: ""
 
-
-    private fun findAction(actionId: Long): GuidedAction =
-        actions.find { it.id == actionId }!!
 
     private fun showToast(message: CharSequence){
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun notifyRequired(actionId: Long){
-        showToast("Please enter ${findAction(actionId).title}")
+        showToast("Please enter ${findActionById(actionId).title}")
     }
 
     companion object {

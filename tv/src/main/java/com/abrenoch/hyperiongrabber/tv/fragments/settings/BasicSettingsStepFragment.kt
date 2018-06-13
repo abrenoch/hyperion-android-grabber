@@ -4,18 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v17.leanback.widget.GuidanceStylist
 import android.support.v17.leanback.widget.GuidedAction
-
-import com.abrenoch.hyperiongrabber.common.util.Preferences
 import com.abrenoch.hyperiongrabber.tv.R
 
 internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
-
-    private lateinit var prefs: Preferences
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        prefs = preferences
-    }
 
     override fun onProvideTheme(): Int {
         return R.style.Theme_Example_Leanback_GuidedStep_First
@@ -43,22 +34,22 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val enterHost = GuidedAction.Builder(context)
                 .id(ACTION_HOST_NAME)
                 .title(getString(R.string.pref_title_host))
-                .description(preferences.getString(R.string.pref_key_hyperion_host, null))
+                .description(prefs.getString(R.string.pref_key_hyperion_host, null))
                 .descriptionEditable(true)
                 .build()
 
         val enterPort = unSignedNumberAction(
                 ACTION_PORT,
                 getString(R.string.pref_title_port),
-                preferences.getString(R.string.pref_key_hyperion_port, "19445")
+                prefs.getString(R.string.pref_key_hyperion_port, "19445")
         )
         val priority = unSignedNumberAction(
                 ACTION_MESSAGE_PRIORITY,
                 getString(R.string.pref_title_priority),
-                preferences.getString(R.string.pref_key_hyperion_priority, "50")
+                prefs.getString(R.string.pref_key_hyperion_priority, "50")
         )
 
-        val reconnectEnabled = preferences.getBoolean(R.string.pref_key_reconnect, true)
+        val reconnectEnabled = prefs.getBoolean(R.string.pref_key_reconnect, true)
 
         val reconnect = GuidedAction.Builder(context)
                 .id(ACTION_RECONNECT)
@@ -70,13 +61,15 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val reconnectDelay = unSignedNumberAction(
                 ACTION_RECONNECT_DELAY,
                 getString(R.string.pref_title_reconnect_delay),
-                preferences.getString(R.string.pref_key_reconnect_delay, "5")
+                prefs.getString(R.string.pref_key_reconnect_delay, "5")
         )
 
         val reconnectDescription =
                 if (reconnectEnabled){
-                    getString(R.string.enabled)
-                } else getString(R.string.disabled)
+                    R.string.enabled
+                } else {
+                    R.string.disabled
+                }
 
         val reconnectGroup = GuidedAction.Builder(context)
                 .id(ACTION_RECONNECT_GROUP)
@@ -95,9 +88,41 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 ACTION_CAPTURE_RATE_SET_ID,
                 frameRateLabels,
                 frameRateValues,
-                preferences.getString(R.string.pref_key_hyperion_framerate, "30")
+                prefs.getString(R.string.pref_key_hyperion_framerate, "30")
 
         )
+
+        val useOgl = prefs.getBoolean(R.string.pref_key_ogl_grabber, false)
+
+
+        val mediaProjection = ValueGuidedAction.Companion.Builder(context)
+                .id(ACTION_GRABBER_MEDIA)
+                .title(R.string.pref_title_media_grabber)
+                .description(getString(R.string.pref_summary_media_grabber))
+                .checkSetId(ACTION_GRABBER_SET_ID)
+                .checked(!useOgl)
+                .build()
+
+        val ogl = ValueGuidedAction.Companion.Builder(context)
+                .id(ACTION_GRABBER_OGL)
+                .title(R.string.pref_title_ogl_grabber)
+                .description(R.string.pref_summary_ogl_grabber)
+                .checkSetId(ACTION_GRABBER_SET_ID)
+                .checked(useOgl)
+                .build()
+
+        val grabberDescription = if (useOgl){
+            R.string.pref_title_ogl_grabber
+        } else {
+            R.string.pref_title_media_grabber
+        }
+
+        val grabberGroup = GuidedAction.Builder(context)
+                .id(ACTION_GRABBER_GROUP)
+                .title(getString(R.string.pref_group_grabber))
+                .description(grabberDescription)
+                .subActions(listOf(mediaProjection, ogl))
+                .build()
 
         actions.add(stepInfo)
         actions.add(enterHost)
@@ -105,6 +130,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         actions.add(priority)
         actions.add(reconnectGroup)
         actions.add(captureRate)
+        actions.add(grabberGroup)
 
     }
 
@@ -142,16 +168,31 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
     }
 
     override fun onSubGuidedActionClicked(action: GuidedAction): Boolean {
-        if (action.id == ACTION_RECONNECT){
-            val newDescription = if(action.isChecked){
-                getString(R.string.enabled)
-            } else getString(R.string.disabled)
+        when {
+            action.id == ACTION_RECONNECT -> {
+                val newDescription = if(action.isChecked){
+                    getString(R.string.enabled)
+                } else getString(R.string.disabled)
 
-            findActionById(ACTION_RECONNECT_GROUP)
-                    .description = newDescription
-            
-            return !action.isChecked
+                findActionById(ACTION_RECONNECT_GROUP)
+                        .description = newDescription
+                notifyActionIdChanged(ACTION_RECONNECT_GROUP)
+
+
+
+                return !action.isChecked
+            }
+            action.id == ACTION_GRABBER_MEDIA -> {
+                findActionById(ACTION_GRABBER_GROUP).description = getString(R.string.pref_title_media_grabber)
+                notifyActionIdChanged(ACTION_GRABBER_GROUP)
+
+            }
+            action.id == ACTION_GRABBER_OGL -> {
+                findActionById(ACTION_GRABBER_GROUP).description = getString(R.string.pref_title_ogl_grabber)
+                notifyActionIdChanged(ACTION_GRABBER_GROUP)
+            }
         }
+
 
         return super.onSubGuidedActionClicked(action)
     }
@@ -165,6 +206,10 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         private const val ACTION_MESSAGE_PRIORITY = 300L
         private const val ACTION_CAPTURE_RATE = 400L
         private const val ACTION_CAPTURE_RATE_SET_ID = 1500
+        private const val ACTION_GRABBER_GROUP = 500L
+        private const val ACTION_GRABBER_SET_ID = 550
+        private const val ACTION_GRABBER_MEDIA = 560L
+        private const val ACTION_GRABBER_OGL = 570L
     }
 
 
