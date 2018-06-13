@@ -125,7 +125,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                     long now = System.nanoTime();
                     Image img = reader.acquireLatestImage();
                     if (img != null && now - lastFrame >= min_nano_time) {
-                        sendImage(img);
+                        mListener.sendFrame(savePixels(img), mWidthScaled, mHeightScaled);
                         img.close();
                         lastFrame = now;
                     } else if (img != null) {
@@ -138,50 +138,28 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     };
 
-    private byte[] grabPixels(ByteBuffer buffer, int width, int height, int rowStride,
-        int pixelStride, int firstX, int firstY){
+    private byte[] savePixels(Image image){
+        Image.Plane plane = image.getPlanes()[0];
+        ByteBuffer buffer = plane.getBuffer();
 
-        int rowPadding = rowStride - width * pixelStride;
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int pixelStride = plane.getPixelStride();
+        int rowPadding = plane.getRowStride() - width * pixelStride;
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream(width * height * 3);
+
         int offset = 0;
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream(
-                (width - firstX * 2) * (height - firstY * 2) * 3
-        );
-
-        for (int y = 0, compareHeight = height - firstY - 1; y < height; y++, offset += rowPadding) {
-            if (y < firstY || y > compareHeight) continue;
-            for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
-                if (x < firstX || x > compareWidth) continue;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 bao.write(buffer.get(offset)); // R
                 bao.write(buffer.get(offset + 1)); // G
                 bao.write(buffer.get(offset + 2)); // B
+                offset += pixelStride;
             }
+            offset += rowPadding;
         }
 
         return bao.toByteArray();
-    }
-
-    private void sendImage(Image img) {
-        Image.Plane plane = img.getPlanes()[0];
-        ByteBuffer buffer = plane.getBuffer();
-
-        int width = img.getWidth();
-        int height = img.getHeight();
-        int pixelStride = plane.getPixelStride();
-        int rowStride = plane.getRowStride();
-        int firstX = 0;
-        int firstY = 0;
-
-        BorderObject border = findBorder(buffer, width, height, rowStride, pixelStride);
-        if (border.isKnown) {
-            firstX = border.horizontalBorderIndex;
-            firstY = border.verticalBorderIndex;
-        }
-
-        mListener.sendFrame(
-                grabPixels(buffer, width, height, rowStride, pixelStride, firstX, firstY),
-                width - firstX * 2,
-                height - firstY * 2
-        );
     }
 }
