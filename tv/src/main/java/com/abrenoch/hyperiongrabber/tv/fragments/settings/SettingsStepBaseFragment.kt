@@ -89,12 +89,28 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         }
     }
 
+    protected fun findActionByIdRecursive(actionId: Long) =
+        findActionById(actionId) ?: findSubActionById(actionId)
+
+
+    protected fun findSubActionById(subActionId: Long): GuidedAction? {
+        actions.forEach { mainAction ->
+            mainAction.subActions?.find {
+                if (it.id == subActionId) {
+                    return it
+                } else false
+            }
+        }
+
+        return null
+    }
+
     /** makes sure a value is filled for the GuidedAction and
      * returns that value. If it is not filled, a toast is shown and this
      * fun @throws a [AssertionError]
      */
     protected fun <T: Any> assertSubActionValue(actionId: Long, type: Class<T>): T {
-        with(findActionById(actionId)){
+        with(findActionByIdRecursive(actionId)!!){
             val selected = subActions.find { it.isChecked }
 
             if (selected is ValueGuidedAction){
@@ -115,15 +131,15 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
     /** Returns empty string if not set */
     private fun stringValueForAction(actionId: Long): String =
-        findActionById(actionId).description?.toString() ?: ""
+        findActionByIdRecursive(actionId)?.description?.toString() ?: ""
 
 
-    private fun showToast(message: CharSequence){
+    protected fun showToast(message: CharSequence){
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun notifyRequired(actionId: Long){
-        showToast("Please enter ${findActionById(actionId).title}")
+        showToast(getString(R.string.pref_error_missing_field, findActionById(actionId).title))
     }
 
     companion object {

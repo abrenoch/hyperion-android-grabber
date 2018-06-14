@@ -111,6 +111,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
         val mediaProjection = ValueGuidedAction.Companion.Builder(context)
                 .id(ACTION_GRABBER_MEDIA)
+                .value(false)
                 .title(R.string.pref_title_media_grabber)
                 .description(getString(R.string.pref_summary_media_grabber))
                 .checkSetId(ACTION_GRABBER_SET_ID)
@@ -119,6 +120,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
         val ogl = ValueGuidedAction.Companion.Builder(context)
                 .id(ACTION_GRABBER_OGL)
+                .value(true)
                 .title(R.string.pref_title_ogl_grabber)
                 .description(R.string.pref_summary_ogl_grabber)
                 .checkSetId(ACTION_GRABBER_SET_ID)
@@ -166,12 +168,23 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val host = assertValue(ACTION_HOST_NAME)
                 val port = assertValue(ACTION_PORT)
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, Int::class.java)
-                val reconnect = findActionById(ACTION_RECONNECT).isChecked
+                val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
+                val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
+                val reconnectDelay = assertValue(ACTION_RECONNECT_DELAY).let{
+                    try {
+                        Integer.parseInt(it)
+                    } catch (ignored: Exception){
+                        showToast(getString(R.string.pref_error_invalid_field, it, getString(R.string.pref_title_reconnect_delay)))
+                        throw AssertionError("invalid reconnectDelay")
+                    }
+                }
 
                 prefs.putString(R.string.pref_key_hyperion_host, host)
                 prefs.putString(R.string.pref_key_hyperion_port, port)
+                prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
                 prefs.putInt(R.string.pref_key_hyperion_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
+                prefs.putBoolean(R.string.pref_key_ogl_grabber, useOgl)
 
                 val activity = activity
                 activity.setResult(Activity.RESULT_OK)
