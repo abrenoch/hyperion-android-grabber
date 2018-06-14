@@ -42,7 +42,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
                 .build()
     }
 
-    protected fun unSignedNumberAction(id: Long, title: String, description: String?): GuidedAction {
+    protected fun unSignedNumberAction(id: Long, title: String, description: CharSequence?): GuidedAction {
         return GuidedAction.Builder(context)
                 .id(id)
                 .title(title)
@@ -86,6 +86,17 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
                 throw AssertionError("$actionId has no value")
             }
             return this
+        }
+    }
+
+    protected fun assertIntValue(actionId: Long): Int {
+        return assertValue(actionId).let{
+            try {
+                Integer.parseInt(it)
+            } catch (ignored: Exception){
+                showToast(getString(R.string.pref_error_invalid_field, it, getString(R.string.pref_title_reconnect_delay)))
+                throw AssertionError("invalid reconnectDelay")
+            }
         }
     }
 

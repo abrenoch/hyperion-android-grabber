@@ -113,7 +113,7 @@ public class ScanResultActivity extends LeanbackActivity {
     private void saveResult() {
         Preferences prefs = new Preferences(getApplicationContext());
         prefs.putString(R.string.pref_key_hyperion_host, hostName);
-        prefs.putString(R.string.pref_key_hyperion_port, String.valueOf(port));
+        prefs.putInt(R.string.pref_key_hyperion_port, port);
     }
 
     private void startKonfetti() {

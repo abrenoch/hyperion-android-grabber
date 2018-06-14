@@ -41,7 +41,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val enterPort = unSignedNumberAction(
                 ACTION_PORT,
                 getString(R.string.pref_title_port),
-                prefs.getString(R.string.pref_key_hyperion_port, "19445")
+                prefs.getInt(R.string.pref_key_hyperion_port, 19445).toString()
         )
         val priority = unSignedNumberAction(
                 ACTION_MESSAGE_PRIORITY,
@@ -166,21 +166,14 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
             try {
                 val host = assertValue(ACTION_HOST_NAME)
-                val port = assertValue(ACTION_PORT)
+                val port = assertIntValue(ACTION_PORT)
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, Int::class.java)
                 val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
-                val reconnectDelay = assertValue(ACTION_RECONNECT_DELAY).let{
-                    try {
-                        Integer.parseInt(it)
-                    } catch (ignored: Exception){
-                        showToast(getString(R.string.pref_error_invalid_field, it, getString(R.string.pref_title_reconnect_delay)))
-                        throw AssertionError("invalid reconnectDelay")
-                    }
-                }
+                val reconnectDelay = assertIntValue(ACTION_RECONNECT_DELAY)
 
                 prefs.putString(R.string.pref_key_hyperion_host, host)
-                prefs.putString(R.string.pref_key_hyperion_port, port)
+                prefs.putInt(R.string.pref_key_hyperion_port, port)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
                 prefs.putInt(R.string.pref_key_hyperion_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)

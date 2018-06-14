@@ -78,7 +78,7 @@ public class HyperionScreenService extends Service {
     private boolean prepared() {
         Preferences prefs = new Preferences(getBaseContext());
         String host = prefs.getString(R.string.pref_key_hyperion_host, null);
-        String port = prefs.getString(R.string.pref_key_hyperion_port, null);
+        int port = prefs.getInt(R.string.pref_key_hyperion_port, -1);
         String priority = prefs.getString(R.string.pref_key_hyperion_priority, "50");
         mFrameRate = prefs.getInt(R.string.pref_key_hyperion_framerate, 30);
         OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber, false);
@@ -88,12 +88,12 @@ public class HyperionScreenService extends Service {
             mStartError = getResources().getString(R.string.error_empty_host);
             return false;
         }
-        if (port == null || Objects.equals(port, "")) {
+        if (port == -1) {
             mStartError = getResources().getString(R.string.error_empty_port);
             return false;
         }
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority), RECONNECT, delay);
+        mHyperionThread = new HyperionThread(mReceiver, host, port, Integer.parseInt(priority), RECONNECT, delay);
         mHyperionThread.start();
         mStartError = null;
         return true;
