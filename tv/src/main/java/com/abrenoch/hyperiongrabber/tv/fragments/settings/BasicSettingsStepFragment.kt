@@ -65,11 +65,16 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         )
 
         val reconnectDescription =
-                if (reconnectEnabled){
-                    R.string.enabled
+                if (prefs.contains(R.string.pref_key_reconnect)){
+                    if (reconnectEnabled){
+                        R.string.enabled
+                    } else {
+                        R.string.disabled
+                    }
                 } else {
-                    R.string.disabled
+                    R.string.pref_summary_reconnect
                 }
+
 
         val reconnectGroup = GuidedAction.Builder(context)
                 .id(ACTION_RECONNECT_GROUP)
@@ -81,14 +86,23 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val frameRateLabels = resources.getStringArray(R.array.pref_list_framerate)
         val frameRateValues = resources.getIntArray(R.array.pref_list_framerate_values).toTypedArray()
 
+        val selectedCaptureRate = prefs.getInt(R.string.pref_key_hyperion_framerate, 30)
+
+        val captureRateDescription =
+                if (prefs.contains(R.string.pref_key_hyperion_framerate)){
+                    frameRateLabels[frameRateValues.indexOf(selectedCaptureRate)]
+                } else {
+                    getString(R.string.pref_summary_framerate)
+                }
+
         val captureRate = radioListAction(
                 ACTION_CAPTURE_RATE,
                 getString(R.string.pref_title_framerate),
-                getString(R.string.pref_summary_framerate),
+                captureRateDescription,
                 ACTION_CAPTURE_RATE_SET_ID,
                 frameRateLabels,
                 frameRateValues,
-                prefs.getInt(R.string.pref_key_hyperion_framerate, 30)
+                selectedCaptureRate
 
         )
 
@@ -111,11 +125,17 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 .checked(useOgl)
                 .build()
 
-        val grabberDescription = if (useOgl){
-            R.string.pref_title_ogl_grabber
-        } else {
-            R.string.pref_title_media_grabber
-        }
+        val grabberDescription =
+            if (prefs.contains(R.string.pref_key_ogl_grabber)){
+                if (useOgl){
+                    R.string.pref_title_ogl_grabber
+                } else {
+                    R.string.pref_title_media_grabber
+                }
+            } else {
+                R.string.pref_summary_grabber
+            }
+
 
         val grabberGroup = GuidedAction.Builder(context)
                 .id(ACTION_GRABBER_GROUP)

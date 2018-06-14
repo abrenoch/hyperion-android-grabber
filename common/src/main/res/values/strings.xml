@@ -43,6 +43,7 @@
     <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
     <string name="pref_default_framerate">30</string>
     <string name="pref_group_grabber">Grabber</string>
+    <string name="pref_summary_grabber">The capturing method to use</string>
     <string name="pref_title_media_grabber">MediaProjection</string>
     <string name="pref_summary_media_grabber">The default grabber</string>
     <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
