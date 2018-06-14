@@ -23,13 +23,15 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
     private static final boolean DEBUG = false;
+    private static boolean BORDER_DETECTION_ENABLED = false; // enables detecting borders for standard grabbing
+    private boolean USE_AVERAGE_COLOR = false; // if true will send only average color of screen
     private VirtualDisplay mVirtualDisplay;
     private ImageReader mImageReader;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
-                           final MediaProjection projection, final int width, final int height,
-                           final int density, int frameRate) {
+                          final MediaProjection projection, final int width, final int height,
+                          final int density, int frameRate) {
         super(listener, projection, width, height, density, frameRate);
 
         try {
@@ -125,7 +127,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                     long now = System.nanoTime();
                     Image img = reader.acquireLatestImage();
                     if (img != null && now - lastFrame >= min_nano_time) {
-                        mListener.sendFrame(savePixels(img), mWidthScaled, mHeightScaled);
+                        sendImage(img);
                         img.close();
                         lastFrame = now;
                     } else if (img != null) {
@@ -138,28 +140,89 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     };
 
-    private byte[] savePixels(Image image){
-        Image.Plane plane = image.getPlanes()[0];
-        ByteBuffer buffer = plane.getBuffer();
+    private byte[] getPixels(ByteBuffer buffer, int width, int height, int rowStride,
+                             int pixelStride, int firstX, int firstY){
 
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int pixelStride = plane.getPixelStride();
-        int rowPadding = plane.getRowStride() - width * pixelStride;
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream(width * height * 3);
-
+        int rowPadding = rowStride - width * pixelStride;
         int offset = 0;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                bao.write(buffer.get(offset)); // R
-                bao.write(buffer.get(offset + 1)); // G
-                bao.write(buffer.get(offset + 2)); // B
-                offset += pixelStride;
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream(
+                (width - firstX * 2) * (height - firstY * 2) * 3
+        );
+
+        for (int y = 0, compareHeight = height - firstY - 1; y < height; y++, offset += rowPadding) {
+            if (y < firstY || y > compareHeight) continue;
+            for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
+                if (x < firstX || x > compareWidth) continue;
+                bao.write(buffer.get(offset) & 0xff); // R
+                bao.write(buffer.get(offset + 1) & 0xff); // G
+                bao.write(buffer.get(offset + 2) & 0xff); // B
             }
-            offset += rowPadding;
         }
 
+
+
         return bao.toByteArray();
+    }
+
+    private byte[] getAverageColor(ByteBuffer buffer, int width, int height, int rowStride,
+                                   int pixelStride, int firstX, int firstY) {
+
+        long totalRed = 0, totalGreen = 0, totalBlue = 0;
+        int rowPadding = rowStride - width * pixelStride;
+        int pixelCount = width * height;
+        int offset = 0;
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream(3);
+
+        for (int y = 0, compareHeight = height - firstY - 1; y < height; y++, offset += rowPadding) {
+            if (y < firstY || y > compareHeight) continue;
+            for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
+                if (x < firstX || x > compareWidth) continue;
+                totalRed += buffer.get(offset & 0xff); // R
+                totalGreen += buffer.get((offset + 1) & 0xff); // G
+                totalBlue += buffer.get((offset + 2) & 0xff); // B
+            }
+        }
+
+        bao.write((int) totalRed / pixelCount);
+        bao.write((int) totalGreen / pixelCount);
+        bao.write((int) totalBlue / pixelCount);
+
+        return bao.toByteArray();
+    }
+
+    private void sendImage(Image img) {
+        Image.Plane plane = img.getPlanes()[0];
+        ByteBuffer buffer = plane.getBuffer();
+
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int pixelStride = plane.getPixelStride();
+        int rowStride = plane.getRowStride();
+        int firstX = 0;
+        int firstY = 0;
+
+        if (BORDER_DETECTION_ENABLED || USE_AVERAGE_COLOR) {
+            BorderObject border = findBorder(buffer, width, height, rowStride, pixelStride);
+            if (border.isKnown) {
+                firstX = border.horizontalBorderIndex;
+                firstY = border.verticalBorderIndex;
+            }
+        }
+
+        if (USE_AVERAGE_COLOR) {
+            mListener.sendFrame(
+                    getAverageColor(buffer, width, height, rowStride, pixelStride, firstX, firstY),
+                    1,
+                    1
+            );
+        } else {
+            mListener.sendFrame(
+                    getPixels(buffer, width, height, rowStride, pixelStride, firstX, firstY),
+                    width - firstX * 2,
+                    height - firstY * 2
+            );
+        }
     }
 }
