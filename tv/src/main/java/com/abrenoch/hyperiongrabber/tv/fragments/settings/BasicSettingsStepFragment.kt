@@ -88,7 +88,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 ACTION_CAPTURE_RATE_SET_ID,
                 frameRateLabels,
                 frameRateValues,
-                prefs.getString(R.string.pref_key_hyperion_framerate, "30")
+                prefs.getInt(R.string.pref_key_hyperion_framerate, 30)
 
         )
 

@@ -54,7 +54,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
     }
 
-    protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionLabels: Array<String>, optionValues: Array<String>, selected: String?): GuidedAction {
+    protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionLabels: Array<String>, optionValues: Array<out Any>, selected: Any?): GuidedAction {
         val subActions = optionLabels.zip(optionValues).map {
             ValueGuidedAction.Companion.Builder(context)
                     .checkSetId(setId)
