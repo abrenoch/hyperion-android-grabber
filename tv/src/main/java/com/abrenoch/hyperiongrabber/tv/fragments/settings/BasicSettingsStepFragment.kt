@@ -79,7 +79,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 .build()
 
         val frameRateLabels = resources.getStringArray(R.array.pref_list_framerate)
-        val frameRateValues = resources.getStringArray(R.array.pref_list_framerate_values)
+        val frameRateValues = resources.getIntArray(R.array.pref_list_framerate_values).toTypedArray()
 
         val captureRate = radioListAction(
                 ACTION_CAPTURE_RATE,
@@ -190,6 +190,10 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
             action.id == ACTION_GRABBER_OGL -> {
                 findActionById(ACTION_GRABBER_GROUP).description = getString(R.string.pref_title_ogl_grabber)
                 notifyActionIdChanged(ACTION_GRABBER_GROUP)
+            }
+            action is ValueGuidedAction && action.parentId != null -> {
+                findActionById(action.parentId).description = action.title
+                notifyActionIdChanged(action.parentId)
             }
         }
 

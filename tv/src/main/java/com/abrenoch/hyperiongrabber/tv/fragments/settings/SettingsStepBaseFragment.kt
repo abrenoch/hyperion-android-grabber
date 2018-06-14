@@ -57,6 +57,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
     protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionLabels: Array<String>, optionValues: Array<out Any>, selected: Any?): GuidedAction {
         val subActions = optionLabels.zip(optionValues).map {
             ValueGuidedAction.Companion.Builder(context)
+                    .parentId(id)
                     .checkSetId(setId)
                     .title(it.first)
                     .value(it.second)
@@ -130,23 +131,30 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         const val BACK = -1304L
     }
 
-    class ValueGuidedAction : GuidedAction() {
-        var value: Any? = null
+    class ValueGuidedAction(
+            val value: Any? = null,
+            val parentId: Long? = null
+    ) : GuidedAction() {
 
         companion object {
             class Builder(context: Context) : GuidedAction.BuilderBase<Builder>(context){
                 var value: Any? = null
+                var parentId: Long? = null
 
                 fun value(value: Any?): Builder {
                     this.value = value
                     return this
                 }
 
+                fun parentId(parentId: Long?): Builder {
+                    this.parentId = parentId
+                    return this
+                }
+
                 fun build(): ValueGuidedAction{
-                    val action = ValueGuidedAction()
+                    val action = ValueGuidedAction(value, parentId)
                     applyValues(action)
 
-                    action.value = value
                     return action
                 }
 
