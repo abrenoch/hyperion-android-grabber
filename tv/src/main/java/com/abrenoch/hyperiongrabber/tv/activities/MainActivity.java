@@ -1,5 +1,7 @@
 package com.abrenoch.hyperiongrabber.tv.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -20,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
@@ -43,10 +46,8 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             String error = intent.getStringExtra(BROADCAST_ERROR);
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
-            } else if (checked){
-                Toast.makeText(getBaseContext(), getResources().getText(R.string.toast_service_started), Toast.LENGTH_LONG).show();
             }
-            setImageViews(checked);
+            setImageViews(checked, true);
         }
     };
 
@@ -103,7 +104,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         ib.setOnFocusChangeListener(this);
         ib.setFocusable(true);
 
-        setImageViews(mRecorderRunning);
+        setImageViews(mRecorderRunning, false);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
@@ -166,7 +167,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
                 if (mRecorderRunning) {
                     stopScreenRecorder();
                 }
-                setImageViews(false);
+                setImageViews(false, true);
                 return;
             }
             Log.i(TAG, "Starting screen capture");
@@ -191,26 +192,31 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         }
     }
 
-    private void setImageViews(boolean running) {
+    private void setImageViews(boolean running, boolean animated) {
         View rainbow = findViewById(R.id.sweepGradientView);
+        View message = findViewById(R.id.grabberStartedText);
         if (running) {
-            rainbow.setVisibility(View.VISIBLE);
+            if (animated){
+                fadeView(rainbow, true);
+                fadeView(message, true);
+            } else {
+                rainbow.setVisibility(View.VISIBLE);
+                message.setVisibility(View.VISIBLE);
+            }
         } else {
-            rainbow.setVisibility(View.INVISIBLE);
+            if (animated){
+                fadeView(rainbow, false);
+                fadeView(message, false);
+            } else {
+                rainbow.setVisibility(View.INVISIBLE);
+                message.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
-        Intent intent = new Intent(this, HyperionScreenService.class);
-        intent.setAction(HyperionScreenService.ACTION_START);
-        intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
-        intent.putExtras(data);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            startService(intent);
-        }
+        BootActivity.startScreenRecorder(this, resultCode, data);
     }
 
     public void stopScreenRecorder() {
@@ -230,5 +236,22 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
             }
         }
         return false;
+    }
+
+    private void fadeView(View view, boolean visible){
+        float alpha = visible ? 1f : 0f;
+        int endVisibility = visible ? View.VISIBLE : View.INVISIBLE;
+        view.setVisibility(View.VISIBLE);
+        view.animate()
+                .alpha(alpha)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setVisibility(endVisibility);
+                    }
+                })
+                .start();
+
+
     }
 }

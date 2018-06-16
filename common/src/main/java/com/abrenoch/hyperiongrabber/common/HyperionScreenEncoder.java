@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
+    private static final boolean DEBUG = false;
     private VirtualDisplay mVirtualDisplay;
     private ImageReader mImageReader;
 
@@ -41,24 +42,35 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void prepare() throws IOException, MediaCodec.CodecException {
-        mIsCapturing = true;
-
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 "Capturing Display",
                 mWidthScaled, mHeightScaled, mDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                null, displayCallback, null);
+                null, mDisplayCallback, null);
 
         setImageReader();
     }
 
     @Override
     public void stopRecording() {
-        Log.i(TAG, "stopRecording Called");
+        if (DEBUG) Log.i(TAG, "stopRecording Called");
         mIsCapturing = false;
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
         new Thread(clearAndDisconnect).start();
+        mImageReader.close();
+        mImageReader = null;
+    }
+
+    @Override
+    public void resumeRecording() {
+        if (!isCapturing() && mImageReader != null) {
+            Image img = mImageReader.acquireNextImage();
+            mIsCapturing = true;
+            if (img != null) {
+                img.close();
+            }
+        }
     }
 
     private Runnable clearAndDisconnect  = new Runnable() {
@@ -68,25 +80,26 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     };
 
-    private VirtualDisplay.Callback displayCallback = new VirtualDisplay.Callback() {
+    private VirtualDisplay.Callback mDisplayCallback = new VirtualDisplay.Callback() {
         @Override
         public void onPaused() {
+            if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onPaused triggered");
             super.onPaused();
-            Log.i(TAG, "onPaused");
             mIsCapturing = false;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
         @Override
         public void onResumed() {
+            if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onResumed triggered");
             super.onResumed();
-            Log.i(TAG, "onResumed");
-            mIsCapturing = true;
+            resumeRecording();
         }
 
         @Override
         public void onStopped() {
+            if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onStopped triggered");
             super.onStopped();
-            Log.i(TAG, "onStopped");
             mIsCapturing = false;
         }
     };
@@ -97,6 +110,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
+        mIsCapturing = true;
     }
 
     private OnImageAvailableListener imageAvailableListener = new OnImageAvailableListener() {
@@ -112,6 +126,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                     Image img = reader.acquireLatestImage();
                     if (img != null && now - lastFrame >= min_nano_time) {
                         mListener.sendFrame(savePixels(img), mWidthScaled, mHeightScaled);
+                        img.close();
                         lastFrame = now;
                     } else if (img != null) {
                         img.close();
@@ -145,14 +160,6 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             offset += rowPadding;
         }
 
-        image.close();
-
         return bao.toByteArray();
     }
-
-//    public interface HyperionEncoderListener {
-//        public void onPrepared(HyperionScreenEncoder encoder);
-//        public void onStopped(HyperionScreenEncoder encoder);
-//        public void sendFrame(byte[] data, int width, int height);
-//    }
 }
