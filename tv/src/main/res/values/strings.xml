@@ -9,6 +9,7 @@
     <string name="guidedstep_second_breadcrumb">Steps 2\/2</string>
     <string name="guidedstep_section_advanced_title">Advanced settings</string>
     <string name="guidedstep_section_advanced_description">The settings below can safely be left at their defaults</string>
+    <string name="guidedstep_save">Save</string>
     <string name="guidedstep_continue">Continue</string>
     <string name="guidedstep_letsdoit">Let\'s do it</string>
     <string name="guidedstep_nevermind">Never mind</string>

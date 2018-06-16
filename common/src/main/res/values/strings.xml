@@ -51,7 +51,7 @@
 
     <!-- General settings -->
     <string name="pref_group_general">General</string>
-    <string name="pref_summary_boot">Start screen grabber when android boots</string>
+    <string name="pref_summary_boot">Start screen grabber when device starts</string>
     <string name="pref_title_boot">Grab on Boot</string>
 
     <string name="pref_error_missing_field">%s should not be empty</string>

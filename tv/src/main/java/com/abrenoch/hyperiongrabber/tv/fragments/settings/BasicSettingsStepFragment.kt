@@ -34,6 +34,16 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.getInt(R.string.pref_key_hyperion_port, 19445).toString()
         )
 
+        val startOnBootEnabled = prefs.getBoolean(R.string.pref_key_start_on_boot, true)
+
+        val startOnBoot = GuidedAction.Builder(context)
+                .id(ACTION_START_ON_BOOT)
+                .title(getString(R.string.pref_title_boot))
+                .description(R.string.pref_summary_boot)
+                .checkSetId(GuidedAction.CHECKBOX_CHECK_SET_ID)
+                .checked(startOnBootEnabled)
+                .build()
+
         val advancedInfo = GuidedAction.Builder(context)
                 .title(R.string.guidedstep_section_advanced_title)
                 .description(R.string.guidedstep_section_advanced_description)
@@ -61,7 +71,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val reconnectDelay = unSignedNumberAction(
                 ACTION_RECONNECT_DELAY,
                 getString(R.string.pref_title_reconnect_delay),
-                prefs.getString(R.string.pref_key_reconnect_delay, "5")
+                prefs.getInt(R.string.pref_key_reconnect_delay, 5).toString()
         )
 
         val reconnectDescription =
@@ -148,6 +158,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
         actions.add(enterHost)
         actions.add(enterPort)
+        actions.add(startOnBoot)
         actions.add(advancedInfo)
         actions.add(priority)
         actions.add(reconnectGroup)
@@ -167,6 +178,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
             try {
                 val host = assertValue(ACTION_HOST_NAME)
                 val port = assertIntValue(ACTION_PORT)
+                val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, Int::class.java)
                 val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
@@ -174,6 +186,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
                 prefs.putString(R.string.pref_key_hyperion_host, host)
                 prefs.putInt(R.string.pref_key_hyperion_port, port)
+                prefs.putBoolean(R.string.pref_key_start_on_boot, startOnBootEnabled)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
                 prefs.putInt(R.string.pref_key_hyperion_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
@@ -230,6 +243,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
     companion object {
         private const val ACTION_HOST_NAME = 100L
         private const val ACTION_PORT = 110L
+        private const val ACTION_START_ON_BOOT = 120L
         private const val ACTION_RECONNECT_GROUP = 200L
         private const val ACTION_RECONNECT = 210L
         private const val ACTION_RECONNECT_DELAY = 220L
