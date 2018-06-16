@@ -22,10 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:exported="true"
-            android:theme="@style/LeanbackPreferences" />
-        <activity
             android:name=".activities.NetworkScanActivity"
             android:exported="true"
             android:theme="@style/MyOnboardingTheme" />

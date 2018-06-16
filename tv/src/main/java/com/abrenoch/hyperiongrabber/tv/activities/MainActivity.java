@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
 import com.abrenoch.hyperiongrabber.tv.R;
-import com.abrenoch.hyperiongrabber.tv.SettingsActivity;
 
 public class MainActivity extends LeanbackActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
@@ -177,7 +176,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     }
 
     private void startSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+        Intent intent = new Intent(this, ManualSetupActivity.class);
         Bundle bundle =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                         .toBundle();
