@@ -15,7 +15,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
         val title = getString(R.string.guidedstep_basic_settings_title)
         val description = getString(R.string.guidedstep_basic_settings_description)
-        val icon = activity.getDrawable(R.drawable.ic_qr_android_tv_remote)
+        val icon = activity.getDrawable(R.drawable.ic_qr_android_tv_remote_short)
         return GuidanceStylist.Guidance(title, description, null, icon)
     }
 
