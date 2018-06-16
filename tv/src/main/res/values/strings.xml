@@ -7,8 +7,8 @@
     <string name="guidedstep_second_title">Connection test</string>
     <string name="guidedstep_second_description">let\'s see those lights shine</string>
     <string name="guidedstep_second_breadcrumb">Steps 2\/2</string>
-    <string name="guidedstep_action_title">Confused?</string>
-    <string name="guidedstep_action_description">Just press the back button and start a scan</string>
+    <string name="guidedstep_section_advanced_title">Advanced settings</string>
+    <string name="guidedstep_section_advanced_description">The settings below can safely be left at their defaults</string>
     <string name="guidedstep_continue">Continue</string>
     <string name="guidedstep_letsdoit">Let\'s do it</string>
     <string name="guidedstep_nevermind">Never mind</string>

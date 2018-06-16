@@ -20,15 +20,6 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
-        val desc = resources.getString(R.string.guidedstep_action_description)
-        val stepInfo = GuidedAction.Builder(context)
-                .title(resources.getString(R.string.guidedstep_action_title))
-                .description(desc)
-                .multilineDescription(true)
-                .focusable(false)
-                .infoOnly(true)
-                .enabled(false)
-                .build()
 
         val enterHost = GuidedAction.Builder(context)
                 .id(ACTION_HOST_NAME)
@@ -42,6 +33,16 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 getString(R.string.pref_title_port),
                 prefs.getInt(R.string.pref_key_hyperion_port, 19445).toString()
         )
+
+        val advancedInfo = GuidedAction.Builder(context)
+                .title(R.string.guidedstep_section_advanced_title)
+                .description(R.string.guidedstep_section_advanced_description)
+                .multilineDescription(true)
+                .focusable(false)
+                .infoOnly(true)
+                .enabled(false)
+                .build()
+
         val priority = unSignedNumberAction(
                 ACTION_MESSAGE_PRIORITY,
                 getString(R.string.pref_title_priority),
@@ -145,9 +146,9 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 .subActions(listOf(mediaProjection, ogl))
                 .build()
 
-        actions.add(stepInfo)
         actions.add(enterHost)
         actions.add(enterPort)
+        actions.add(advancedInfo)
         actions.add(priority)
         actions.add(reconnectGroup)
         actions.add(captureRate)
