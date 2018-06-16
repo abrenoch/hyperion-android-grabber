@@ -12,27 +12,35 @@
         >
 
         <com.abrenoch.hyperiongrabber.common.views.SweepGradientView
+            android:id="@+id/sweepGradientView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.abrenoch.hyperiongrabber.mobile.FadingImageView
-            android:id="@+id/imageView_lights"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/grabberStartedText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:visibility="invisible"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/pill_background"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_info_white_24dp"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:text="@string/message_service_started"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_toggle_image_bottom" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -48,23 +56,26 @@
             app:srcCompat="@drawable/ic_toggle_image_middle" />
 
         <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/imageView_button"
+            android:id="@+id/power_toggle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="73dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
+
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
-            android:alpha="0.25"
+
+            android:background="@drawable/image_button_background"
             android:clickable="true"
-            android:focusedByDefault="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_toggle_image_top" />
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatImageView"
+            app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
+            app:layout_constraintTop_toTopOf="@+id/appCompatImageView"
+            app:srcCompat="@drawable/ic_power_black_72dp" />
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
