@@ -15,9 +15,8 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
         val title = getString(R.string.guidedstep_basic_settings_title)
         val description = getString(R.string.guidedstep_basic_settings_description)
-        val breadCrumb = getString(R.string.guidedstep_basic_settings_breadcrumb)
         val icon = activity.getDrawable(R.drawable.ic_settings_ethernet_white_128dp)
-        return GuidanceStylist.Guidance(title, description, breadCrumb, icon)
+        return GuidanceStylist.Guidance(title, description, null, icon)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
