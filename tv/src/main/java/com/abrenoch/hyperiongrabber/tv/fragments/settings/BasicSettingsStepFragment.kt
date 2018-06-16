@@ -9,13 +9,13 @@ import com.abrenoch.hyperiongrabber.tv.R
 internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
     override fun onProvideTheme(): Int {
-        return R.style.Theme_Example_Leanback_GuidedStep_First
+        return R.style.Theme_HyperionGrabber_GuidedStep_First
     }
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
         val title = getString(R.string.guidedstep_basic_settings_title)
         val description = getString(R.string.guidedstep_basic_settings_description)
-        val icon = activity.getDrawable(R.drawable.ic_settings_ethernet_white_128dp)
+        val icon = activity.getDrawable(R.drawable.ic_qr_android_tv_remote)
         return GuidanceStylist.Guidance(title, description, null, icon)
     }
 

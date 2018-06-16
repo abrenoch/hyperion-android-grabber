@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Strings related to guided sequence activity -->
-    <string name="guidedstep_basic_settings_title">Connection settings</string>
-    <string name="guidedstep_basic_settings_description">Communication is key</string>
+    <string name="guidedstep_basic_settings_title">Tip</string>
+    <string name="guidedstep_basic_settings_description">Download the official Android TV Remote app on your phone for easy entry of numbers and text</string>
     <string name="guidedstep_second_title">Connection test</string>
     <string name="guidedstep_second_description">let\'s see those lights shine</string>
     <string name="guidedstep_second_breadcrumb">Steps 2\/2</string>

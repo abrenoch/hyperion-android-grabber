@@ -13,31 +13,27 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Widget.Example.Leanback.GuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
-        <item name="android:background">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="Widget.Example.Leanback.FirstStepGuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <style name="Widget.Example.Leanback.SecondStepGuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
-        <item name="android:padding">24dp</item>
-    </style>
-
-    <style name="Theme.Example.Leanback.GuidedStep" parent="Theme.Leanback.GuidedStep">
-        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.GuidanceIconStyle</item>
-    </style>
-
-    <style name="Widget.Hyperion_Grabber.GuidedActionItemDescriptionStyle" parent="Widget.Leanback.GuidedActionItemDescriptionStyle">
+    <style name="Widget.HyperionGrabber.GuidedActionItemDescriptionStyle" parent="Widget.Leanback.GuidedActionItemDescriptionStyle">
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
-    <style name="Theme.Example.Leanback.GuidedStep.First">
+    <style name="Widget.HyperionGrabber.GuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Widget.HyperionGrabber.FirstStepGuidanceIconStyle" parent="Widget.HyperionGrabber.GuidanceIconStyle">
+        <item name="android:background">#fff</item>
+    </style>
+
+    <style name="Theme.HyperionGrabber.GuidedStep" parent="Theme.Leanback.GuidedStep">
         <item name="guidedStepBackground">@color/colorPrimaryDark</item>
         <item name="guidedActionsBackground">@color/colorPrimaryExtraDark</item>
         <item name="guidedActionsBackgroundDark">@color/colorPrimarySuperDark</item>
-        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.FirstStepGuidanceIconStyle</item>
-
+        <item name="guidanceIconStyle">@style/Widget.HyperionGrabber.GuidanceIconStyle</item>
     </style>
+
+    <style name="Theme.HyperionGrabber.GuidedStep.First" parent="@style/Theme.HyperionGrabber.GuidedStep">
+        <item name="guidanceIconStyle">@style/Widget.HyperionGrabber.FirstStepGuidanceIconStyle</item>
+    </style>
+
 </resources>
