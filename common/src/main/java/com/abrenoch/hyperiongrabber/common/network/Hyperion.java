@@ -31,7 +31,8 @@ public class Hyperion {
 
 
     public boolean isConnected() {
-        return mSocket.isConnected();
+        //noinspection ConstantConditions for some reason mSocket CAN be null sometimes
+        return mSocket != null && mSocket.isConnected();
     }
 
     public void disconnect() throws IOException {
