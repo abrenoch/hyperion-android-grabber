@@ -1,5 +1,7 @@
 package com.abrenoch.hyperiongrabber.mobile;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -9,10 +11,10 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +23,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.mobile.R;
 
 public class MainActivity extends AppCompatActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
             if (error != null) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
             }
-            setImageViews(checked);
+            setImageViews(checked, true);
         }
     };
 
@@ -51,11 +53,13 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         mMediaProjectionManager = (MediaProjectionManager)
                                         getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
-        ImageView iv = findViewById(R.id.imageView_button);
+        ImageView iv = findViewById(R.id.power_toggle);
         iv.setOnClickListener(this);
         iv.setOnFocusChangeListener(this);
         iv.setFocusable(true);
         iv.requestFocus();
+
+        setImageViews(mRecorderRunning, false);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
                 if (mRecorderRunning) {
                     stopScreenRecorder();
                 }
-                setImageViews(false);
+                setImageViews(false, true);
                 return;
             }
             Log.i(TAG, "Starting screen capture");
@@ -128,21 +132,18 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         }
     }
 
-    private void setImageViews(boolean running) {
-        FadingImageView bottomImage = findViewById(R.id.imageView_lights);
-        ImageView buttonImage = findViewById(R.id.imageView_button);
-        if (running) {
-            buttonImage.setAlpha((float) 1);
-            bottomImage.setVisibility(View.VISIBLE);
-        } else {
-            buttonImage.setAlpha((float) 0.25);
-            bottomImage.setVisibility(View.INVISIBLE);
-        }
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
-        BootActivity.startScreenRecorder(this, resultCode, data);
+        Intent intent = new Intent(this, HyperionScreenService.class);
+        intent.setAction(HyperionScreenService.ACTION_START);
+        intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
+        intent.putExtras(data);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     public void stopScreenRecorder() {
@@ -150,6 +151,31 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
             Intent intent = new Intent(this, HyperionScreenService.class);
             intent.setAction(HyperionScreenService.ACTION_EXIT);
             startService(intent);
+        }
+    }
+
+    private void setImageViews(boolean running, boolean animated) {
+        View rainbow = findViewById(R.id.sweepGradientView);
+        View message = findViewById(R.id.grabberStartedText);
+        View buttonImage = findViewById(R.id.power_toggle);
+        if (running) {
+            if (animated){
+                fadeView(rainbow, true);
+                fadeView(message, true);
+            } else {
+                rainbow.setVisibility(View.VISIBLE);
+                message.setVisibility(View.VISIBLE);
+            }
+            buttonImage.setAlpha((float) 1);
+        } else {
+            if (animated){
+                fadeView(rainbow, false);
+                fadeView(message, false);
+            } else {
+                rainbow.setVisibility(View.INVISIBLE);
+                message.setVisibility(View.INVISIBLE);
+            }
+            buttonImage.setAlpha((float) 0.25);
         }
     }
 
@@ -164,7 +190,18 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         return false;
     }
 
-
-
-
+    private void fadeView(View view, boolean visible){
+        float alpha = visible ? 1f : 0f;
+        int endVisibility = visible ? View.VISIBLE : View.INVISIBLE;
+        view.setVisibility(View.VISIBLE);
+        view.animate()
+                .alpha(alpha)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setVisibility(endVisibility);
+                    }
+                })
+                .start();
+    }
 }
