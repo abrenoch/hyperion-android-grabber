@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abrenoch.hyperiongrabber.tv.MainActivity">
+    tools:context="com.abrenoch.hyperiongrabber.tv.activities.MainActivity">
 
     <com.abrenoch.hyperiongrabber.common.views.SweepGradientView
         android:id="@+id/sweepGradientView"

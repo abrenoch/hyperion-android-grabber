@@ -1,4 +1,4 @@
-package com.abrenoch.hyperiongrabber.tv;
+package com.abrenoch.hyperiongrabber.tv.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -22,11 +22,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
+import com.abrenoch.hyperiongrabber.tv.R;
 
 public class MainActivity extends LeanbackActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
+    public static final int REQUEST_INITIAL_SETUP = 2;
     public static final String BROADCAST_ERROR = "SERVICE_ERROR";
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
@@ -47,11 +51,40 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!initIfConfigured()){
+            startSetup();
+        }
+
+
+    }
+
+    /** @return whether the activity was initialized */
+    private boolean initIfConfigured() {
+        // Do we have a valid server config?
+        Preferences preferences = new Preferences(getApplicationContext());
+        String host = preferences.getString(R.string.pref_key_hyperion_host, null);
+        int port = preferences.getInt(R.string.pref_key_hyperion_port, -1);
+
+        if (host == null || port == -1){
+            return false;
+        }
+
+        initActivity();
+        return true;
+    }
+
+    private void startSetup() {
+        // Start onboarding (setup)
+        Intent intent = new Intent(this, NetworkScanActivity.class);
+        startActivityForResult(intent, REQUEST_INITIAL_SETUP);
+    }
+
+    // Prepare activity for display
+    private void initActivity() {
         // assume the recorder is not running until we are notified otherwise
         mRecorderRunning = false;
 
@@ -80,7 +113,6 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         checkForInstance();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -118,6 +150,17 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_INITIAL_SETUP){
+            if (resultCode == RESULT_OK){
+                if (!initIfConfigured()){
+                    startSetup();
+                }
+            } else {
+                finish();
+            }
+
+            return;
+        }
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
             if (resultCode != Activity.RESULT_OK) {
                 Toast.makeText(this, R.string.toast_must_give_permission, Toast.LENGTH_SHORT).show();
@@ -134,7 +177,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     }
 
     private void startSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+        Intent intent = new Intent(this, ManualSetupActivity.class);
         Bundle bundle =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                         .toBundle();
@@ -173,15 +216,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
-        Intent intent = new Intent(this, HyperionScreenService.class);
-        intent.setAction(HyperionScreenService.ACTION_START);
-        intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
-        intent.putExtras(data);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            startService(intent);
-        }
+        BootActivity.startScreenRecorder(this, resultCode, data);
     }
 
     public void stopScreenRecorder() {
