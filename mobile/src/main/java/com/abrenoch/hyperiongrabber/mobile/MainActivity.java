@@ -9,10 +9,10 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
-import com.abrenoch.hyperiongrabber.mobile.R;
 
 public class MainActivity extends AppCompatActivity implements ImageView.OnClickListener,
         ImageView.OnFocusChangeListener {
@@ -164,4 +163,8 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         }
         return false;
     }
+
+
+
+
 }

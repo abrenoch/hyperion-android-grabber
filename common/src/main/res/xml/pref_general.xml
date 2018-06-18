@@ -8,7 +8,6 @@
 
         <EditTextPreference
             android:capitalize="words"
-            android:defaultValue="@string/pref_default_host"
             android:inputType="textCapWords"
             android:key="hyperion_host"
             android:summary="@string/pref_summary_host"
@@ -44,7 +43,7 @@
             android:defaultValue="false"
             android:key="reconnect"
             android:summary="@string/pref_summary_reconnect"
-            android:title="@string/pref_titel_reconnect" />
+            android:title="@string/pref_title_reconnect" />
 
         <EditTextPreference
             android:defaultValue="@string/pref_default_reconnect_delay"

@@ -8,12 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 import java.util.Objects;
 
@@ -91,25 +90,24 @@ public class HyperionScreenService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private boolean prepared() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String host = preferences.getString("hyperion_host", null);
-        String port = preferences.getString("hyperion_port", null);
-        String priority = preferences.getString("hyperion_priority", "50");
-        String rate = preferences.getString("hyperion_framerate", "30");
-        OGL_GRABBER = preferences.getBoolean("ogl_grabber", false);
-        RECONNECT = preferences.getBoolean("reconnect", false);
-        String delay = preferences.getString("delay", "5");
+        Preferences prefs = new Preferences(getBaseContext());
+        String host = prefs.getString(R.string.pref_key_hyperion_host, null);
+        int port = prefs.getInt(R.string.pref_key_hyperion_port, -1);
+        String priority = prefs.getString(R.string.pref_key_hyperion_priority, "50");
+        mFrameRate = prefs.getInt(R.string.pref_key_hyperion_framerate, 30);
+        OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber, false);
+        RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect, false);
+        int delay = prefs.getInt(R.string.pref_key_reconnect_delay, 5);
         if (host == null || Objects.equals(host, "0.0.0.0") || Objects.equals(host, "")) {
             mStartError = getResources().getString(R.string.error_empty_host);
             return false;
         }
-        if (port == null || Objects.equals(port, "")) {
+        if (port == -1) {
             mStartError = getResources().getString(R.string.error_empty_port);
             return false;
         }
-        mFrameRate = Integer.parseInt(rate);
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority), RECONNECT, Integer.parseInt(delay));
+        mHyperionThread = new HyperionThread(mReceiver, host, port, Integer.parseInt(priority), RECONNECT, delay);
         mHyperionThread.start();
         mStartError = null;
         return true;
