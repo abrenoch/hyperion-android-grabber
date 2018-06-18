@@ -4,6 +4,8 @@
 - Added some eye candy for when grabber is started
 - General UI tweaks (tv & mobile)
 - Reconnect behavior implemented for mobile build
+- New connection wizard
+- New settings/connection page (tv build)
 
 ### Fixed
 - Grabber would fail to resume when waking device
