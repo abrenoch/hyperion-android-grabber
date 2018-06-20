@@ -23,36 +23,54 @@
 
     <!-- Connection settings -->
     <string name="pref_group_connection">Connection</string>
+
+    <string name="pref_key_host">pref_key_host</string>
     <string name="pref_title_host">Hyperion Host</string>
     <string name="pref_summary_host">Host your hyperion instance is running on</string>
+
+    <string name="pref_key_port">pref_key_port</string>
     <string name="pref_title_port">Hyperion Protobuf Port</string>
     <string name="pref_summary_port">The protobuf port of your hyperion instance</string>
-    <string name="pref_default_port">19445</string>
+    <integer name="pref_default_port">19445</integer>
+
+    <string name="pref_key_priority">pref_key_priority</string>
     <string name="pref_title_priority">Message Priority</string>
     <string name="pref_summary_priority">Message priority channel to use</string>
-    <string name="pref_default_priority">50</string>
+    <integer name="pref_default_priority">50</integer>
+
+    <string name="pref_key_reconnect">pref_key_reconnect</string>
     <string name="pref_title_reconnect">Reconnect</string>
     <string name="pref_summary_reconnect">Automatic reconnect to hyperion on lost connection</string>
+    <bool name="pref_default_reconnect">true</bool>
+
+    <string name="pref_key_reconnect_delay">pref_key_reconnect_delay</string>
     <string name="pref_title_reconnect_delay">Reconnect Delay</string>
     <string name="pref_summary_reconnect_delay">The number of seconds to wait before trying to reconnect</string>
-    <string name="pref_default_reconnect_delay">5</string>
+    <integer name="pref_default_reconnect_delay">5</integer>
 
     <!-- Capturing settings -->
     <string name="pref_group_capturing">Capturing</string>
+
+    <string name="pref_key_framerate">pref_key_framerate</string>
     <string name="pref_title_framerate">Capture Rate</string>
     <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
-    <string name="pref_default_framerate">30</string>
+    <integer name="pref_default_framerate">30</integer>
+
     <string name="pref_group_grabber">Grabber</string>
     <string name="pref_summary_grabber">The capturing method to use</string>
     <string name="pref_title_media_grabber">MediaProjection</string>
     <string name="pref_summary_media_grabber">The default grabber</string>
+    <string name="pref_key_ogl_grabber">pref_key_ogl_grabber</string>
     <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
     <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
+    <bool name="pref_default_ogl_grabber">false</bool>
 
     <!-- General settings -->
     <string name="pref_group_general">General</string>
+    <string name="pref_key_boot">pref_key_start_on_boot</string>
     <string name="pref_summary_boot">Start screen grabber when device starts</string>
     <string name="pref_title_boot">Grab on Boot</string>
+    <bool name="pref_default_boot">false</bool>
 
     <string name="pref_error_missing_field">%s should not be empty</string>
     <string name="pref_error_invalid_field">%s is not valid for %s</string>
@@ -64,13 +82,13 @@
         <item>30 fps</item>
         <item>60 fps</item>
     </string-array>
-    <integer-array name="pref_list_framerate_values">
+    <string-array name="pref_list_framerate_values">
         <item>10</item>
         <item>15</item>
         <item>24</item>
         <item>30</item>
         <item>60</item>
-    </integer-array>
+    </string-array>
 
     <string name="error_empty_host">Host setting should not be empty</string>
     <string name="error_empty_port">Port setting should not be empty</string>
