@@ -176,7 +176,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         if (action.id == SettingsStepBaseFragment.CONTINUE) {
 
             try {
-                val host = assertValue(ACTION_HOST_NAME)
+                val host = assertStringValue(ACTION_HOST_NAME)
                 val port = assertIntValue(ACTION_PORT)
                 val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, String::class.java)

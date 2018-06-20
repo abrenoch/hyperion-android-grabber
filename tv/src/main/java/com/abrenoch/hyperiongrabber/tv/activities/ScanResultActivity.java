@@ -109,7 +109,7 @@ public class ScanResultActivity extends LeanbackActivity {
         }
     }
 
-    /** Save scan result to SharedPreferences */
+    /** Save scan result to Preferences */
     private void saveResult() {
         Preferences prefs = new Preferences(getApplicationContext());
         prefs.putString(R.string.pref_key_hyperion_host, hostName);
