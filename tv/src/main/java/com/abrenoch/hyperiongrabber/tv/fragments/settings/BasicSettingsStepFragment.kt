@@ -24,17 +24,17 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val enterHost = GuidedAction.Builder(context)
                 .id(ACTION_HOST_NAME)
                 .title(getString(R.string.pref_title_host))
-                .description(prefs.getString(R.string.pref_key_hyperion_host, null))
+                .description(prefs.getString(R.string.pref_key_host, null))
                 .descriptionEditable(true)
                 .build()
 
         val enterPort = unSignedNumberAction(
                 ACTION_PORT,
                 getString(R.string.pref_title_port),
-                prefs.getInt(R.string.pref_key_hyperion_port, 19445).toString()
+                prefs.getInt(R.string.pref_key_port).toString()
         )
 
-        val startOnBootEnabled = prefs.getBoolean(R.string.pref_key_start_on_boot, true)
+        val startOnBootEnabled = prefs.getBoolean(R.string.pref_key_boot)
 
         val startOnBoot = GuidedAction.Builder(context)
                 .id(ACTION_START_ON_BOOT)
@@ -56,10 +56,10 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val priority = unSignedNumberAction(
                 ACTION_MESSAGE_PRIORITY,
                 getString(R.string.pref_title_priority),
-                prefs.getString(R.string.pref_key_hyperion_priority, "50")
+                prefs.getString(R.string.pref_key_priority, "50")
         )
 
-        val reconnectEnabled = prefs.getBoolean(R.string.pref_key_reconnect, true)
+        val reconnectEnabled = prefs.getBoolean(R.string.pref_key_reconnect)
 
         val reconnect = GuidedAction.Builder(context)
                 .id(ACTION_RECONNECT)
@@ -71,7 +71,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val reconnectDelay = unSignedNumberAction(
                 ACTION_RECONNECT_DELAY,
                 getString(R.string.pref_title_reconnect_delay),
-                prefs.getInt(R.string.pref_key_reconnect_delay, 5).toString()
+                prefs.getInt(R.string.pref_key_reconnect_delay).toString()
         )
 
         val reconnectDescription =
@@ -96,10 +96,10 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         val frameRateLabels = resources.getStringArray(R.array.pref_list_framerate)
         val frameRateValues = resources.getStringArray(R.array.pref_list_framerate_values)
 
-        val selectedCaptureRate = prefs.getString(R.string.pref_key_hyperion_framerate, "30")
+        val selectedCaptureRate = prefs.getString(R.string.pref_key_framerate, "30")
 
         val captureRateDescription =
-                if (prefs.contains(R.string.pref_key_hyperion_framerate)){
+                if (prefs.contains(R.string.pref_key_framerate)){
                     frameRateLabels[frameRateValues.indexOf(selectedCaptureRate)]
                 } else {
                     getString(R.string.pref_summary_framerate)
@@ -116,7 +116,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
         )
 
-        val useOgl = prefs.getBoolean(R.string.pref_key_ogl_grabber, false)
+        val useOgl = prefs.getBoolean(R.string.pref_key_ogl_grabber)
 
 
         val mediaProjection = ValueGuidedAction.Companion.Builder(context)
@@ -184,11 +184,11 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
                 val reconnectDelay = assertIntValue(ACTION_RECONNECT_DELAY)
 
-                prefs.putString(R.string.pref_key_hyperion_host, host)
-                prefs.putInt(R.string.pref_key_hyperion_port, port)
-                prefs.putBoolean(R.string.pref_key_start_on_boot, startOnBootEnabled)
+                prefs.putString(R.string.pref_key_host, host)
+                prefs.putInt(R.string.pref_key_port, port)
+                prefs.putBoolean(R.string.pref_key_boot, startOnBootEnabled)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
-                prefs.putString(R.string.pref_key_hyperion_framerate, frameRate)
+                prefs.putString(R.string.pref_key_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
                 prefs.putBoolean(R.string.pref_key_ogl_grabber, useOgl)
 

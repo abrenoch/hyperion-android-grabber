@@ -6,9 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 /**
@@ -98,10 +98,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("hyperion_host"));
-            bindPreferenceSummaryToValue(findPreference("hyperion_port"));
-            bindPreferenceSummaryToValue(findPreference("hyperion_priority"));
-            bindPreferenceSummaryToValue(findPreference("hyperion_framerate"));
+            bindPreferenceSummaryToValue(findPreference("pref_key_host"));
+            bindPreferenceSummaryToValue(findPreference("pref_key_port"));
+            bindPreferenceSummaryToValue(findPreference("pref_key_priority"));
+            bindPreferenceSummaryToValue(findPreference("pref_key_framerate"));
         }
 
         @Override

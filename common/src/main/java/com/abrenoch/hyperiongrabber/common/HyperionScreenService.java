@@ -91,13 +91,13 @@ public class HyperionScreenService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private boolean prepared() {
         Preferences prefs = new Preferences(getBaseContext());
-        String host = prefs.getString(R.string.pref_key_hyperion_host, null);
-        int port = prefs.getInt(R.string.pref_key_hyperion_port, -1);
-        String priority = prefs.getString(R.string.pref_key_hyperion_priority, "50");
-        mFrameRate = prefs.getInt(R.string.pref_key_hyperion_framerate, 30);
-        OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber, false);
-        RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect, false);
-        int delay = prefs.getInt(R.string.pref_key_reconnect_delay, 5);
+        String host = prefs.getString(R.string.pref_key_host, null);
+        int port = prefs.getInt(R.string.pref_key_port, -1);
+        String priority = prefs.getString(R.string.pref_key_priority, "50");
+        mFrameRate = prefs.getInt(R.string.pref_key_framerate);
+        OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber);
+        RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect);
+        int delay = prefs.getInt(R.string.pref_key_reconnect_delay);
         if (host == null || Objects.equals(host, "0.0.0.0") || Objects.equals(host, "")) {
             mStartError = getResources().getString(R.string.error_empty_host);
             return false;
