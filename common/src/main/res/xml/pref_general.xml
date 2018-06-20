@@ -9,7 +9,7 @@
         <EditTextPreference
             android:capitalize="words"
             android:inputType="textCapWords"
-            android:key="hyperion_host"
+            android:key="@string/pref_key_hyperion_host"
             android:summary="@string/pref_summary_host"
             android:maxLines="1"
             android:selectAllOnFocus="true"
@@ -20,7 +20,7 @@
             android:defaultValue="@string/pref_default_port"
             android:hint="@string/pref_default_port"
             android:maxLines="1"
-            android:key="hyperion_port"
+            android:key="@string/pref_key_hyperion_port"
             android:summary="@string/pref_summary_port"
             android:numeric="integer"
             android:inputType="phone"
@@ -32,7 +32,7 @@
             android:defaultValue="@string/pref_default_priority"
             android:hint="@string/pref_default_priority"
             android:maxLines="1"
-            android:key="hyperion_priority"
+            android:key="@string/pref_key_hyperion_priority"
             android:summary="@string/pref_summary_priority"
             android:numeric="integer"
             android:selectAllOnFocus="true"
@@ -41,15 +41,15 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="reconnect"
+            android:key="@string/pref_key_reconnect"
             android:summary="@string/pref_summary_reconnect"
             android:title="@string/pref_title_reconnect" />
 
         <EditTextPreference
             android:defaultValue="@string/pref_default_reconnect_delay"
-            android:dependency="reconnect"
+            android:dependency="@string/pref_key_reconnect"
             android:hint="@string/pref_default_reconnect_delay"
-            android:key="delay"
+            android:key="@string/pref_key_reconnect_delay"
             android:maxLines="1"
             android:numeric="integer"
             android:selectAllOnFocus="true"
@@ -66,7 +66,7 @@
             android:defaultValue="@string/pref_default_framerate"
             android:entries="@array/pref_list_framerate"
             android:entryValues="@array/pref_list_framerate_values"
-            android:key="hyperion_framerate"
+            android:key="@string/pref_key_hyperion_framerate"
             android:summary="@string/pref_summary_framerate"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
@@ -74,7 +74,7 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="ogl_grabber"
+            android:key="@string/pref_key_ogl_grabber"
             android:title="@string/pref_title_ogl_grabber"
             android:summary="@string/pref_summary_ogl_grabber" />
 
@@ -85,7 +85,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="start_on_boot"
+        android:key="@string/pref_key_start_on_boot"
         android:title="@string/pref_title_boot"
         android:summary="@string/pref_summary_boot" />
 
