@@ -64,13 +64,13 @@
         <item>30 fps</item>
         <item>60 fps</item>
     </string-array>
-    <integer-array name="pref_list_framerate_values">
+    <string-array name="pref_list_framerate_values">
         <item>10</item>
         <item>15</item>
         <item>24</item>
         <item>30</item>
         <item>60</item>
-    </integer-array>
+    </string-array>
 
     <string name="error_empty_host">Host setting should not be empty</string>
     <string name="error_empty_port">Port setting should not be empty</string>

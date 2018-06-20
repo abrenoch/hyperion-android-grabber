@@ -94,9 +94,9 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 .build()
 
         val frameRateLabels = resources.getStringArray(R.array.pref_list_framerate)
-        val frameRateValues = resources.getIntArray(R.array.pref_list_framerate_values).toTypedArray()
+        val frameRateValues = resources.getStringArray(R.array.pref_list_framerate_values)
 
-        val selectedCaptureRate = prefs.getInt(R.string.pref_key_hyperion_framerate, 30)
+        val selectedCaptureRate = prefs.getString(R.string.pref_key_hyperion_framerate, "30")
 
         val captureRateDescription =
                 if (prefs.contains(R.string.pref_key_hyperion_framerate)){
@@ -179,7 +179,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val host = assertValue(ACTION_HOST_NAME)
                 val port = assertIntValue(ACTION_PORT)
                 val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
-                val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, Int::class.java)
+                val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, String::class.java)
                 val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
                 val reconnectDelay = assertIntValue(ACTION_RECONNECT_DELAY)
@@ -188,7 +188,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.putInt(R.string.pref_key_hyperion_port, port)
                 prefs.putBoolean(R.string.pref_key_start_on_boot, startOnBootEnabled)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
-                prefs.putInt(R.string.pref_key_hyperion_framerate, frameRate)
+                prefs.putString(R.string.pref_key_hyperion_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
                 prefs.putBoolean(R.string.pref_key_ogl_grabber, useOgl)
 
