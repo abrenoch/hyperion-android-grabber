@@ -66,8 +66,8 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     private boolean initIfConfigured() {
         // Do we have a valid server config?
         Preferences preferences = new Preferences(getApplicationContext());
-        String host = preferences.getString(R.string.pref_key_hyperion_host, null);
-        int port = preferences.getInt(R.string.pref_key_hyperion_port, -1);
+        String host = preferences.getString(R.string.pref_key_host, null);
+        int port = preferences.getInt(R.string.pref_key_port, -1);
 
         if (host == null || port == -1){
             return false;
