@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -51,12 +52,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
+        Preferences prefs = new Preferences(preference.getContext());
+
         // Trigger the listener immediately with the preference's
         // current value.
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                prefs.getString(preference.getKey(), ""));
     }
 
     @Override
@@ -80,8 +81,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-
-
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
@@ -98,10 +97,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("pref_key_host"));
-            bindPreferenceSummaryToValue(findPreference("pref_key_port"));
-            bindPreferenceSummaryToValue(findPreference("pref_key_priority"));
-            bindPreferenceSummaryToValue(findPreference("pref_key_framerate"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_host)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_port)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_priority)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_framerate)));
         }
 
         @Override
@@ -114,6 +113,4 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-
 }
