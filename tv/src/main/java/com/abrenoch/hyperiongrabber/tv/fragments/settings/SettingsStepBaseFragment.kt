@@ -79,7 +79,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
      * returns that value. If it is not filled, a toast is shown and this
      * fun @throws a [AssertionError]
      */
-    protected fun assertValue(actionId: Long): String {
+    protected fun assertStringValue(actionId: Long): String {
         with(stringValueForAction(actionId)){
             if (isEmpty()){
                 notifyRequired(actionId)
@@ -90,7 +90,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
     }
 
     protected fun assertIntValue(actionId: Long): Int {
-        return assertValue(actionId).let{
+        return assertStringValue(actionId).let{
             try {
                 Integer.parseInt(it)
             } catch (ignored: Exception){

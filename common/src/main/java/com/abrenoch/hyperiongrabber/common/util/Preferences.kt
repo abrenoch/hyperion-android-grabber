@@ -22,13 +22,11 @@ class Preferences(context: Context) {
     }
 
     fun getInt(@StringRes keyResourceId: Int, default: Int = 0): Int {
-        return preferences.getInt(key(keyResourceId), default)
+        return getString(keyResourceId)?.let { Integer.parseInt(it) } ?: default
     }
 
     fun putInt(@StringRes keyResourceId: Int, value: Int){
-        val edit = preferences.edit()
-        edit.putInt(key(keyResourceId), value)
-        edit.apply()
+        putString(keyResourceId, value.toString())
     }
 
     fun getBoolean(@StringRes keyResourceId: Int, default: Boolean): Boolean =
