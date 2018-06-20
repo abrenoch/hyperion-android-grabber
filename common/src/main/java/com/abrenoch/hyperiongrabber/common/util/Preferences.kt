@@ -16,6 +16,10 @@ class Preferences(context: Context) {
         return preferences.getString(key(keyResourceId), default)
     }
 
+    fun getString(key: String, default: String? = null): String? {
+        return preferences.getString(key, default)
+    }
+
     fun putString(@StringRes keyResourceId: Int, value: String){
         val edit = preferences.edit()
         edit.putString(key(keyResourceId), value)
