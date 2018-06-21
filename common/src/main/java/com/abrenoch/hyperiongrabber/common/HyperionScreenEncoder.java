@@ -28,8 +28,8 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
-                           final MediaProjection projection, final int width, final int height,
-                           final int density, int frameRate) {
+                          final MediaProjection projection, final int width, final int height,
+                          final int density, int frameRate) {
         super(listener, projection, width, height, density, frameRate);
 
         try {
@@ -57,7 +57,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         mIsCapturing = false;
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
-        new Thread(clearAndDisconnect).start();
+        clearAndDisconnect();
         mImageReader.close();
         mImageReader = null;
     }
@@ -72,13 +72,6 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             }
         }
     }
-
-    private Runnable clearAndDisconnect  = new Runnable() {
-        public void run() {
-            mListener.clear();
-            mListener.disconnect();
-        }
-    };
 
     private VirtualDisplay.Callback mDisplayCallback = new VirtualDisplay.Callback() {
         @Override
