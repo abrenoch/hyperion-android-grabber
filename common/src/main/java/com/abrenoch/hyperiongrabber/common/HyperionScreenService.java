@@ -42,6 +42,7 @@ public class HyperionScreenService extends Service {
 
     private boolean OGL_GRABBER = false;
     private boolean RECONNECT = false;
+    private boolean HAS_CONNECTED = false;
     private MediaProjectionManager mMediaProjectionManager;
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
@@ -55,13 +56,20 @@ public class HyperionScreenService extends Service {
         @Override
         public void onConnected() {
             Log.d("DEBUG", "CONNECTED TO HYPERION INSTANCE");
+            HAS_CONNECTED = true;
         }
 
         @Override
         public void onConnectionError(int errorID, String error) {
             Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e("ERROR", error);
-            if (RECONNECT) Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            if (!HAS_CONNECTED) {
+                mStartError = getResources().getString(R.string.error_server_unreachable);
+                stopSelf();
+            }
+            if (RECONNECT && HAS_CONNECTED) {
+                Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            }
         }
 
 //        @Override
