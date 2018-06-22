@@ -54,14 +54,14 @@ public class HyperionScreenService extends Service {
     HyperionThreadBroadcaster mReceiver = new HyperionThreadBroadcaster() {
         @Override
         public void onConnected() {
-            Log.d("DEBUG", "CONNECTED TO HYPERION INSTANCE");
+            Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
         }
 
         @Override
         public void onConnectionError(int errorID, String error) {
-            Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
-            if (error != null) Log.e("ERROR", error);
-            if (RECONNECT) Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
+            if (error != null) Log.e(TAG, error);
+            if (RECONNECT) Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
         }
     };
 
@@ -82,14 +82,6 @@ public class HyperionScreenService extends Service {
                     if (currentEncoder() != null) {
                         if (DEBUG) Log.v(TAG, "Clearing current light data");
                         currentEncoder().clearLights();
-                    }
-                break;
-                case Intent.ACTION_REBOOT:
-                case Intent.ACTION_SHUTDOWN:
-                    if (DEBUG) Log.v(TAG, "ACTION_REBOOT|ACTION_SHUTDOWN intent received");
-                    if (currentEncoder() != null) {
-                        if (DEBUG) Log.v(TAG, "Clearing current light data and disconnecting");
-                        stopSelf();
                     }
                 break;
             }
@@ -147,8 +139,6 @@ public class HyperionScreenService extends Service {
                             IntentFilter intentFilter = new IntentFilter();
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
                             intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-                            intentFilter.addAction(Intent.ACTION_REBOOT);
-                            intentFilter.addAction(Intent.ACTION_SHUTDOWN);
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
