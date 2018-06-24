@@ -90,6 +90,7 @@ public class HyperionScreenEncoderBase {
 
     private int findDivisor() {
         List<Integer> divisors = getCommonDivisors(mWidth, mHeight);
+        if (DEBUG) Log.d(TAG, "Available Divisors: " + divisors.toString());
         for (Integer divisor : divisors) {
             if ((mWidth / divisor) * (mHeight / divisor) * 3 <= TARGET_BIT_RATE) {
                 return divisor;
