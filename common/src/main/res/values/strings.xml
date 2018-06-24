@@ -5,6 +5,9 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
 
+    <!-- notification button -->
+    <string name="notification_exit_button">Exit</string>
+
     <!-- Network scanner -->
     <string name="scanner_title">Hi there!</string>
     <string name="scanner_description">Hyperion Grabber can scan your network for running servers, so you won\'t have to fiddle with your remote to punch in an ip-address.</string>
