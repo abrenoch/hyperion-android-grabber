@@ -68,7 +68,7 @@ public class HyperionScreenService extends Service {
                 stopSelf();
             }
             if (RECONNECT && HAS_CONNECTED) {
-                Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+                Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
             }
         }
     };
