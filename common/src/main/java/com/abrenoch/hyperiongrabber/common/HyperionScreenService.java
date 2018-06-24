@@ -55,13 +55,13 @@ public class HyperionScreenService extends Service {
     HyperionThreadBroadcaster mReceiver = new HyperionThreadBroadcaster() {
         @Override
         public void onConnected() {
-            Log.d("DEBUG", "CONNECTED TO HYPERION INSTANCE");
+            Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             HAS_CONNECTED = true;
         }
 
         @Override
         public void onConnectionError(int errorID, String error) {
-            Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
+            Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e("ERROR", error);
             if (!HAS_CONNECTED) {
                 mStartError = getResources().getString(R.string.error_server_unreachable);
