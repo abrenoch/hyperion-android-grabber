@@ -114,13 +114,6 @@ public class HyperionScreenService extends Service {
         return true;
     }
 
-//    private void updateStatus() {
-//        final Intent result = new Intent();
-//        result.setAction(ACTION_QUERY_STATUS_RESULT);
-//        result.putExtra(EXTRA_QUERY_RESULT_PAUSING, false);
-//        sendBroadcast(result);
-//    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
