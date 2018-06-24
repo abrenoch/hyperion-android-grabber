@@ -163,17 +163,6 @@ public class HyperionScreenService extends Service {
         return null;
     }
 
-    private Intent buildStopStartButtons() {
-        Intent notificationIntent = new Intent(this, this.getClass());
-        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (isCapturing()) {
-            notificationIntent.setAction(ACTION_EXIT);
-        } else {
-            notificationIntent.setAction(ACTION_START);
-        }
-        return notificationIntent;
-    }
-
     private Intent buildExitButton() {
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
@@ -181,16 +170,10 @@ public class HyperionScreenService extends Service {
         return notificationIntent;
     }
 
-    // TODO: probably only need one button in here. Only one seems to work anyway...
     public Notification getNotification() {
         HyperionNotification notification = new HyperionNotification(this, mNotificationManager);
-        String label = "START GRABBER";
-        String label2 = "EXIT";
-        if (isCapturing()) {
-            label = "STOP GRABBER";
-        }
-        notification.setAction(NOTIFICATION_STAT_STOP_INTENT_ID, label, buildStopStartButtons());
-        notification.setAction(NOTIFICATION_EXIT_INTENT_ID, label2, buildExitButton());
+        String label = getString(R.string.notification_exit_button);
+        notification.setAction(NOTIFICATION_EXIT_INTENT_ID, label, buildExitButton());
         return notification.buildNotification();
     }
 
