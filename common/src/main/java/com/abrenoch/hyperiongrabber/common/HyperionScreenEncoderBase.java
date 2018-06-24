@@ -11,8 +11,8 @@ public class HyperionScreenEncoderBase {
     private static final int TARGET_HEIGHT = 60;
     private static final int TARGET_WIDTH = 60;
     private static final int TARGET_BIT_RATE = TARGET_HEIGHT * TARGET_WIDTH * 3;
-    int mHeight;
-    int mWidth;
+    private int mHeight;
+    private int mWidth;
     int mWidthScaled;
     int mFrameRate;
     int mHeightScaled;
@@ -25,8 +25,8 @@ public class HyperionScreenEncoderBase {
     HyperionThread.HyperionThreadListener mListener;
 
     HyperionScreenEncoderBase(final HyperionThread.HyperionThreadListener listener,
-                             final MediaProjection projection, final int width, final int height,
-                             final int density, int frameRate) {
+                              final MediaProjection projection, final int width, final int height,
+                              final int density, int frameRate) {
         mListener = listener;
         mMediaProjection = projection;
         mDensity = density;
@@ -46,6 +46,27 @@ public class HyperionScreenEncoderBase {
         mHandler = new Handler(thread.getLooper());
     }
 
+    private Runnable clearAndDisconnectRunner = new Runnable() {
+        public void run() {
+            mListener.clear();
+            mListener.disconnect();
+        }
+    };
+
+    private Runnable clearLightsRunner = new Runnable() {
+        public void run() {
+            mListener.clear();
+        }
+    };
+
+    public void clearLights() {
+        new Thread(clearLightsRunner).start();
+    }
+
+    void clearAndDisconnect() {
+        new Thread(clearAndDisconnectRunner).start();
+    }
+
     public boolean isCapturing() {
         return mIsCapturing;
     }
@@ -58,7 +79,7 @@ public class HyperionScreenEncoderBase {
         throw new RuntimeException("Stub!");
     }
 
-    public float findScaleFactor() {
+    private float findScaleFactor() {
         float step = (float) 0.2;
         for (float i = 1; i < 100; i += step) {
             if ((mWidth / i) * (mHeight / i) * 3 <= TARGET_BIT_RATE) {

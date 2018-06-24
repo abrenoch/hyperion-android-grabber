@@ -11,6 +11,7 @@ public class HyperionThread extends Thread {
     private int PRIORITY;
     private final int FRAME_DURATION = -1;
     private boolean RECONNECT = false;
+    private boolean HAS_CONNECTED = false;
     private int RECONNECT_DELAY;
     private Hyperion mHyperion;
 
@@ -26,7 +27,7 @@ public class HyperionThread extends Thread {
                 } catch (IOException e) {
                     mSender.onConnectionError(e.hashCode(), e.getMessage());
                     e.printStackTrace();
-                    if (RECONNECT) {
+                    if (RECONNECT && HAS_CONNECTED) {
                         reconnectDelay(RECONNECT_DELAY);
                         try {
                             mHyperion = new Hyperion(HOST, PORT);
@@ -82,23 +83,25 @@ public class HyperionThread extends Thread {
             } catch (IOException e) {
                 mSender.onConnectionError(e.hashCode(), e.getMessage());
                 e.printStackTrace();
-                if (RECONNECT) {
+                if (RECONNECT && HAS_CONNECTED) {
                     reconnectDelay(RECONNECT_DELAY);
                 }
             } finally {
                 if (mHyperion != null && mSender != null && mHyperion.isConnected()) {
+                    HAS_CONNECTED = true;
                     mSender.onConnected();
                     break;
                 }
             }
-        } while (RECONNECT);
+        } while (RECONNECT && HAS_CONNECTED);
     }
     
     public void reconnectDelay(long t) {
-    try {
-        Thread.sleep(t);
+        try {
+            Thread.sleep(t);
         } catch (InterruptedException e) {
             RECONNECT = false;
+            HAS_CONNECTED = false;
             Thread.currentThread().interrupt();
         }
     }
