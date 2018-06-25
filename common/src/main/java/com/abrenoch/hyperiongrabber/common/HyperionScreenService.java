@@ -57,6 +57,7 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             HAS_CONNECTED = true;
+            notifyActivity();
         }
 
         @Override
@@ -141,7 +142,6 @@ public class HyperionScreenService extends Service {
                         boolean isPrepared = prepared();
                         if (isPrepared) {
                             startScreenRecord(intent);
-                            notifyActivity();
                             startForeground(NOTIFICATION_ID, getNotification());
 
                             IntentFilter intentFilter = new IntentFilter();
