@@ -70,6 +70,9 @@ public class HyperionScreenService extends Service {
             }
             if (RECONNECT && HAS_CONNECTED) {
                 Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            } else if (!RECONNECT && HAS_CONNECTED) {
+                mStartError = getResources().getString(R.string.error_connection_lost);
+                stopSelf();
             }
         }
     };
