@@ -62,10 +62,10 @@ public class HyperionScreenService extends Service {
         @Override
         public void onConnectionError(int errorID, String error) {
             Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
-            if (error != null) Log.e("ERROR", error);
+            if (error != null) Log.e(TAG, error);
             if (!HAS_CONNECTED) {
                 mStartError = getResources().getString(R.string.error_server_unreachable);
-                stopSelf();
+                haltStartup();
             }
             if (RECONNECT && HAS_CONNECTED) {
                 Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
@@ -150,10 +150,7 @@ public class HyperionScreenService extends Service {
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
-
-                            // this line feels unnecessary, but problems happen without it
-                            startForeground(NOTIFICATION_ID, getNotification());
-                            stopSelf();
+                            haltStartup();
                         }
                     }
                     break;
@@ -192,6 +189,12 @@ public class HyperionScreenService extends Service {
         notifyActivity();
 
         super.onDestroy();
+    }
+
+    private void haltStartup() {
+        // this line feels unnecessary, but problems happen without it
+        startForeground(NOTIFICATION_ID, getNotification());
+        stopSelf();
     }
 
     private Intent buildStopStartButtons() {
