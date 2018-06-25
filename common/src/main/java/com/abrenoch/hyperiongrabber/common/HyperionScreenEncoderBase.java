@@ -38,18 +38,10 @@ public class HyperionScreenEncoderBase {
             Log.d(TAG, "Original Height: " + String.valueOf(height));
         }
 
-        // enforce we have whole even numbers
-        width = (int) Math.floor(width);
-        height = (int) Math.floor(height);
-        if (width % 2 != 0) width--;
-        if (height % 2 != 0) height--;
-
-        if (DEBUG) {
-            Log.d(TAG, "Rounded Width: " + String.valueOf(width));
-            Log.d(TAG, "Rounded Height: " + String.valueOf(height));
-        }
-
+        // find the common divisor for width & height best fit for the LED count (defined in options)
         int divisor = options.findDivisor(width, height);
+
+        // set the scaled width & height based upon the found divisor
         mHeightScaled = (height / divisor);
         mWidthScaled = (width / divisor);
 
