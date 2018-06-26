@@ -8,12 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 import java.util.Objects;
 
@@ -55,31 +54,37 @@ public class HyperionScreenService extends Service {
     HyperionThreadBroadcaster mReceiver = new HyperionThreadBroadcaster() {
         @Override
         public void onConnected() {
-            Log.d("DEBUG", "CONNECTED TO HYPERION INSTANCE");
+            Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
         }
 
         @Override
         public void onConnectionError(int errorID, String error) {
-            Log.e("ERROR", "COULD NOT CONNECT TO HYPERION INSTANCE");
-            if (error != null) Log.e("ERROR", error);
-            if (RECONNECT) Log.e("DEBUG", "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
+            if (error != null) Log.e(TAG, error);
+            if (RECONNECT) Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
         }
-
-//        @Override
-//        public void onResponse(String response) {
-//
-//        }
     };
 
-    BroadcastReceiver mWakeReceiver = new BroadcastReceiver() {
+    BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DEBUG) Log.v(TAG, "ACTION_SCREEN_ON intent received");
-            if (currentEncoder() != null && !isCapturing()) {
-                if (DEBUG) Log.v(TAG, "Encoder not grabbing, attempting to restart");
-                currentEncoder().resumeRecording();
+            switch (Objects.requireNonNull(intent.getAction())) {
+                case Intent.ACTION_SCREEN_ON:
+                    if (DEBUG) Log.v(TAG, "ACTION_SCREEN_ON intent received");
+                    if (currentEncoder() != null && !isCapturing()) {
+                        if (DEBUG) Log.v(TAG, "Encoder not grabbing, attempting to restart");
+                        currentEncoder().resumeRecording();
+                    }
+                    notifyActivity();
+                break;
+                case Intent.ACTION_SCREEN_OFF:
+                    if (DEBUG) Log.v(TAG, "ACTION_SCREEN_OFF intent received");
+                    if (currentEncoder() != null) {
+                        if (DEBUG) Log.v(TAG, "Clearing current light data");
+                        currentEncoder().clearLights();
+                    }
+                break;
             }
-            notifyActivity();
         }
     };
 
@@ -91,55 +96,56 @@ public class HyperionScreenService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private boolean prepared() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String host = preferences.getString("hyperion_host", null);
-        String port = preferences.getString("hyperion_port", null);
-        String priority = preferences.getString("hyperion_priority", "50");
-        String rate = preferences.getString("hyperion_framerate", "30");
-        OGL_GRABBER = preferences.getBoolean("ogl_grabber", false);
-        RECONNECT = preferences.getBoolean("reconnect", false);
-        String delay = preferences.getString("delay", "5");
+        Preferences prefs = new Preferences(getBaseContext());
+        String host = prefs.getString(R.string.pref_key_host, null);
+        int port = prefs.getInt(R.string.pref_key_port, -1);
+        String priority = prefs.getString(R.string.pref_key_priority, "50");
+        mFrameRate = prefs.getInt(R.string.pref_key_framerate);
+        OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber);
+        RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect);
+        int delay = prefs.getInt(R.string.pref_key_reconnect_delay);
         if (host == null || Objects.equals(host, "0.0.0.0") || Objects.equals(host, "")) {
             mStartError = getResources().getString(R.string.error_empty_host);
             return false;
         }
-        if (port == null || Objects.equals(port, "")) {
+        if (port == -1) {
             mStartError = getResources().getString(R.string.error_empty_port);
             return false;
         }
-        mFrameRate = Integer.parseInt(rate);
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        mHyperionThread = new HyperionThread(mReceiver, host, Integer.parseInt(port), Integer.parseInt(priority), RECONNECT, Integer.parseInt(delay));
+        mHyperionThread = new HyperionThread(mReceiver, host, port, Integer.parseInt(priority), RECONNECT, delay);
         mHyperionThread.start();
         mStartError = null;
         return true;
     }
 
-//    private void updateStatus() {
-//        final Intent result = new Intent();
-//        result.setAction(ACTION_QUERY_STATUS_RESULT);
-//        result.putExtra(EXTRA_QUERY_RESULT_PAUSING, false);
-//        sendBroadcast(result);
-//    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (DEBUG) Log.v(TAG, "onStartCommand::");
+        if (DEBUG) Log.v(TAG, "Start command received");
         super.onStartCommand(intent, flags, startId);
         final String action = intent.getAction();
         if (action != null) {
+            if (DEBUG) Log.v(TAG, "Start command action: " + String.valueOf(action));
             switch (action) {
                 case ACTION_START:
                     if (mHyperionThread == null) {
-                        boolean prepd = prepared();
-                        if (prepd) {
+                        boolean isPrepared = prepared();
+                        if (isPrepared) {
                             startScreenRecord(intent);
                             notifyActivity();
                             startForeground(NOTIFICATION_ID, getNotification());
-                            registerReceiver(mWakeReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+
+                            IntentFilter intentFilter = new IntentFilter();
+                            intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+                            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+
+                            registerReceiver(mEventReceiver, intentFilter);
                         } else {
-                            notifyActivity();
+
+                            // this line feels unnecessary, but problems happen without it
+                            startForeground(NOTIFICATION_ID, getNotification());
+                            stopSelf();
                         }
                     }
                     break;
@@ -150,14 +156,6 @@ public class HyperionScreenService extends Service {
                     notifyActivity();
                     break;
                 case ACTION_EXIT:
-                    try {
-                        unregisterReceiver(mWakeReceiver);
-                    } catch (Exception e) {
-                        if (DEBUG) Log.v(TAG, "Wake receiver not registered");
-                    }
-                    stopScreenRecord();
-                    stopForeground(true);
-                    notifyActivity();
                     stopSelf();
                     break;
             }
@@ -169,6 +167,23 @@ public class HyperionScreenService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (DEBUG) Log.v(TAG, "Ending service");
+
+        try {
+            unregisterReceiver(mEventReceiver);
+        } catch (Exception e) {
+            if (DEBUG) Log.v(TAG, "Wake receiver not registered");
+        }
+
+        stopScreenRecord();
+        stopForeground(true);
+        notifyActivity();
+
+        super.onDestroy();
     }
 
     private Intent buildStopStartButtons() {
@@ -204,6 +219,7 @@ public class HyperionScreenService extends Service {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void startScreenRecord(final Intent intent) {
+        if (DEBUG) Log.v(TAG, "Start screen recorder");
         final int resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
         // get MediaProjection
         final MediaProjection projection = mMediaProjectionManager.getMediaProjection(resultCode, intent);
@@ -211,13 +227,14 @@ public class HyperionScreenService extends Service {
             final DisplayMetrics metrics = getResources().getDisplayMetrics();
             final int density = metrics.densityDpi;
             _mediaProjection = projection;
-            if (DEBUG) Log.v(TAG, "startRecording:");
             if (OGL_GRABBER) {
+                if (DEBUG) Log.v(TAG, "Starting the recorder with openGL grabber");
                 mHyperionEncoderOGL = new HyperionScreenEncoderOGL(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
                         density, mFrameRate);
                 mHyperionEncoder = null;
             } else {
+                if (DEBUG) Log.v(TAG, "Starting the recorder with default grabber");
                 mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
                         density, mFrameRate);
@@ -227,10 +244,10 @@ public class HyperionScreenService extends Service {
     }
 
     private void stopScreenRecord() {
-        if (DEBUG) Log.v(TAG, "stopScreenRecord");
+        if (DEBUG) Log.v(TAG, "Stop screen recorder");
         mNotificationManager.cancel(NOTIFICATION_ID);
         if (currentEncoder() != null) {
-            if (DEBUG) Log.v(TAG, "stopScreenRecord:stopping encoder");
+            if (DEBUG) Log.v(TAG, "Stopping the current encoder");
             currentEncoder().stopRecording();
         }
         releaseResource();

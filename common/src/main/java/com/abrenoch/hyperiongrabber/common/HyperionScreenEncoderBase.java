@@ -49,6 +49,27 @@ public class HyperionScreenEncoderBase {
         mHandler = new Handler(thread.getLooper());
     }
 
+    private Runnable clearAndDisconnectRunner = new Runnable() {
+        public void run() {
+            mListener.clear();
+            mListener.disconnect();
+        }
+    };
+
+    private Runnable clearLightsRunner = new Runnable() {
+        public void run() {
+            mListener.clear();
+        }
+    };
+
+    public void clearLights() {
+        new Thread(clearLightsRunner).start();
+    }
+
+    void clearAndDisconnect() {
+        new Thread(clearAndDisconnectRunner).start();
+    }
+
     public boolean isCapturing() {
         return mIsCapturing;
     }
