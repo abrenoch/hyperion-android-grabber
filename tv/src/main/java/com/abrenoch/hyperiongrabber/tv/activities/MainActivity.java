@@ -177,6 +177,7 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
     }
 
     private void startSettings() {
+        stopScreenRecorder();
         Intent intent = new Intent(this, ManualSetupActivity.class);
         Bundle bundle =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this)
