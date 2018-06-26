@@ -196,6 +196,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val host = assertStringValue(ACTION_HOST_NAME)
                 val port = assertIntValue(ACTION_PORT)
                 val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
+                val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, String::class.java)
                 val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
@@ -204,6 +205,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.putString(R.string.pref_key_host, host)
                 prefs.putInt(R.string.pref_key_port, port)
                 prefs.putBoolean(R.string.pref_key_boot, startOnBootEnabled)
+                prefs.putInt(R.string.pref_key_priority, priority)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
                 prefs.putString(R.string.pref_key_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
