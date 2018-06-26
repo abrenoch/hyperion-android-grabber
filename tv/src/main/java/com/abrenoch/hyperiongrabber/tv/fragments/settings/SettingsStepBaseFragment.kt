@@ -3,6 +3,7 @@ package com.abrenoch.hyperiongrabber.tv.fragments.settings
 import android.content.Context
 import android.os.Bundle
 import android.support.v17.leanback.app.GuidedStepSupportFragment
+import android.support.v17.leanback.widget.GuidanceStylist
 import android.support.v17.leanback.widget.GuidedAction
 import android.text.InputType
 import android.widget.Toast
@@ -17,6 +18,10 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         prefs = Preferences(context)
         super.onCreate(savedInstanceState)
 
+    }
+
+    override fun onCreateGuidanceStylist(): GuidanceStylist {
+        return SettingsStepStylist()
     }
 
     /** Default implementation handles backAction only*/
