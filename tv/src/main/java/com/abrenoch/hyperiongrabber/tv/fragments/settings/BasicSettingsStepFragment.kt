@@ -1,12 +1,19 @@
 package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
 import android.app.Activity
+import android.graphics.Color
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v17.leanback.widget.GuidanceStylist
 import android.support.v17.leanback.widget.GuidedAction
+import com.abrenoch.hyperiongrabber.common.network.Hyperion
 import com.abrenoch.hyperiongrabber.tv.R
+import java.io.IOException
 
 internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
+
+    /** The amount of times the connection was tested */
+    private var testCounter = 0
 
     override fun onProvideTheme(): Int {
         return R.style.Theme_HyperionGrabber_GuidedStep_First
@@ -169,6 +176,13 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
     override fun onCreateButtonActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
         actions.add(continueAction())
+        actions.add(GuidedAction.Builder(context)
+                .id(ACTION_TEST)
+                .title(getString(R.string.guidedstep_test))
+                .description(R.string.guidedstep_taste_the_rainbow)
+                .build()
+
+        )
         actions.add(backAction())
     }
 
@@ -201,6 +215,15 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
             return
 
+        } else if (action.id == ACTION_TEST){
+            val colorIdx = testCounter % TEST_COLORS.size
+            val color = TEST_COLORS[colorIdx]
+            testCounter++
+
+            val host = assertStringValue(ACTION_HOST_NAME)
+            val port = assertIntValue(ACTION_PORT)
+            val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
+            testHyperionColor(host, port, priority, color)
         }
 
         super.onGuidedActionClicked(action)
@@ -254,6 +277,43 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         private const val ACTION_GRABBER_SET_ID = 550
         private const val ACTION_GRABBER_MEDIA = 560L
         private const val ACTION_GRABBER_OGL = 570L
+        private const val ACTION_TEST = 600L
+
+        private val TEST_COLORS = intArrayOf(Color.RED, Color.GREEN, Color.BLUE, Color.WHITE)
+
+        /** tries to connect to Hyperion and sets the given color for 5 seconds  */
+        private fun testHyperionColor(hostName: String, port: Int, priority: Int, color: Int) {
+            TestTask().execute(TestSpec(hostName, port, priority, color))
+        }
+
+        class TestTask: AsyncTask<TestSpec, Int, Int>(){
+            override fun doInBackground(vararg params: TestSpec?): Int {
+                try {
+                    val (host, port, priority, color) = params[0]!!
+                    val hyperion = Hyperion(host, port)
+                    if (hyperion.isConnected) {
+                        hyperion.setColor(color, priority, 5000)
+                    } else {
+                        return RESULT_UNREACHABLE
+                    }
+                    hyperion.disconnect()
+                    return RESULT_OK
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    return RESULT_UNKNOWN_ERROR
+                }
+            }
+
+            companion object {
+                const val RESULT_OK = 1
+                const val RESULT_UNREACHABLE = -1
+                const val RESULT_UNKNOWN_ERROR = -100
+            }
+
+        }
+
+        data class TestSpec(val host: String, val port: Int, val priority: Int, val color: Int)
+
     }
 
 
