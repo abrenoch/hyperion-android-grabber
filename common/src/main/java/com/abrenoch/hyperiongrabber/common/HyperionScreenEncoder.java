@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.BorderProcessor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +24,20 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
     private static final boolean DEBUG = false;
-    private static boolean BORDER_DETECTION_ENABLED = false; // enables detecting borders for standard grabbing
+    private static boolean BORDER_DETECTION_ENABLED = true; // enables detecting borders for standard grabbing
     private boolean USE_AVERAGE_COLOR = false; // if true will send only average color of screen
     private VirtualDisplay mVirtualDisplay;
     private ImageReader mImageReader;
+    private BorderProcessor mBorderProcessor;
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
                           final MediaProjection projection, final int width, final int height,
                           final int density, int frameRate) {
         super(listener, projection, width, height, density, frameRate);
+
+        mBorderProcessor = new BorderProcessor(5);
 
         try {
             prepare();
@@ -135,7 +140,6 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     private byte[] getPixels(ByteBuffer buffer, int width, int height, int rowStride,
                              int pixelStride, int firstX, int firstY){
-
         int rowPadding = rowStride - width * pixelStride;
         int offset = 0;
 
@@ -153,17 +157,14 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             }
         }
 
-
-
         return bao.toByteArray();
     }
 
     private byte[] getAverageColor(ByteBuffer buffer, int width, int height, int rowStride,
                                    int pixelStride, int firstX, int firstY) {
-
         long totalRed = 0, totalGreen = 0, totalBlue = 0;
         int rowPadding = rowStride - width * pixelStride;
-        int pixelCount = width * height;
+        int pixelCount = 0;
         int offset = 0;
 
         ByteArrayOutputStream bao = new ByteArrayOutputStream(3);
@@ -172,9 +173,10 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             if (y < firstY || y > compareHeight) continue;
             for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
                 if (x < firstX || x > compareWidth) continue;
-                totalRed += buffer.get(offset & 0xff); // R
-                totalGreen += buffer.get((offset + 1) & 0xff); // G
-                totalBlue += buffer.get((offset + 2) & 0xff); // B
+                totalRed += buffer.get(offset) & 0xff; // R
+                totalGreen += buffer.get(offset + 1) & 0xff; // G
+                totalBlue += buffer.get(offset + 2) & 0xff; // B
+                pixelCount++;
             }
         }
 
@@ -197,10 +199,11 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         int firstY = 0;
 
         if (BORDER_DETECTION_ENABLED || USE_AVERAGE_COLOR) {
-            BorderObject border = findBorder(buffer, width, height, rowStride, pixelStride);
-            if (border.isKnown) {
-                firstX = border.horizontalBorderIndex;
-                firstY = border.verticalBorderIndex;
+            mBorderProcessor.parseBorder(buffer, width, height, rowStride, pixelStride);
+            BorderProcessor.BorderObject border = mBorderProcessor.getCurrentBorder();
+            if (border != null && border.isKnown()) {
+                firstX = border.getHorizontalBorderIndex();
+                firstY = border.getVerticalBorderIndex();
             }
         }
 
