@@ -73,13 +73,6 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     }
 
-    private Runnable clearAndDisconnect  = new Runnable() {
-        public void run() {
-            mListener.clear();
-            mListener.disconnect();
-        }
-    };
-
     private VirtualDisplay.Callback mDisplayCallback = new VirtualDisplay.Callback() {
         @Override
         public void onPaused() {
