@@ -57,7 +57,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         mIsCapturing = false;
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
-        clearAndDisconnect();
+        new Thread(clearAndDisconnect).start();
         mImageReader.close();
         mImageReader = null;
     }
@@ -72,6 +72,13 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             }
         }
     }
+
+    private Runnable clearAndDisconnect  = new Runnable() {
+        public void run() {
+            mListener.clear();
+            mListener.disconnect();
+        }
+    };
 
     private VirtualDisplay.Callback mDisplayCallback = new VirtualDisplay.Callback() {
         @Override
