@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 import java.util.Objects;
@@ -47,6 +48,8 @@ public class HyperionScreenService extends Service {
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
     private int mFrameRate;
+    private int mHorizontalLEDCount;
+    private int mVerticalLEDCount;
     private HyperionScreenEncoder mHyperionEncoder;
     private HyperionScreenEncoderOGL mHyperionEncoderOGL;
     private NotificationManager mNotificationManager;
@@ -102,6 +105,8 @@ public class HyperionScreenService extends Service {
         int port = prefs.getInt(R.string.pref_key_port, -1);
         String priority = prefs.getString(R.string.pref_key_priority, "50");
         mFrameRate = prefs.getInt(R.string.pref_key_framerate);
+        mHorizontalLEDCount = prefs.getInt(R.string.pref_key_x_led);
+        mVerticalLEDCount = prefs.getInt(R.string.pref_key_y_led);
         OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber);
         RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect);
         int delay = prefs.getInt(R.string.pref_key_reconnect_delay);
@@ -205,16 +210,10 @@ public class HyperionScreenService extends Service {
         return notificationIntent;
     }
 
-    // TODO: probably only need one button in here. Only one seems to work anyway...
     public Notification getNotification() {
         HyperionNotification notification = new HyperionNotification(this, mNotificationManager);
-        String label = "START GRABBER";
-        String label2 = "EXIT";
-        if (isCapturing()) {
-            label = "STOP GRABBER";
-        }
-        notification.setAction(NOTIFICATION_STAT_STOP_INTENT_ID, label, buildStopStartButtons());
-        notification.setAction(NOTIFICATION_EXIT_INTENT_ID, label2, buildExitButton());
+        String label = getString(R.string.notification_exit_button);
+        notification.setAction(NOTIFICATION_EXIT_INTENT_ID, label, buildExitButton());
         return notification.buildNotification();
     }
 
@@ -226,21 +225,25 @@ public class HyperionScreenService extends Service {
         final MediaProjection projection = mMediaProjectionManager.getMediaProjection(resultCode, intent);
         WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         if (projection != null && window != null) {
+            _mediaProjection = projection;
             final DisplayMetrics metrics = new DisplayMetrics();
             window.getDefaultDisplay().getRealMetrics(metrics);
             final int density = metrics.densityDpi;
             _mediaProjection = projection;
+            HyperionGrabberOptions options = new HyperionGrabberOptions(mHorizontalLEDCount,
+                    mVerticalLEDCount, mFrameRate);
+
             if (OGL_GRABBER) {
                 if (DEBUG) Log.v(TAG, "Starting the recorder with openGL grabber");
                 mHyperionEncoderOGL = new HyperionScreenEncoderOGL(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
-                        density, mFrameRate);
+                        density, options);
                 mHyperionEncoder = null;
             } else {
                 if (DEBUG) Log.v(TAG, "Starting the recorder with default grabber");
                 mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
-                        density, mFrameRate);
+                        density, options);
                 mHyperionEncoderOGL = null;
             }
         }

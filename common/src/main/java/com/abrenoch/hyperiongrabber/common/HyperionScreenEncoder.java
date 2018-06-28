@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 import com.abrenoch.hyperiongrabber.common.util.BorderProcessor;
+import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,22 +34,22 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
-                          final MediaProjection projection, final int width, final int height,
-                          final int density, int frameRate) {
-        super(listener, projection, width, height, density, frameRate);
+                           final MediaProjection projection, final int width, final int height,
+                           final int density, HyperionGrabberOptions options) {
+        super(listener, projection, width, height, density, options);
 
         mBorderProcessor = new BorderProcessor(5);
 
         try {
             prepare();
-        } catch (IOException e) {
+        } catch (MediaCodec.CodecException e) {
             e.printStackTrace();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void prepare() throws IOException, MediaCodec.CodecException {
+    private void prepare() throws MediaCodec.CodecException {
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 "Capturing Display",
                 mWidthScaled, mHeightScaled, mDensity,
