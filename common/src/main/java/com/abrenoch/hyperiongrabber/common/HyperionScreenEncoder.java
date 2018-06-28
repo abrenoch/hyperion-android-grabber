@@ -23,21 +23,15 @@ import java.nio.ByteBuffer;
 public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
-    private static final boolean DEBUG = false;
-    private static boolean BORDER_DETECTION_ENABLED = true; // enables detecting borders for standard grabbing
-    private boolean USE_AVERAGE_COLOR = false; // if true will send only average color of screen
+
     private VirtualDisplay mVirtualDisplay;
     private ImageReader mImageReader;
-    private BorderProcessor mBorderProcessor;
-
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
                            final MediaProjection projection, final int width, final int height,
                            final int density, HyperionGrabberOptions options) {
         super(listener, projection, width, height, density, options);
-
-        mBorderProcessor = new BorderProcessor(5);
 
         try {
             prepare();
@@ -49,6 +43,8 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void prepare() throws MediaCodec.CodecException {
+        if (DEBUG) Log.d(TAG, "Preparing encoder");
+
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 "Capturing Display",
                 mWidthScaled, mHeightScaled, mDensity,
@@ -60,8 +56,8 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @Override
     public void stopRecording() {
-        if (DEBUG) Log.i(TAG, "stopRecording Called");
-        mIsCapturing = false;
+        if (DEBUG) Log.d(TAG, "stopRecording Called");
+        setCapturing(false);
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
         clearAndDisconnect();
@@ -73,7 +69,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     public void resumeRecording() {
         if (!isCapturing() && mImageReader != null) {
             Image img = mImageReader.acquireNextImage();
-            mIsCapturing = true;
+            setCapturing(true);
             if (img != null) {
                 img.close();
             }
@@ -85,7 +81,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         public void onPaused() {
             if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onPaused triggered");
             super.onPaused();
-            mIsCapturing = false;
+            setCapturing(false);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
@@ -100,17 +96,19 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         public void onStopped() {
             if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onStopped triggered");
             super.onStopped();
-            mIsCapturing = false;
+            setCapturing(false);
         }
     };
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
+        if (DEBUG) Log.d(TAG, "Setting image reader  " + String.valueOf(isCapturing()));
+
         mImageReader = ImageReader.newInstance(mWidthScaled, mHeightScaled,
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
-        mIsCapturing = true;
+        setCapturing(true);
     }
 
     private OnImageAvailableListener imageAvailableListener = new OnImageAvailableListener() {
@@ -198,7 +196,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         int firstX = 0;
         int firstY = 0;
 
-        if (BORDER_DETECTION_ENABLED || USE_AVERAGE_COLOR) {
+        if (mRemoveBorders || mAvgColor) {
             mBorderProcessor.parseBorder(buffer, width, height, rowStride, pixelStride);
             BorderProcessor.BorderObject border = mBorderProcessor.getCurrentBorder();
             if (border != null && border.isKnown()) {
@@ -207,7 +205,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             }
         }
 
-        if (USE_AVERAGE_COLOR) {
+        if (mAvgColor) {
             mListener.sendFrame(
                     getAverageColor(buffer, width, height, rowStride, pixelStride, firstX, firstY),
                     1,

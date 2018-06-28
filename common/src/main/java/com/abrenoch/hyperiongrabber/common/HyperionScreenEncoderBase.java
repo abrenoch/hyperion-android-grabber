@@ -6,15 +6,20 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.BorderProcessor;
 import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 
 public class HyperionScreenEncoderBase {
-    private static final boolean DEBUG = false;
+    static final boolean DEBUG = false;
     private static final String TAG = "ScreenEncoderBase";
-    int mWidthScaled;
-    int mFrameRate;
-    int mHeightScaled;
-    int mDensity;
+
+    final boolean mRemoveBorders = false; // enables detecting borders for standard grabbing - disabled for now
+    final boolean mAvgColor;
+    final int mWidthScaled;
+    final int mFrameRate;
+    final int mHeightScaled;
+    final int mDensity;
+    BorderProcessor mBorderProcessor;
     Handler mHandler;
 
     boolean mIsCapturing = false;
@@ -30,12 +35,18 @@ public class HyperionScreenEncoderBase {
         mMediaProjection = projection;
         mDensity = density;
         mFrameRate = options.getFrameRate();
+        mAvgColor = options.useAverageColor();
+
+        int blackThreshold = options.getBlackThreshold();
+        mBorderProcessor = new BorderProcessor(blackThreshold);
 
         if (DEBUG) {
             Log.d(TAG, "Density: " + String.valueOf(mDensity));
             Log.d(TAG, "Frame Rate: " + String.valueOf(mFrameRate));
             Log.d(TAG, "Original Width: " + String.valueOf(width));
             Log.d(TAG, "Original Height: " + String.valueOf(height));
+            Log.d(TAG, "Average Color Only: " + String.valueOf(mAvgColor));
+            Log.d(TAG, "Black Pixel Threshold: " + String.valueOf(blackThreshold));
         }
 
         // find the common divisor for width & height best fit for the LED count (defined in options)
@@ -81,6 +92,10 @@ public class HyperionScreenEncoderBase {
 
     public boolean isCapturing() {
         return mIsCapturing;
+    }
+
+    public void setCapturing(boolean isCapturing) {
+        mIsCapturing = isCapturing;
     }
 
     public void stopRecording() {
