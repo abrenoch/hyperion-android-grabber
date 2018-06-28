@@ -11,8 +11,10 @@ public class HyperionGrabberOptions {
 
     private final int MINIMUM_IMAGE_PACKET_SIZE; // how many bytes the minimal acceptable image quality is
     private final int FRAME_RATE;
+    private final boolean USE_AVERAGE_COLOR;
+    private final int BLACK_THRESHOLD = 5; // The limit each RGB value must be under to be considered a black pixel [0-255]
 
-    public HyperionGrabberOptions(int horizontalLED, int verticalLED, int frameRate) {
+    public HyperionGrabberOptions(int horizontalLED, int verticalLED, int frameRate, boolean useAvgColor) {
 
         // To determine the minimal acceptable image packet size we take the count of the width & height
         // of the LED pixels (that the user is driving via their hyperion server) and multiply them
@@ -20,6 +22,7 @@ public class HyperionGrabberOptions {
         // that the minimal acceptable quality should be equal to or greater than.
         MINIMUM_IMAGE_PACKET_SIZE = horizontalLED * verticalLED * 3;
         FRAME_RATE = frameRate;
+        USE_AVERAGE_COLOR = useAvgColor;
 
         if (DEBUG) {
             Log.d(TAG, "Horizontal LED Count: " + String.valueOf(horizontalLED));
@@ -30,6 +33,9 @@ public class HyperionGrabberOptions {
 
     // just returns the frame rate
     public int getFrameRate() { return FRAME_RATE; }
+
+    // boolean for if we should only be sending the average color or not
+    public boolean useAverageColor() { return USE_AVERAGE_COLOR; }
 
     // returns the divisor best suited to be used to meet the minimum image packet size
     //      Since we only want to scale using whole numbers, we need to find what common divisors
@@ -63,4 +69,6 @@ public class HyperionGrabberOptions {
         if (num1 % min == 0 && num2 % min == 0) list.add(min);
         return list;
     }
+
+    public int getBlackThreshold() { return BLACK_THRESHOLD; }
 }
