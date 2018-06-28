@@ -135,7 +135,7 @@ public class BorderProcessor {
     }
 
     private boolean isBlack(int red, int green, int blue) {
-        return red < 5 && green < 5 && blue < 5;
+        return red < BLACK_THRESHOLD && green < BLACK_THRESHOLD && blue < BLACK_THRESHOLD;
     }
 
     public static class BorderObject {
