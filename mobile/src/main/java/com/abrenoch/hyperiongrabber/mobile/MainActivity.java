@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
             mRecorderRunning = checked;
             String error = intent.getStringExtra(HyperionScreenService.BROADCAST_ERROR);
             if (error != null) {
-                Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), error, Toast.LENGTH_LONG).show();
             }
             setImageViews(checked, checked);
         }
