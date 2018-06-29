@@ -214,7 +214,6 @@ public class MainActivity extends LeanbackActivity implements ImageView.OnClickL
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
         BootActivity.startScreenRecorder(this, resultCode, data);
     }

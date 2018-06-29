@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void startScreenRecorder(int resultCode, Intent data) {
         BootActivity.startScreenRecorder(this, resultCode, data);
     }
