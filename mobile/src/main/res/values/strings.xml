@@ -1,3 +1,4 @@
 <resources>
     <string name="settings">Settings</string>
+    <string name="quick_tile_label">Toggle Grabber</string>
 </resources>
