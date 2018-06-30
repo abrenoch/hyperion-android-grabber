@@ -192,17 +192,6 @@ public class HyperionScreenService extends Service {
         super.onDestroy();
     }
 
-    private Intent buildStopStartButtons() {
-        Intent notificationIntent = new Intent(this, this.getClass());
-        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (isCapturing()) {
-            notificationIntent.setAction(ACTION_EXIT);
-        } else {
-            notificationIntent.setAction(ACTION_START);
-        }
-        return notificationIntent;
-    }
-
     private Intent buildExitButton() {
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
