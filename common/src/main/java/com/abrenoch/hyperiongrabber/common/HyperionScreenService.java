@@ -17,6 +17,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 import com.abrenoch.hyperiongrabber.common.util.Preferences;
@@ -223,8 +224,10 @@ public class HyperionScreenService extends Service {
         final int resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
         // get MediaProjection
         final MediaProjection projection = mMediaProjectionManager.getMediaProjection(resultCode, intent);
-        if (projection != null) {
-            final DisplayMetrics metrics = getResources().getDisplayMetrics();
+        WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        if (projection != null && window != null) {
+            final DisplayMetrics metrics = new DisplayMetrics();
+            window.getDefaultDisplay().getRealMetrics(metrics);
             final int density = metrics.densityDpi;
             _mediaProjection = projection;
             if (OGL_GRABBER) {
