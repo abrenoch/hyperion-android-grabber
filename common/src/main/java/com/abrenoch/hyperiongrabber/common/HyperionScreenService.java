@@ -39,8 +39,7 @@ public class HyperionScreenService extends Service {
     public static final String GET_STATUS = BASE + "ACTION_STATUS";
     public static final String EXTRA_RESULT_CODE = BASE + "EXTRA_RESULT_CODE";
     private static final int NOTIFICATION_ID = 1;
-    private static final int NOTIFICATION_STAT_STOP_INTENT_ID = 2;
-    private static final int NOTIFICATION_EXIT_INTENT_ID = 3;
+    private static final int NOTIFICATION_EXIT_INTENT_ID = 2;
 
     private boolean OGL_GRABBER = false;
     private boolean RECONNECT = false;
