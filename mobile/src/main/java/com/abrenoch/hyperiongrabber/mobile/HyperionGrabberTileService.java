@@ -31,28 +31,6 @@ public class HyperionGrabberTileService extends TileService {
     };
 
     @Override
-    public void onTileAdded() {
-        super.onTileAdded();
-
-        // warn the user if the app wasn't configured yet
-        Preferences preferences = new Preferences(getApplicationContext());
-        if (TextUtils.isEmpty(preferences.getString(R.string.pref_key_host, null)) || preferences.getInt(R.string.pref_key_port, -1) == -1){
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            settingsIntent.putExtra(SettingsActivity.EXTRA_SHOW_TOAST_KEY, SettingsActivity.EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE);
-            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            // Use TaskStackBuilder to make sure the MainActivity opens when the SettingsActivity is closed
-            TaskStackBuilder.create(this)
-                            .addNextIntentWithParentStack(settingsIntent)
-                            .startActivities();
-
-            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            sendBroadcast(closeIntent);
-        }
-
-    }
-
-    @Override
     public void onStartListening() {
         super.onStartListening();
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -85,11 +63,17 @@ public class HyperionGrabberTileService extends TileService {
             startService(intent);
         } else {
             Runnable runner = () -> {
-                final Intent i = new Intent(this, BootActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        |Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                        |Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(i);
+
+                boolean setupStarted = startSetupIfNeeded();
+
+                if (!setupStarted){
+                    final Intent i = new Intent(this, BootActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            |Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                            |Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(i);
+                }
+
             };
             if (isLocked()) {
                 unlockAndRun(runner);
@@ -107,6 +91,31 @@ public class HyperionGrabberTileService extends TileService {
                 return true;
             }
         }
+        return false;
+    }
+
+    /** Starts the Settings Activity if connection settings are missing
+     *
+     * @return true if setup was started
+     */
+    private boolean startSetupIfNeeded(){
+        Preferences preferences = new Preferences(getApplicationContext());
+        if (TextUtils.isEmpty(preferences.getString(R.string.pref_key_host, null)) || preferences.getInt(R.string.pref_key_port, -1) == -1){
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            settingsIntent.putExtra(SettingsActivity.EXTRA_SHOW_TOAST_KEY, SettingsActivity.EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE);
+            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // Use TaskStackBuilder to make sure the MainActivity opens when the SettingsActivity is closed
+            TaskStackBuilder.create(this)
+                    .addNextIntentWithParentStack(settingsIntent)
+                    .startActivities();
+
+            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            sendBroadcast(closeIntent);
+
+            return true;
+        }
+
         return false;
     }
 }
