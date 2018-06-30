@@ -59,11 +59,18 @@ public class HyperionGrabberTileService extends TileService {
             intent.setAction(HyperionScreenService.ACTION_EXIT);
             startService(intent);
         } else {
-            final Intent i = new Intent(this, BootActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    |Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                    |Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(i);
+            Runnable runner = () -> {
+                final Intent i = new Intent(this, BootActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        |Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                        |Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(i);
+            };
+            if (isLocked()) {
+                unlockAndRun(runner);
+            } else {
+                runner.run();
+            }
         }
     }
 
