@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -23,19 +24,19 @@ import android.view.MenuItem;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+    public static final String EXTRA_SHOW_TOAST_KEY = "extra_show_toast_key";
+    public static final int EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE = 1;
+
 
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-                preference.setSummary(stringValue);
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
+        String stringValue = value.toString();
+            preference.setSummary(stringValue);
 
-            return true;
-        }
+        return true;
     };
 
     /**
@@ -66,6 +67,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 new GeneralPreferenceFragment()).commit();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey(EXTRA_SHOW_TOAST_KEY)){
+            if (extras.getInt(EXTRA_SHOW_TOAST_KEY) == EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE){
+                Toast.makeText(getApplicationContext(), R.string.quick_tile_toast_setup_required, Toast.LENGTH_SHORT).show();
+            }
+        }
+
         setupActionBar();
     }
 
@@ -79,8 +87,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
-
 
     /**
      * This fragment shows general preferences only. It is used when the
@@ -98,10 +104,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("pref_key_host"));
-            bindPreferenceSummaryToValue(findPreference("pref_key_port"));
-            bindPreferenceSummaryToValue(findPreference("pref_key_priority"));
-            bindPreferenceSummaryToValue(findPreference("pref_key_framerate"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_host)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_port)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_priority)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_framerate)));
         }
 
         @Override
@@ -114,6 +120,4 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-
 }

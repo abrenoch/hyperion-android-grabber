@@ -1,14 +1,5 @@
 <resources>
-    <string name="app_name">Hyperion Grabber</string>
-    <string name="title_activity_settings">Settings</string>
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-
-    <string name="pref_summary_boot">Start screen grabber when android boots</string>
-    <string name="pref_title_boot">Grab on Boot</string>
-
     <string name="settings">Settings</string>
-
+    <string name="quick_tile_label">Toggle Grabber</string>
+    <string name="quick_tile_toast_setup_required">Please make sure Hyperion Grabber is setup before using the quick settings tile</string>
 </resources>

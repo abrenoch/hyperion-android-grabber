@@ -58,6 +58,27 @@ public class HyperionScreenEncoderBase {
         if (DEBUG) Log.d(TAG, "Encoder ready");
     }
 
+    private Runnable clearAndDisconnectRunner = new Runnable() {
+        public void run() {
+            mListener.clear();
+            mListener.disconnect();
+        }
+    };
+
+    private Runnable clearLightsRunner = new Runnable() {
+        public void run() {
+            mListener.clear();
+        }
+    };
+
+    public void clearLights() {
+        new Thread(clearLightsRunner).start();
+    }
+
+    void clearAndDisconnect() {
+        new Thread(clearAndDisconnectRunner).start();
+    }
+
     public boolean isCapturing() {
         return mIsCapturing;
     }
@@ -68,5 +89,34 @@ public class HyperionScreenEncoderBase {
 
     public void resumeRecording() {
         throw new RuntimeException("Stub!");
+    }
+
+    private int findDivisor() {
+        List<Integer> divisors = getCommonDivisors(mWidth, mHeight);
+        if (DEBUG) Log.d(TAG, "Available Divisors: " + divisors.toString());
+        for (Integer divisor : divisors) {
+            if ((mWidth / divisor) * (mHeight / divisor) * 3 <= TARGET_BIT_RATE) {
+                return divisor;
+            }
+        }
+        return 1;
+    }
+
+    private static List<Integer> getCommonDivisors(int num1, int num2) {
+        List<Integer> list = new ArrayList<>();
+        int min = minimum(num1, num2);
+        for (int i = 1; i <= min / 2; i++) {
+            if (num1 % i == 0 && num2 % i == 0) {
+                list.add(i);
+            }
+        }
+        if (num1 % min == 0 && num2 % min == 0) {
+            list.add(min);
+        }
+        return list;
+    }
+
+    private static int minimum(int num1, int num2) {
+        return num1 <= num2 ? num1 : num2;
     }
 }

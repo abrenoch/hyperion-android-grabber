@@ -58,7 +58,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         mIsCapturing = false;
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
-        new Thread(clearAndDisconnect).start();
+        clearAndDisconnect();
         mImageReader.close();
         mImageReader = null;
     }

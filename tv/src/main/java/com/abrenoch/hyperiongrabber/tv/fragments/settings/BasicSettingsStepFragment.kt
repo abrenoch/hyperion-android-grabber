@@ -1,12 +1,22 @@
 package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Color
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v17.leanback.widget.GuidanceStylist
 import android.support.v17.leanback.widget.GuidedAction
+import android.widget.Toast
+import com.abrenoch.hyperiongrabber.common.network.Hyperion
 import com.abrenoch.hyperiongrabber.tv.R
+import java.lang.ref.WeakReference
+import java.net.UnknownHostException
 
 internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
+
+    /** The amount of times the connection was tested */
+    private var testCounter = 0
 
     override fun onProvideTheme(): Int {
         return R.style.Theme_HyperionGrabber_GuidedStep_First
@@ -169,6 +179,13 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
     override fun onCreateButtonActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
         actions.add(continueAction())
+        actions.add(GuidedAction.Builder(context)
+                .id(ACTION_TEST)
+                .title(getString(R.string.guidedstep_test))
+                .description(R.string.guidedstep_test_description)
+                .build()
+
+        )
         actions.add(backAction())
     }
 
@@ -179,6 +196,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val host = assertStringValue(ACTION_HOST_NAME)
                 val port = assertIntValue(ACTION_PORT)
                 val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
+                val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, String::class.java)
                 val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
@@ -187,6 +205,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.putString(R.string.pref_key_host, host)
                 prefs.putInt(R.string.pref_key_port, port)
                 prefs.putBoolean(R.string.pref_key_boot, startOnBootEnabled)
+                prefs.putInt(R.string.pref_key_priority, priority)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
                 prefs.putString(R.string.pref_key_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
@@ -201,6 +220,15 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
             return
 
+        } else if (action.id == ACTION_TEST){
+            val colorIdx = testCounter % TEST_COLORS.size
+            val color = TEST_COLORS[colorIdx]
+            testCounter++
+
+            val host = assertStringValue(ACTION_HOST_NAME)
+            val port = assertIntValue(ACTION_PORT)
+            val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
+            testHyperionColor(host, port, priority, color)
         }
 
         super.onGuidedActionClicked(action)
@@ -240,6 +268,11 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         return super.onSubGuidedActionClicked(action)
     }
 
+    /** tries to connect to Hyperion and sets the given color for 5 seconds  */
+    private fun testHyperionColor(hostName: String, port: Int, priority: Int, color: Int) {
+        TestTask(context).execute(TestSpec(hostName, port, priority, color))
+    }
+
     companion object {
         private const val ACTION_HOST_NAME = 100L
         private const val ACTION_PORT = 110L
@@ -254,6 +287,58 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         private const val ACTION_GRABBER_SET_ID = 550
         private const val ACTION_GRABBER_MEDIA = 560L
         private const val ACTION_GRABBER_OGL = 570L
+        private const val ACTION_TEST = 600L
+
+        private val TEST_COLORS = intArrayOf(Color.RED, Color.GREEN, Color.BLUE, Color.WHITE)
+
+        class TestTask(context: Context): AsyncTask<TestSpec, Int, Int>(){
+
+
+            private val contextRef = WeakReference(context)
+
+            override fun doInBackground(vararg params: TestSpec?): Int {
+                try {
+                    val (host, port, priority, color) = params[0]!!
+                    val hyperion = Hyperion(host, port)
+                    if (hyperion.isConnected) {
+                        hyperion.setColor(color, priority, 3000)
+                    } else {
+                        return RESULT_UNREACHABLE
+                    }
+                    hyperion.disconnect()
+                    return RESULT_OK
+                } catch (e: UnknownHostException) {
+                    return RESULT_UNREACHABLE
+                } catch (e: Exception){
+                    return RESULT_UNKNOWN_ERROR
+                }
+            }
+
+            override fun onPostExecute(result: Int) {
+                contextRef.get()?.run {
+                    val messageRes = when(result){
+                        RESULT_OK -> R.string.guidedstep_test_success
+                        RESULT_UNREACHABLE -> R.string.guidedstep_test_host_unreachable
+                        else -> R.string.guidedstep_test_unknown_error
+                    }
+
+                    Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
+                }
+
+
+
+            }
+
+            companion object {
+                const val RESULT_OK = 1
+                const val RESULT_UNREACHABLE = -1
+                const val RESULT_UNKNOWN_ERROR = -100
+            }
+
+        }
+
+        data class TestSpec(val host: String, val port: Int, val priority: Int, val color: Int)
+
     }
 
 
