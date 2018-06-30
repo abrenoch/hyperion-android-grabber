@@ -17,7 +17,6 @@ import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
 import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
@@ -73,11 +72,6 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             }
         }
     }
-
-    private Runnable clearAndDisconnect  = () -> {
-        mListener.clear();
-        mListener.disconnect();
-    };
 
     private VirtualDisplay.Callback mDisplayCallback = new VirtualDisplay.Callback() {
         @Override
