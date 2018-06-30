@@ -26,7 +26,6 @@ public class BootActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
@@ -37,7 +36,6 @@ public class BootActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void startScreenRecorder(Context context, int resultCode, Intent data) {
         Intent intent = new Intent(context, HyperionScreenService.class);
         intent.setAction(HyperionScreenService.ACTION_START);
