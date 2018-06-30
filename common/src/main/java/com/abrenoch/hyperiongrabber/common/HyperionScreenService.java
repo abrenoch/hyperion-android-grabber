@@ -118,6 +118,10 @@ public class HyperionScreenService extends Service {
             mStartError = getResources().getString(R.string.error_empty_port);
             return false;
         }
+        if (mHorizontalLEDCount <= 0 || mVerticalLEDCount <= 0) {
+            mStartError = getResources().getString(R.string.error_invalid_led_counts);
+            return false;
+        }
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         mHyperionThread = new HyperionThread(mReceiver, host, port, Integer.parseInt(priority), RECONNECT, delay);
         mHyperionThread.start();
