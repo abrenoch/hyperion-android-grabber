@@ -9,10 +9,13 @@ import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
 import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
+import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class HyperionGrabberTileService extends TileService {
@@ -26,6 +29,28 @@ public class HyperionGrabberTileService extends TileService {
             tile.updateTile();
         }
     };
+
+    @Override
+    public void onTileAdded() {
+        super.onTileAdded();
+
+        // warn the user if the app wasn't configured yet
+        Preferences preferences = new Preferences(getApplicationContext());
+        if (TextUtils.isEmpty(preferences.getString(R.string.pref_key_host, null)) || preferences.getInt(R.string.pref_key_port, -1) == -1){
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            settingsIntent.putExtra(SettingsActivity.EXTRA_SHOW_TOAST_KEY, SettingsActivity.EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE);
+            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // Use TaskStackBuilder to make sure the MainActivity opens when the SettingsActivity is closed
+            TaskStackBuilder.create(this)
+                            .addNextIntentWithParentStack(settingsIntent)
+                            .startActivities();
+
+            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            sendBroadcast(closeIntent);
+        }
+
+    }
 
     @Override
     public void onStartListening() {
