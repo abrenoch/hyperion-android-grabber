@@ -43,6 +43,7 @@ public class HyperionScreenService extends Service {
 
     private boolean OGL_GRABBER = false;
     private boolean RECONNECT = false;
+    private boolean hasConnected = false;
     private MediaProjectionManager mMediaProjectionManager;
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
@@ -56,13 +57,24 @@ public class HyperionScreenService extends Service {
         @Override
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
+            hasConnected = true;
+            notifyActivity();
         }
 
         @Override
         public void onConnectionError(int errorID, String error) {
             Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e(TAG, error);
-            if (RECONNECT) Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            if (!hasConnected) {
+                mStartError = getResources().getString(R.string.error_server_unreachable);
+                haltStartup();
+            }
+            if (RECONNECT && hasConnected) {
+                Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
+            } else if (!RECONNECT && hasConnected) {
+                mStartError = getResources().getString(R.string.error_connection_lost);
+                stopSelf();
+            }
         }
     };
 
@@ -134,7 +146,6 @@ public class HyperionScreenService extends Service {
                         boolean isPrepared = prepared();
                         if (isPrepared) {
                             startScreenRecord(intent);
-                            notifyActivity();
                             startForeground(NOTIFICATION_ID, getNotification());
 
                             IntentFilter intentFilter = new IntentFilter();
@@ -143,10 +154,7 @@ public class HyperionScreenService extends Service {
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
-
-                            // this line feels unnecessary, but problems happen without it
-                            startForeground(NOTIFICATION_ID, getNotification());
-                            stopSelf();
+                            haltStartup();
                         }
                     }
                     break;
@@ -185,6 +193,11 @@ public class HyperionScreenService extends Service {
         notifyActivity();
 
         super.onDestroy();
+    }
+
+    private void haltStartup() {
+        startForeground(NOTIFICATION_ID, getNotification());
+        stopSelf();
     }
 
     private Intent buildStopStartButtons() {

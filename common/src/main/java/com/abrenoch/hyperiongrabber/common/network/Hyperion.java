@@ -10,14 +10,17 @@ import com.google.protobuf.ByteString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Hyperion {
+    private final int TIMEOUT = 1000;
     private final Socket mSocket;
 
 
     public Hyperion(String address, int port) throws IOException {
-        mSocket = new Socket(address, port);
+        mSocket = new Socket();
+        mSocket.connect(new InetSocketAddress(address, port), TIMEOUT);
     }
 
 
