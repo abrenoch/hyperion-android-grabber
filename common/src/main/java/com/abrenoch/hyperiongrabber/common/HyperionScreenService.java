@@ -42,7 +42,7 @@ public class HyperionScreenService extends Service {
 
     private boolean OGL_GRABBER = false;
     private boolean RECONNECT = false;
-    private boolean HAS_CONNECTED = false;
+    private boolean hasConnected = false;
     private MediaProjectionManager mMediaProjectionManager;
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
@@ -56,7 +56,7 @@ public class HyperionScreenService extends Service {
         @Override
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
-            HAS_CONNECTED = true;
+            hasConnected = true;
             notifyActivity();
         }
 
@@ -64,13 +64,13 @@ public class HyperionScreenService extends Service {
         public void onConnectionError(int errorID, String error) {
             Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e(TAG, error);
-            if (!HAS_CONNECTED) {
+            if (!hasConnected) {
                 mStartError = getResources().getString(R.string.error_server_unreachable);
                 haltStartup();
             }
-            if (RECONNECT && HAS_CONNECTED) {
+            if (RECONNECT && hasConnected) {
                 Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
-            } else if (!RECONNECT && HAS_CONNECTED) {
+            } else if (!RECONNECT && hasConnected) {
                 mStartError = getResources().getString(R.string.error_connection_lost);
                 stopSelf();
             }
@@ -195,7 +195,6 @@ public class HyperionScreenService extends Service {
     }
 
     private void haltStartup() {
-        // this line feels unnecessary, but problems happen without it
         startForeground(NOTIFICATION_ID, getNotification());
         stopSelf();
     }
