@@ -44,7 +44,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private void prepare() throws IOException, MediaCodec.CodecException {
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 "Capturing Display",
-                mWidthScaled, mHeightScaled, mDensity,
+                getGrabberWidth(), getGrabberHeight(), mDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 null, mDisplayCallback, null);
 
@@ -70,6 +70,18 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
             if (img != null) {
                 img.close();
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void setOrientation(int orientation) {
+        if (mVirtualDisplay != null && orientation != mCurrentOrientation) {
+            mCurrentOrientation = orientation;
+            mIsCapturing = false;
+            mVirtualDisplay.resize(getGrabberWidth(), getGrabberHeight(), mDensity);
+            mImageReader.close();
+            setImageReader();
         }
     }
 
@@ -99,7 +111,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
-        mImageReader = ImageReader.newInstance(mWidthScaled, mHeightScaled,
+        mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
@@ -118,7 +130,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                     long now = System.nanoTime();
                     Image img = reader.acquireLatestImage();
                     if (img != null && now - lastFrame >= min_nano_time) {
-                        mListener.sendFrame(savePixels(img), mWidthScaled, mHeightScaled);
+                        mListener.sendFrame(savePixels(img), getGrabberWidth(), getGrabberHeight());
                         img.close();
                         lastFrame = now;
                     } else if (img != null) {
