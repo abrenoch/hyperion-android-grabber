@@ -1,5 +1,6 @@
 package com.abrenoch.hyperiongrabber.common;
 
+import android.content.res.Configuration;
 import android.media.projection.MediaProjection;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -15,12 +16,14 @@ public class HyperionScreenEncoderBase {
     private static final int TARGET_HEIGHT = 60;
     private static final int TARGET_WIDTH = 60;
     private static final int TARGET_BIT_RATE = TARGET_HEIGHT * TARGET_WIDTH * 3;
+    private final int INIT_ORIENTATION;
     private int mHeight;
     private int mWidth;
     int mWidthScaled;
     int mFrameRate;
     int mHeightScaled;
     int mDensity;
+    int mCurrentOrientation;
 
     Handler mHandler;
 
@@ -37,6 +40,9 @@ public class HyperionScreenEncoderBase {
         mMediaProjection = projection;
         mDensity = density;
         mFrameRate = frameRate;
+
+        mCurrentOrientation = INIT_ORIENTATION = width > height ? Configuration.ORIENTATION_PORTRAIT :
+                Configuration.ORIENTATION_PORTRAIT;
 
         if (DEBUG) {
             Log.d(TAG, "Density: " + String.valueOf(mDensity));
@@ -107,6 +113,18 @@ public class HyperionScreenEncoderBase {
 
     public void resumeRecording() {
         throw new RuntimeException("Stub!");
+    }
+
+    int getGrabberWidth() {
+        return INIT_ORIENTATION != mCurrentOrientation ? mHeightScaled : mWidthScaled;
+    }
+
+    int getGrabberHeight() {
+        return INIT_ORIENTATION != mCurrentOrientation ? mWidthScaled : mHeightScaled;
+    }
+
+    public void setOrientation(int orientation) {
+        mCurrentOrientation = orientation;
     }
 
     private int findDivisor() {
