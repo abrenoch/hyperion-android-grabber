@@ -41,7 +41,7 @@ public class HyperionScreenEncoderBase {
         mDensity = density;
         mFrameRate = frameRate;
 
-        mCurrentOrientation = INIT_ORIENTATION = width > height ? Configuration.ORIENTATION_PORTRAIT :
+        mCurrentOrientation = INIT_ORIENTATION = width > height ? Configuration.ORIENTATION_LANDSCAPE :
                 Configuration.ORIENTATION_PORTRAIT;
 
         if (DEBUG) {
