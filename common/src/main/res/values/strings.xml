@@ -39,12 +39,12 @@
     <string name="pref_key_y_led">pref_key_y_led</string>
     <string name="pref_title_y_led">Vertical LED Count</string>
     <string name="pref_summary_y_led">The vertical count of LEDs on your hardware</string>
-    <integer name="pref_default_y_led">20</integer>
+    <integer name="pref_default_y_led">34</integer>
 
     <string name="pref_key_x_led">pref_key_x_led</string>
     <string name="pref_title_x_led">Horizontal LED Count</string>
     <string name="pref_summary_x_led">The horizontal count of LEDs on your hardware</string>
-    <integer name="pref_default_x_led">36</integer>
+    <integer name="pref_default_x_led">60</integer>
 
     <string name="pref_key_priority">pref_key_priority</string>
     <string name="pref_title_priority">Message Priority</string>
