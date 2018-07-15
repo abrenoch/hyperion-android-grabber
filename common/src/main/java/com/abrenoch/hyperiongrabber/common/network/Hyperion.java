@@ -16,6 +16,7 @@ import java.net.Socket;
 public class Hyperion {
     private final int TIMEOUT = 1000;
     private final Socket mSocket;
+    private boolean usedSocket = false;
 
 
     public Hyperion(String address, int port) throws IOException {
@@ -26,8 +27,8 @@ public class Hyperion {
 
     @Override
     protected void finalize() throws Throwable {
-        if (isConnected()) {
-            mSocket.close();
+        while (isConnected()) {
+            if (!usedSocket) mSocket.close();
         }
         super.finalize();
     }
@@ -39,8 +40,8 @@ public class Hyperion {
     }
 
     public void disconnect() throws IOException {
-        if (isConnected()) {
-            mSocket.close();
+        while (isConnected()) {
+            if (!usedSocket) mSocket.close();
         }
     }
 
@@ -134,14 +135,16 @@ public class Hyperion {
     }
 
     private HyperionReply receiveReply() throws IOException {
+        usedSocket = true;
         InputStream input = mSocket.getInputStream();
 
         byte[] header = new byte[4];
         input.read(header, 0, 4);
         int size = (header[0]<<24) | (header[1]<<16) | (header[2]<<8) | (header[3]);
         byte[] data = new byte[size];
-        input.read(data, 0, size);
+        if (size > 0) input.read(data, 0, size);
         HyperionReply reply = HyperionReply.parseFrom(data);
+        usedSocket = false;
 
         return reply;
     }
