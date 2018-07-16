@@ -132,7 +132,7 @@ public class Hyperion {
         try {
             reply = receiveReply();
         } catch (IOException e) {
-            // failed to parse the response
+            throw e;
         }
         if (reply == null || reply.getSuccess()) {
             // response had a problem?

@@ -125,13 +125,13 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                         img.close();
                     }
                 } catch (final Exception e) {
-                    Log.e(TAG, "sendImage exception:", e);
+                    if (DEBUG) Log.w(TAG, "sendImage exception:", e);
                 }
             }
         }
     };
 
-    private byte[] savePixels(Image image){
+    private byte[] savePixels(Image image) throws IllegalStateException {
         Image.Plane plane = image.getPlanes()[0];
         ByteBuffer buffer = plane.getBuffer();
 
