@@ -266,6 +266,7 @@ public class HyperionScreenService extends Service {
 
     private void stopScreenRecord() {
         if (DEBUG) Log.v(TAG, "Stop screen recorder");
+        RECONNECT = false;
         mNotificationManager.cancel(NOTIFICATION_ID);
         if (currentEncoder() != null) {
             if (DEBUG) Log.v(TAG, "Stopping the current encoder");
