@@ -40,7 +40,7 @@ public class HyperionScreenService extends Service {
     public static final String EXTRA_RESULT_CODE = BASE + "EXTRA_RESULT_CODE";
     private static final int NOTIFICATION_ID = 1;
     private static final int NOTIFICATION_EXIT_INTENT_ID = 2;
-
+    private static final int SUCCESSFUL_CONNECTION_NOTIFY_DELAY_MS = 100;
     private boolean OGL_GRABBER = false;
     private boolean RECONNECT = false;
     private boolean hasConnected = false;
@@ -60,6 +60,15 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             hasConnected = true;
+
+            // a slight delay here to give the grabber time to fully initialize
+            // before sending the grabber status back to the activity
+            try {
+                Thread.sleep(SUCCESSFUL_CONNECTION_NOTIFY_DELAY_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             notifyActivity();
         }
 
