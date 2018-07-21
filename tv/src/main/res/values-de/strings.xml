@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Strings related to guided sequence activity -->
+    <string name="guidedstep_basic_settings_title">Tip</string>
+    <string name="guidedstep_basic_settings_description">Lade dir die offiziele Android TV App auf dein Smartphone um Zahlen und Text besser eingeben zu können</string>
+    <string name="guidedstep_second_title">Verbindungstest</string>
+    <string name="guidedstep_second_description">Es werde Licht</string>
+    <string name="guidedstep_second_breadcrumb">Schritt 2\/2</string>
+    <string name="guidedstep_section_advanced_title">Erweiterte Einstellungen</string>
+    <string name="guidedstep_section_advanced_description">Die nachfolgenden Einstellungen können auf ihren Standardwerten belassen werden</string>
+    <string name="guidedstep_save">Speichern</string>
+    <string name="guidedstep_test">Test</string>
+    <string name="guidedstep_test_description">Licht an</string>
+    <string name="guidedstep_test_success">Ergebnis: OK. LEDs leuchten nicht? Versuch\'s mit einer niedrigeren Priorität</string>
+    <string name="guidedstep_test_host_unreachable">Ergebnis: Verbindungsfehler. Bitte überprüfe IP und Port Nummer</string>
+    <string name="guidedstep_test_unknown_error">Ergebnis: Unbekannter Fehler</string>
+    <string name="guidedstep_continue">Weiter</string>
+    <string name="guidedstep_letsdoit">So soll es sein</string>
+    <string name="guidedstep_nevermind">Vergiss es</string>
+    <string name="guidedstep_cancel">Abbrechen</string>
+    <string name="guidedstep_required">Benötigt</string>
+    <string name="header_icon">Header icon</string>
+</resources>
