@@ -35,6 +35,8 @@ public class HyperionGrabberOptions {
 
     public int getFrameRate() { return FRAME_RATE; }
 
+    public boolean useAverageColor() { return USE_AVERAGE_COLOR; }
+
     /**
     * returns the divisor best suited to be used to meet the minimum image packet size
     *     Since we only want to scale using whole numbers, we need to find what common divisors
