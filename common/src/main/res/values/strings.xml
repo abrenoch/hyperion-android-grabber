@@ -5,6 +5,9 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
 
+    <!-- notification button -->
+    <string name="notification_exit_button">Exit</string>
+
     <!-- Network scanner -->
     <string name="scanner_title">Hi there!</string>
     <string name="scanner_description">Hyperion Grabber can scan your network for running servers, so you won\'t have to fiddle with your remote to punch in an ip-address.</string>
@@ -32,6 +35,16 @@
     <string name="pref_title_port">Hyperion Protobuf Port</string>
     <string name="pref_summary_port">The protobuf port of your hyperion instance</string>
     <integer name="pref_default_port">19445</integer>
+
+    <string name="pref_key_y_led">pref_key_y_led</string>
+    <string name="pref_title_y_led">Vertical LED Count</string>
+    <string name="pref_summary_y_led">The vertical count of LEDs on your hardware</string>
+    <integer name="pref_default_y_led">34</integer>
+
+    <string name="pref_key_x_led">pref_key_x_led</string>
+    <string name="pref_title_x_led">Horizontal LED Count</string>
+    <string name="pref_summary_x_led">The horizontal count of LEDs on your hardware</string>
+    <integer name="pref_default_x_led">60</integer>
 
     <string name="pref_key_priority">pref_key_priority</string>
     <string name="pref_title_priority">Message Priority</string>
@@ -92,6 +105,7 @@
 
     <string name="error_empty_host">Host setting should not be empty</string>
     <string name="error_empty_port">Port setting should not be empty</string>
+    <string name="error_invalid_led_counts">Horizontal &amp; vertical LED counts must be set and greater than 0</string>
     <string name="error_server_unreachable">Could not connect to the hyperion server. Check your settings and make sure hyperion is running</string>
     <string name="error_connection_lost">The connection to your hyperion server has been lost, now stopping the grabber</string>
 
