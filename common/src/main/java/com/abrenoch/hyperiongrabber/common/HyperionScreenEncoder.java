@@ -14,9 +14,9 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
@@ -28,20 +28,20 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoder(final HyperionThread.HyperionThreadListener listener,
-                          final MediaProjection projection, final int width, final int height,
-                          final int density, int frameRate) {
-        super(listener, projection, width, height, density, frameRate);
+                           final MediaProjection projection, final int width, final int height,
+                           final int density, HyperionGrabberOptions options) {
+        super(listener, projection, width, height, density, options);
 
         try {
             prepare();
-        } catch (IOException e) {
+        } catch (MediaCodec.CodecException e) {
             e.printStackTrace();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void prepare() throws IOException, MediaCodec.CodecException {
+    private void prepare() throws MediaCodec.CodecException {
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 "Capturing Display",
                 mWidthScaled, mHeightScaled, mDensity,
@@ -125,13 +125,13 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                         img.close();
                     }
                 } catch (final Exception e) {
-                    Log.e(TAG, "sendImage exception:", e);
+                    if (DEBUG) Log.w(TAG, "sendImage exception:", e);
                 }
             }
         }
     };
 
-    private byte[] savePixels(Image image){
+    private byte[] savePixels(Image image) throws IllegalStateException {
         Image.Plane plane = image.getPlanes()[0];
         ByteBuffer buffer = plane.getBuffer();
 

@@ -7,8 +7,8 @@ import com.example.android.screencapture.HyperionProto.HyperionRequest;
 import com.example.android.screencapture.HyperionProto.ImageRequest;
 import com.google.protobuf.ByteString;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -26,9 +26,7 @@ public class Hyperion {
 
     @Override
     protected void finalize() throws Throwable {
-        if (isConnected()) {
-            mSocket.close();
-        }
+        disconnect();
         super.finalize();
     }
 
@@ -112,36 +110,42 @@ public class Hyperion {
 
 
     public void sendRequest(HyperionRequest request) throws IOException {
-        int size = request.getSerializedSize();
+        if (isConnected()) {
+            int size = request.getSerializedSize();
 
-        // create the header
-        byte[] header = new byte[4];
-        header[0] = (byte)((size >> 24) & 0xFF);
-        header[1] = (byte)((size >> 16) & 0xFF);
-        header[2] = (byte)((size >>  8) & 0xFF);
-        header[3] = (byte)((size  ) & 0xFF);
+            // create the header
+            byte[] header = new byte[4];
+            header[0] = (byte)((size >> 24) & 0xFF);
+            header[1] = (byte)((size >> 16) & 0xFF);
+            header[2] = (byte)((size >>  8) & 0xFF);
+            header[3] = (byte)((size  ) & 0xFF);
 
-        // write the data to the socket
-        OutputStream output = mSocket.getOutputStream();
-        output.write(header);
-        request.writeTo(output);
-        output.flush();
+            // write the data to the socket
+            OutputStream output = mSocket.getOutputStream();
+            output.write(header);
+            request.writeTo(output);
+            output.flush();
 
-        HyperionReply reply = receiveReply();
-        if (!reply.getSuccess()) {
-            // response had a problem?
+            HyperionReply reply = receiveReply();
+            if (reply != null && !reply.getSuccess()) {
+                // response had a problem?
+            }
         }
     }
 
     private HyperionReply receiveReply() throws IOException {
-        InputStream input = mSocket.getInputStream();
+        BufferedInputStream input = new BufferedInputStream(mSocket.getInputStream());
 
         byte[] header = new byte[4];
         input.read(header, 0, 4);
         int size = (header[0]<<24) | (header[1]<<16) | (header[2]<<8) | (header[3]);
-        byte[] data = new byte[size];
-        input.read(data, 0, size);
-        HyperionReply reply = HyperionReply.parseFrom(data);
+
+        HyperionReply reply = null;
+        if (size > 0) {
+            byte[] data = new byte[size];
+            input.read(data, 0, size);
+            reply = HyperionReply.parseFrom(data);
+        }
 
         return reply;
     }
