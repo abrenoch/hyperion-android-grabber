@@ -44,6 +44,18 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.getInt(R.string.pref_key_port).toString()
         )
 
+        val enterHorizontalLEDCount = unSignedNumberAction(
+                ACTION_X_LED_COUNT,
+                getString(R.string.pref_title_x_led),
+                prefs.getInt(R.string.pref_key_x_led).toString()
+        )
+
+        val enterVerticalLEDCount = unSignedNumberAction(
+                ACTION_Y_LED_COUNT,
+                getString(R.string.pref_title_y_led),
+                prefs.getInt(R.string.pref_key_y_led).toString()
+        )
+
         val startOnBootEnabled = prefs.getBoolean(R.string.pref_key_boot)
 
         val startOnBoot = GuidedAction.Builder(context)
@@ -168,6 +180,8 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
         actions.add(enterHost)
         actions.add(enterPort)
+        actions.add(enterHorizontalLEDCount)
+        actions.add(enterVerticalLEDCount)
         actions.add(startOnBoot)
         actions.add(advancedInfo)
         actions.add(priority)
@@ -195,6 +209,8 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
             try {
                 val host = assertStringValue(ACTION_HOST_NAME)
                 val port = assertIntValue(ACTION_PORT)
+                val xLED = assertIntValue(ACTION_X_LED_COUNT)
+                val yLED = assertIntValue(ACTION_Y_LED_COUNT)
                 val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
                 val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, String::class.java)
@@ -204,6 +220,8 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
                 prefs.putString(R.string.pref_key_host, host)
                 prefs.putInt(R.string.pref_key_port, port)
+                prefs.putInt(R.string.pref_key_x_led, xLED)
+                prefs.putInt(R.string.pref_key_y_led, yLED)
                 prefs.putBoolean(R.string.pref_key_boot, startOnBootEnabled)
                 prefs.putInt(R.string.pref_key_priority, priority)
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
@@ -277,6 +295,8 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         private const val ACTION_HOST_NAME = 100L
         private const val ACTION_PORT = 110L
         private const val ACTION_START_ON_BOOT = 120L
+        private const val ACTION_X_LED_COUNT = 130L
+        private const val ACTION_Y_LED_COUNT = 140L
         private const val ACTION_RECONNECT_GROUP = 200L
         private const val ACTION_RECONNECT = 210L
         private const val ACTION_RECONNECT_DELAY = 220L
