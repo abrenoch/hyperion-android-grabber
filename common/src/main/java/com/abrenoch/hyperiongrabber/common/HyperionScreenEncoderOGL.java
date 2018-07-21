@@ -18,6 +18,7 @@ import com.abrenoch.hyperiongrabber.common.screencap.EglTask;
 import com.abrenoch.hyperiongrabber.common.screencap.FullFrameRect;
 import com.abrenoch.hyperiongrabber.common.screencap.Texture2dProgram;
 import com.abrenoch.hyperiongrabber.common.screencap.WindowSurface;
+import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,12 +35,12 @@ public class HyperionScreenEncoderOGL extends HyperionScreenEncoderBase implemen
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     HyperionScreenEncoderOGL(final HyperionThread.HyperionThreadListener listener,
                           final MediaProjection projection, final int width, final int height,
-                          final int density, int frameRate) {
-        super(listener, projection, width, height, density, frameRate);
+                          final int density, HyperionGrabberOptions options) {
+        super(listener, projection, width, height, density, options);
 
         try {
             prepare();
-        } catch (IOException e) {
+        } catch (MediaCodec.CodecException e) {
             e.printStackTrace();
         }
     }
@@ -79,7 +80,7 @@ public class HyperionScreenEncoderOGL extends HyperionScreenEncoderBase implemen
 
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void prepare() throws IOException, MediaCodec.CodecException {
+    private void prepare() throws MediaCodec.CodecException {
 
         /*
         *   SCALING THIS SURFACE TEXTURE DOWN SEEMS TO CAUSE PROBLEMS?
@@ -94,8 +95,6 @@ public class HyperionScreenEncoderOGL extends HyperionScreenEncoderBase implemen
 
         new Thread(mScreenCaptureTask, "ScreenCaptureThread").start();
     }
-
-
 
     @Override
     public void stopRecording() {
