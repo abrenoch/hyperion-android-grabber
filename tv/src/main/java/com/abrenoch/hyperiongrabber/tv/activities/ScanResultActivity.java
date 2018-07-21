@@ -84,7 +84,7 @@ public class ScanResultActivity extends LeanbackActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        setHyperionColor(hostName, port, -1);
+        setHyperionColor(hostName, port, Color.BLACK);
 
     }
 
@@ -164,13 +164,13 @@ public class ScanResultActivity extends LeanbackActivity {
                 .burst(100);
     }
 
-    /** A color int , or -1 to clear */
+    /** A color int , or Color.BLACK to clear */
     private void setHyperionColor(String hostName, int port, int color){
         new Thread(() -> {
             try {
                 Hyperion hyperion = new Hyperion(hostName, port);
                 if (hyperion.isConnected()){
-                    if (color == -1){
+                    if (color == Color.BLACK){
                         hyperion.clear(50);
                     } else {
                         hyperion.setColor(color, 50);

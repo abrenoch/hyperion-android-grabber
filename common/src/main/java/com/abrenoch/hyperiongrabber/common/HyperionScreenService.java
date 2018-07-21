@@ -39,12 +39,11 @@ public class HyperionScreenService extends Service {
     public static final String GET_STATUS = BASE + "ACTION_STATUS";
     public static final String EXTRA_RESULT_CODE = BASE + "EXTRA_RESULT_CODE";
     private static final int NOTIFICATION_ID = 1;
-    private static final int NOTIFICATION_STAT_STOP_INTENT_ID = 2;
-    private static final int NOTIFICATION_EXIT_INTENT_ID = 3;
+    private static final int NOTIFICATION_EXIT_INTENT_ID = 2;
 
     private boolean OGL_GRABBER = false;
     private boolean RECONNECT = false;
-    private boolean HAS_CONNECTED = false;
+    private boolean hasConnected = false;
     private MediaProjectionManager mMediaProjectionManager;
     private HyperionThread mHyperionThread;
     private static MediaProjection _mediaProjection;
@@ -61,16 +60,7 @@ public class HyperionScreenService extends Service {
         @Override
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
-            HAS_CONNECTED = true;
-
-            // added a slight delay here to give the grabber time to fully initialize
-            // before sending the grabber status back to the activity
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            hasConnected = true;
             notifyActivity();
         }
 
@@ -78,13 +68,13 @@ public class HyperionScreenService extends Service {
         public void onConnectionError(int errorID, String error) {
             Log.e(TAG, "COULD NOT CONNECT TO HYPERION INSTANCE");
             if (error != null) Log.e(TAG, error);
-            if (!HAS_CONNECTED) {
+            if (!hasConnected) {
                 mStartError = getResources().getString(R.string.error_server_unreachable);
                 haltStartup();
             }
-            if (RECONNECT && HAS_CONNECTED) {
+            if (RECONNECT && hasConnected) {
                 Log.e(TAG, "AUTOMATIC RECONNECT ENABLED. CONNECTING ...");
-            } else if (!RECONNECT && HAS_CONNECTED) {
+            } else if (!RECONNECT && hasConnected) {
                 mStartError = getResources().getString(R.string.error_connection_lost);
                 stopSelf();
             }
@@ -139,6 +129,10 @@ public class HyperionScreenService extends Service {
         }
         if (port == -1) {
             mStartError = getResources().getString(R.string.error_empty_port);
+            return false;
+        }
+        if (mHorizontalLEDCount <= 0 || mVerticalLEDCount <= 0) {
+            mStartError = getResources().getString(R.string.error_invalid_led_counts);
             return false;
         }
         mMediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
@@ -212,7 +206,6 @@ public class HyperionScreenService extends Service {
     }
 
     private void haltStartup() {
-        // this line feels unnecessary, but problems happen without it
         startForeground(NOTIFICATION_ID, getNotification());
         stopSelf();
     }
@@ -254,7 +247,6 @@ public class HyperionScreenService extends Service {
             final DisplayMetrics metrics = new DisplayMetrics();
             window.getDefaultDisplay().getRealMetrics(metrics);
             final int density = metrics.densityDpi;
-            _mediaProjection = projection;
             HyperionGrabberOptions options = new HyperionGrabberOptions(mHorizontalLEDCount,
                     mVerticalLEDCount, mFrameRate, mSendAverageColor);
 
@@ -276,6 +268,7 @@ public class HyperionScreenService extends Service {
 
     private void stopScreenRecord() {
         if (DEBUG) Log.v(TAG, "Stop screen recorder");
+        RECONNECT = false;
         mNotificationManager.cancel(NOTIFICATION_ID);
         if (currentEncoder() != null) {
             if (DEBUG) Log.v(TAG, "Stopping the current encoder");

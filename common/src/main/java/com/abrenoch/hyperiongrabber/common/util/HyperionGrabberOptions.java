@@ -16,10 +16,12 @@ public class HyperionGrabberOptions {
 
     public HyperionGrabberOptions(int horizontalLED, int verticalLED, int frameRate, boolean useAvgColor) {
 
-        // To determine the minimal acceptable image packet size we take the count of the width & height
-        // of the LED pixels (that the user is driving via their hyperion server) and multiply them
-        // together and then by 3 (1 for each color in RGB). This will give us the count of the bytes
-        // that the minimal acceptable quality should be equal to or greater than.
+        /*
+        * To determine the minimal acceptable image packet size we take the count of the width & height
+        * of the LED pixels (that the user is driving via their hyperion server) and multiply them
+        * together and then by 3 (1 for each color in RGB). This will give us the count of the bytes
+        * that the minimal acceptable quality should be equal to or greater than.
+        **/
         MINIMUM_IMAGE_PACKET_SIZE = horizontalLED * verticalLED * 3;
         FRAME_RATE = frameRate;
         USE_AVERAGE_COLOR = useAvgColor;
@@ -31,17 +33,18 @@ public class HyperionGrabberOptions {
         }
     }
 
-    // just returns the frame rate
     public int getFrameRate() { return FRAME_RATE; }
 
-    // boolean for if we should only be sending the average color or not
-    public boolean useAverageColor() { return USE_AVERAGE_COLOR; }
-
-    // returns the divisor best suited to be used to meet the minimum image packet size
-    //      Since we only want to scale using whole numbers, we need to find what common divisors
-    //      are available for the given width & height. We will check those divisors to find the smallest
-    //      number (that we can divide our screen dimensions by) that would meet the minimum image
-    //      packet size required to match the count of the LEDs on the destination hyperion server.
+    /**
+    * returns the divisor best suited to be used to meet the minimum image packet size
+    *     Since we only want to scale using whole numbers, we need to find what common divisors
+    *     are available for the given width & height. We will check those divisors to find the smallest
+    *     number (that we can divide our screen dimensions by) that would meet the minimum image
+    *     packet size required to match the count of the LEDs on the destination hyperion server.
+    * @param width The original width of the device screen
+    * @param height  The original height of the device screen
+    * @return int The divisor bes suited to scale the screen dimensions by
+    **/
     public int findDivisor(int width, int height) {
         List<Integer> divisors = getCommonDivisors(width, height);
         if (DEBUG) Log.d(TAG, "Available Divisors: " + divisors.toString());
@@ -59,7 +62,12 @@ public class HyperionGrabberOptions {
         return 1;
     }
 
-    // gets a list of all the common divisors [large to small] for the given integers
+    /**
+     * gets a list of all the common divisors [large to small] for the given integers.
+     * @param num1 The first integer to find a whole number divisor for
+     * @param num2  The second integer to find a whole number divisor for
+     * @return List A list of the common divisors [large to small] that match the provided integers
+     **/
     private static List<Integer> getCommonDivisors(int num1, int num2) {
         List<Integer> list = new ArrayList<>();
         int min = Math.min(num1, num2);

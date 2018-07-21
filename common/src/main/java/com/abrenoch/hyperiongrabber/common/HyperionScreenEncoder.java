@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private static final int MAX_IMAGE_READER_IMAGES = 5;
     private static final String TAG = "HyperionScreenEncoder";
-
+    private static final boolean DEBUG = false;
     private VirtualDisplay mVirtualDisplay;
     private ImageReader mImageReader;
 
@@ -130,7 +130,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                         img.close();
                     }
                 } catch (final Exception e) {
-                    Log.e(TAG, "sendImage exception:", e);
+                    if (DEBUG) Log.w(TAG, "sendImage exception:", e);
                 }
             }
         }

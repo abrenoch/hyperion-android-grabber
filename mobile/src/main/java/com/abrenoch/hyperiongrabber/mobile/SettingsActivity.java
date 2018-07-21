@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -23,6 +24,9 @@ import android.view.MenuItem;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+    public static final String EXTRA_SHOW_TOAST_KEY = "extra_show_toast_key";
+    public static final int EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE = 1;
+
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -62,6 +66,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 new GeneralPreferenceFragment()).commit();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey(EXTRA_SHOW_TOAST_KEY)){
+            if (extras.getInt(EXTRA_SHOW_TOAST_KEY) == EXTRA_SHOW_TOAST_SETUP_REQUIRED_FOR_QUICK_TILE){
+                Toast.makeText(getApplicationContext(), R.string.quick_tile_toast_setup_required, Toast.LENGTH_SHORT).show();
+            }
+        }
 
         setupActionBar();
     }
