@@ -62,6 +62,30 @@
     <PreferenceCategory
         android:title="@string/pref_group_capturing">
 
+        <EditTextPreference
+            android:defaultValue="@integer/pref_default_x_led"
+            android:hint="@integer/pref_default_x_led"
+            android:maxLines="1"
+            android:key="@string/pref_key_x_led"
+            android:summary="@string/pref_summary_x_led"
+            android:numeric="integer"
+            android:inputType="phone"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_x_led" />
+
+        <EditTextPreference
+            android:defaultValue="@integer/pref_default_y_led"
+            android:hint="@integer/pref_default_y_led"
+            android:maxLines="1"
+            android:key="@string/pref_key_y_led"
+            android:summary="@string/pref_summary_y_led"
+            android:numeric="integer"
+            android:inputType="phone"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_y_led" />
+
         <ListPreference
             android:defaultValue="@integer/pref_default_framerate"
             android:entries="@array/pref_list_framerate"
