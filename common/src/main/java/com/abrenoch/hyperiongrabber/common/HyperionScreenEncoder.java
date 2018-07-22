@@ -43,7 +43,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void prepare() throws MediaCodec.CodecException {
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
-                "Capturing Display",
+                TAG,
                 mWidthScaled, mHeightScaled, mDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 null, mDisplayCallback, null);
