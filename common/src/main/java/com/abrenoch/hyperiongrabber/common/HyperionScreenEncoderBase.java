@@ -12,7 +12,7 @@ import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 public class HyperionScreenEncoderBase {
     static final boolean DEBUG = false;
     private static final String TAG = "ScreenEncoderBase";
-    private final int CLEAR_COMMAND_DELAY_MS = 50;
+    private final int CLEAR_COMMAND_DELAY_MS = 100;
 
     final boolean mRemoveBorders = false; // enables detecting borders for standard grabbing - disabled for now
     final boolean mAvgColor;
