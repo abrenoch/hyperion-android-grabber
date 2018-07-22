@@ -16,6 +16,7 @@ public class HyperionNotification {
     private static final String NOTIFICATION_CHANNEL_LABEL = "Hyperion Grabber Notifications";
     private static final String NOTIFICATION_TITLE = "Hyperion Grabber";
     private static final String NOTIFICATION_DESCRIPTION = "Currently grabbing screen content";
+    private final int PENDING_INTENT_REQUEST_CODE = 0;
     private final NotificationManager mNotificationManager;
     private final Context mContext;
     private Notification.Action mAction = null;
@@ -49,10 +50,17 @@ public class HyperionNotification {
     }
 
     public Notification buildNotification() {
+        Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+        if (intent != null) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        }
+        PendingIntent pIntent = PendingIntent.getActivity(mContext, PENDING_INTENT_REQUEST_CODE, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder = new Notification.Builder(mContext, NOTIFICATION_CHANNEL_ID)
                     .setOngoing(true)
                     .setSmallIcon(R.drawable.ic_notification_icon)
+                    .setContentIntent(pIntent)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
             if (mAction != null) {
@@ -66,6 +74,7 @@ public class HyperionNotification {
                     .setOngoing(true)
                     .setPriority(Notification.PRIORITY_MAX)
                     .setSmallIcon(R.drawable.ic_notification_icon)
+                    .setContentIntent(pIntent)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
             return builder.build();
