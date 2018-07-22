@@ -12,6 +12,7 @@ import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 public class HyperionScreenEncoderBase {
     static final boolean DEBUG = false;
     private static final String TAG = "ScreenEncoderBase";
+    private final int CLEAR_COMMAND_DELAY_MS = 50;
 
     final boolean mRemoveBorders = false; // enables detecting borders for standard grabbing - disabled for now
     final boolean mAvgColor;
@@ -71,6 +72,12 @@ public class HyperionScreenEncoderBase {
 
     private Runnable clearAndDisconnectRunner = new Runnable() {
         public void run() {
+            if (DEBUG) Log.d(TAG, "Clearing LEDs and disconnecting");
+            try {
+                Thread.sleep(CLEAR_COMMAND_DELAY_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             mListener.clear();
             mListener.disconnect();
         }
@@ -78,6 +85,12 @@ public class HyperionScreenEncoderBase {
 
     private Runnable clearLightsRunner = new Runnable() {
         public void run() {
+            if (DEBUG) Log.d(TAG, "Clearing LEDs");
+            try {
+                Thread.sleep(CLEAR_COMMAND_DELAY_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             mListener.clear();
         }
     };
