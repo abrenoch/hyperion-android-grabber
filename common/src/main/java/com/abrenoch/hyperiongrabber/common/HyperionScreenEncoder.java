@@ -168,7 +168,10 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         ByteArrayOutputStream bao = new ByteArrayOutputStream(3);
 
         for (int y = 0, compareHeight = height - firstY - 1; y < height; y++, offset += rowPadding) {
-            if (y < firstY || y > compareHeight) continue;
+            if (y < firstY || y > compareHeight) {
+                offset += width * pixelStride;
+                continue;
+            }
             for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
                 if (x < firstX || x > compareWidth) continue;
                 totalRed += buffer.get(offset) & 0xff; // R
