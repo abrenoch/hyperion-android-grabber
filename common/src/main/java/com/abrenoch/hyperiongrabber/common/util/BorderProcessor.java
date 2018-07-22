@@ -1,6 +1,7 @@
 package com.abrenoch.hyperiongrabber.common.util;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 public class BorderProcessor {
 
@@ -153,25 +154,28 @@ public class BorderProcessor {
         public int getHorizontalBorderIndex() { return horizontalBorderIndex; }
         public int getVerticalBorderIndex() { return verticalBorderIndex; }
 
-        public String toString() {
-            if (this.isKnown) {
-                return "Border information: firstX:" + String.valueOf(this.horizontalBorderIndex) +
-                        " firstY: " + String.valueOf(this.verticalBorderIndex);
-            }
-            return "Border information: unknown";
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BorderObject that = (BorderObject) o;
+            return isKnown == that.isKnown &&
+                    horizontalBorderIndex == that.horizontalBorderIndex &&
+                    verticalBorderIndex == that.verticalBorderIndex;
         }
 
         @Override
         public int hashCode() {
-            if (!this.isKnown) return 0;
-            String hashString = String.valueOf(this.horizontalBorderIndex) +
-                    String.valueOf(this.horizontalBorderIndex);
-            return hashString.hashCode();
+            return Objects.hash(isKnown, horizontalBorderIndex, verticalBorderIndex);
         }
 
         @Override
-        public boolean equals(Object border) {
-            return this.getClass() == border.getClass() && this.hashCode() == border.hashCode();
+        public String toString() {
+            return "BorderObject{" +
+                    "isKnown=" + isKnown +
+                    ", horizontalBorderIndex=" + horizontalBorderIndex +
+                    ", verticalBorderIndex=" + verticalBorderIndex +
+                    '}';
         }
     }
 }
