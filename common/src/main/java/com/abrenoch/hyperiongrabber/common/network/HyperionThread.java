@@ -63,9 +63,9 @@ public class HyperionThread extends Thread {
         }
 
         @Override
-        public void sendStatus(boolean isCapturing) {
+        public void sendStatus(boolean isGrabbing) {
             if (mSender != null) {
-                mSender.onReceiveStatus(isCapturing);
+                mSender.onReceiveStatus(isGrabbing);
             }
         }
     };
