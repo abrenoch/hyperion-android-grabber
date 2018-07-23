@@ -60,7 +60,6 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             hasConnected = true;
-            notifyActivity();
         }
 
         @Override
@@ -77,6 +76,13 @@ public class HyperionScreenService extends Service {
                 mStartError = getResources().getString(R.string.error_connection_lost);
                 stopSelf();
             }
+        }
+
+        @Override
+        public void onReceiveStatus(boolean isCapturing) {
+            if (DEBUG) Log.v(TAG, "Received grabber status, notifying activity. Status: " +
+                    String.valueOf(isCapturing));
+            notifyActivity();
         }
     };
 
@@ -255,12 +261,13 @@ public class HyperionScreenService extends Service {
                         density, options);
                 mHyperionEncoder = null;
             } else {
-                if (DEBUG) Log.v(TAG, "Starting the recorder with default grabber");
+                if (DEBUG) Log.v(TAG, "Starting the recorder");
                 mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
                         density, options);
                 mHyperionEncoderOGL = null;
             }
+            currentEncoder().sendStatus();
         }
     }
 
@@ -303,6 +310,12 @@ public class HyperionScreenService extends Service {
         Intent intent = new Intent(BROADCAST_FILTER);
         intent.putExtra(BROADCAST_TAG, isCapturing());
         intent.putExtra(BROADCAST_ERROR, mStartError);
+        if (DEBUG) {
+            Log.v(TAG, "Sending status broadcast - capturing: " + String.valueOf(isCapturing()));
+            if (mStartError != null) {
+                Log.v(TAG, "Startup error: " + mStartError);
+            }
+        }
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
@@ -310,5 +323,6 @@ public class HyperionScreenService extends Service {
 //        void onResponse(String response);
         void onConnected();
         void onConnectionError(int errorHash, String errorString);
+        void onReceiveStatus(boolean isCapturing);
     }
 }
