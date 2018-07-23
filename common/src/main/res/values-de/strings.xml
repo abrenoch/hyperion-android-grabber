@@ -25,53 +25,38 @@
     <!-- Connection settings -->
     <string name="pref_group_connection">Verbindung</string>
 
-    <string name="pref_key_host">pref_key_host</string>
     <string name="pref_title_host">IP Adresse</string>
     <string name="pref_summary_host">Die IP Adresse auf dem dein Hyperion Server läuft</string>
 
-    <string name="pref_key_port">pref_key_port</string>
     <string name="pref_title_port">Port Nummer</string>
     <string name="pref_summary_port">Die PROTO Port Nummer von deinem Hyperion Server</string>
-    <integer name="pref_default_port">19445</integer>
 
-    <string name="pref_key_priority">pref_key_priority</string>
     <string name="pref_title_priority">Priorität</string>
     <string name="pref_summary_priority">Die Priorität vom Hyperion Grabber</string>
-    <integer name="pref_default_priority">50</integer>
 
-    <string name="pref_key_reconnect">pref_key_reconnect</string>
     <string name="pref_title_reconnect">Verbindungswiederholung</string>
     <string name="pref_summary_reconnect">Die Verbindung zum Hyperion Server bei Verlust automatisch wiederherstellen</string>
-    <bool name="pref_default_reconnect">true</bool>
 
-    <string name="pref_key_reconnect_delay">pref_key_reconnect_delay</string>
     <string name="pref_title_reconnect_delay">Verzögerung</string>
     <string name="pref_summary_reconnect_delay">Die Sekundenanzahl zwischen den Verbindungswiederholungen</string>
-    <integer name="pref_default_reconnect_delay">5</integer>
 
     <!-- Capturing settings -->
     <string name="pref_group_capturing">Aufnahme</string>
 
-    <string name="pref_key_framerate">pref_key_framerate</string>
     <string name="pref_title_framerate">Aufnahmefrequenz</string>
     <string name="pref_summary_framerate">Wie schnell neue Bilder an den Server gesendet werden sollen</string>
-    <integer name="pref_default_framerate">30</integer>
 
     <string name="pref_group_grabber">Aufnahmemethode</string>
     <string name="pref_summary_grabber">Die zu verwendende Aufnahmemethode</string>
     <string name="pref_title_media_grabber">MediaProjection</string>
     <string name="pref_summary_media_grabber">Die Standard Aufnahmemethode</string>
-    <string name="pref_key_ogl_grabber">pref_key_ogl_grabber</string>
     <string name="pref_title_ogl_grabber">OpenGL</string>
     <string name="pref_summary_ogl_grabber">Eine alternative Aufnahmemethode</string>
-    <bool name="pref_default_ogl_grabber">false</bool>
 
     <!-- General settings -->
     <string name="pref_group_general">Allgemein</string>
-    <string name="pref_key_boot">pref_key_start_on_boot</string>
     <string name="pref_title_boot">Autostart</string>
     <string name="pref_summary_boot">Hyperion Grabber mit Android starten</string>
-    <bool name="pref_default_boot">false</bool>
 
     <string name="pref_error_missing_field">%s sollte nicht leer sein</string>
     <string name="pref_error_invalid_field">%s passt nicht zur %s</string>
@@ -82,13 +67,6 @@
         <item>24 fps</item>
         <item>30 fps</item>
         <item>60 fps</item>
-    </string-array>
-    <string-array name="pref_list_framerate_values">
-        <item>10</item>
-        <item>15</item>
-        <item>24</item>
-        <item>30</item>
-        <item>60</item>
     </string-array>
 
     <string name="error_empty_host">Die IP Adresse darf nicht leer sein</string>
