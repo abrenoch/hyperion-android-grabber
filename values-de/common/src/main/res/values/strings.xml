@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="pref_list_framerate_values">
+    <item>10</item>
+    <item>15</item>
+    <item>24</item>
+    <item>30</item>
+    <item>60</item>
+  </string-array>
+  <string name="pref_key_host">pref_key_host</string>
+  <string name="pref_key_port">pref_key_port</string>
+  <string name="pref_key_y_led"></string>
+  <string name="pref_key_x_led"></string>
+  <string name="pref_key_priority">pref_key_priority</string>
+  <string name="pref_key_reconnect">pref_key_reconnect</string>
+  <string name="pref_key_reconnect_delay">pref_key_reconnect_delay</string>
+  <string name="pref_key_framerate">pref_key_framerate</string>
+  <string name="pref_key_ogl_grabber">pref_key_ogl_grabber</string>
+  <string name="pref_key_boot">pref_key_start_on_boot</string>
+</resources>
