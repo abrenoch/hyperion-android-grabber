@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="pref_list_framerate">
+    <item>10 fps</item>
+    <item>15 fps</item>
+    <item>24 fps</item>
+    <item>30 fps</item>
+    <item>60 fps</item>
+  </string-array>
+  <string name="app_name">Hyperion Grabber</string>
+  <string name="pref_title_host">IP Adresse</string>
+  <string name="pref_summary_host">Die IP Adresse auf dem dein Hyperion Server läuft</string>
+  <string name="pref_title_port">Port Nummer</string>
+  <string name="pref_summary_port">Die PROTO Port Nummer von deinem Hyperion Server</string>
+  <string name="pref_title_priority">Priorität</string>
+  <string name="pref_summary_priority">Die Priorität vom Hyperion Grabber</string>
+  <string name="pref_summary_boot">Hyperion Grabber mit Android starten</string>
+  <string name="pref_title_boot">Autostart</string>
+  <string name="pref_title_framerate">Aufnahmefrequenz</string>
+  <string name="pref_summary_framerate">Wie schnell neue Bilder an den Server gesendet werden sollen</string>
+  <string name="pref_title_ogl_grabber">OpenGL</string>
+  <string name="pref_summary_ogl_grabber">Eine alternative Aufnahmemethode</string>
+  <string name="error_empty_host">Die IP Adresse darf nicht leer sein</string>
+  <string name="error_empty_port">Die Port Nummer darf nicht leer sein</string>
+  <string name="toast_must_give_permission">Bitte erlaube die Bilderfassung.</string>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Tip</string>
+  <string name="guidedstep_basic_settings_description">Lade dir die offiziele Android TV App auf dein Smartphone um Zahlen und Text besser eingeben zu können</string>
+  <string name="guidedstep_second_title">Verbindungstest</string>
+  <string name="guidedstep_second_description">Es werde Licht</string>
+  <string name="guidedstep_second_breadcrumb">Schritt 2\/2</string>
+  <string name="guidedstep_section_advanced_title">Erweiterte Einstellungen</string>
+  <string name="guidedstep_section_advanced_description">Die nachfolgenden Einstellungen können auf ihren Standardwerten belassen werden</string>
+  <string name="guidedstep_save">Speichern</string>
+  <string name="guidedstep_test">Test</string>
+  <string name="guidedstep_test_description">Licht an</string>
+  <string name="guidedstep_test_success">Ergebnis: OK. LEDs leuchten nicht? Versuch\'s mit einer niedrigeren Priorität</string>
+  <string name="guidedstep_test_host_unreachable">Ergebnis: Verbindungsfehler. Bitte überprüfe IP und Port Nummer</string>
+  <string name="guidedstep_test_unknown_error">Ergebnis: Unbekannter Fehler</string>
+  <string name="guidedstep_continue">Weiter</string>
+  <string name="guidedstep_letsdoit">So soll es sein</string>
+  <string name="guidedstep_nevermind">Vergiss es</string>
+  <string name="guidedstep_cancel">Abbrechen</string>
+  <string name="guidedstep_required">Benötigt</string>
+  <string name="header_icon">Header icon</string>
+  <string name="pref_title">Einstellungen</string>
+  <string name="enabled">Einschalten</string>
+  <string name="disabled">Ausschalten</string>
+  <!-- notification button -->
+  <string name="notification_exit_button"></string>
+  <!-- Network scanner -->
+  <string name="scanner_title">Hallo!</string>
+  <string name="scanner_description">Hyperion Grabber kann im Netzwerk nach Servern suchen, so dass Du nicht die IP-Adresse deines Servers manuell eingeben musst.</string>
+  <string name="scanner_start_scan_button">Suche starten</string>
+  <string name="scanner_scan_in_progress_text">Suche nach lokalen Hyperion Servers läuft %s</string>
+  <string name="scanner_scan_in_progress_button">Suche…</string>
+  <string name="scanner_no_results">Kein Server gefunden %s</string>
+  <string name="scanner_retry_button">Wiederholen</string>
+  <string name="scanner_manual_setup_button">Manuelle Einstellung</string>
+  <!-- Network Scanner result -->
+  <string name="scan_result_title">Und der Gewinner ist …</string>
+  <string name="scan_result_description">Jetzt müssten alle deine LEDs Lila aufleuchten %s</string>
+  <string name="scan_result_confirm_button_text">Ich liebe es!</string>
+  <string name="scan_result_alternative_color_button_text">Bitte kein Lila</string>
+  <!-- Connection settings -->
+  <string name="pref_group_connection">Verbindung</string>
+  <string name="pref_title_y_led"></string>
+  <string name="pref_summary_y_led"></string>
+  <string name="pref_title_x_led"></string>
+  <string name="pref_summary_x_led"></string>
+  <string name="pref_title_reconnect">Verbindungswiederholung</string>
+  <string name="pref_summary_reconnect">Die Verbindung zum Hyperion Server bei Verlust automatisch wiederherstellen</string>
+  <string name="pref_title_reconnect_delay">Verzögerung</string>
+  <string name="pref_summary_reconnect_delay">Die Sekundenanzahl zwischen den Verbindungswiederholungen</string>
+  <!-- Capturing settings -->
+  <string name="pref_group_capturing">Aufnahme</string>
+  <string name="pref_group_grabber">Aufnahmemethode</string>
+  <string name="pref_summary_grabber">Die zu verwendende Aufnahmemethode</string>
+  <string name="pref_title_media_grabber">MediaProjection</string>
+  <string name="pref_summary_media_grabber">Die Standard Aufnahmemethode</string>
+  <!-- General settings -->
+  <string name="pref_group_general">Allgemein</string>
+  <string name="pref_error_missing_field">%s sollte nicht leer sein</string>
+  <string name="pref_error_invalid_field" formatted="false">%s passt nicht zur %s</string>
+  <string name="error_invalid_led_counts"></string>
+  <string name="error_server_unreachable">Eine Verbindung zum Hyperion Server konnte nicht hergestellt werden. Bitte überprüfe deine Einstellungen und stelle sicher, dass dein Hyperion Server läuft</string>
+  <string name="error_connection_lost">Die Verbindung zum Hyperion Server wurde getrennt. Die Bilderfassung wir angehalten.</string>
+  <string name="message_service_started">Du kannst Hyperion Grabber mit der Zurück-Taste verlassen. Der Bildschirminhalt wird im Hintergrund an deinen Hyperion Server gesendet.</string>
+  <string name="error_no_host_name_extra">Eigentlich sollte hier eine IP Adresse eingegeben werden</string>
+  <string name="quick_tile_label">Hyperion Grabber umschalten</string>
+  <string name="quick_tile_toast_setup_required">Bitte stelle sicher das du Hyperion Grabber konfiguriert hast bevor du den Schnellzugriff verwendest.</string>
+  <!-- notifications -->
+  <string name="notification_title"></string>
+  <string name="notification_channel_label"></string>
+  <string name="notification_description"></string>
+</resources>
