@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="settings">Settings</string>
+  <string name="quick_tile_label">Toggle Grabber</string>
+  <string name="quick_tile_toast_setup_required">Please make sure Hyperion Grabber is setup before using the quick settings tile</string>
+</resources>
