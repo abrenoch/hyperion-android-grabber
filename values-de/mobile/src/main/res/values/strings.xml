@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="settings">Einstellungen</string>
+  <string name="quick_tile_label">Hyperion Grabber umschalten</string>
+  <string name="quick_tile_toast_setup_required">Bitte stelle sicher das du Hyperion Grabber konfiguriert hast bevor du den Schnellzugriff verwendest.</string>
+</resources>
