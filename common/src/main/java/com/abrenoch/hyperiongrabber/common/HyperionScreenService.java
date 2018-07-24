@@ -60,7 +60,6 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             hasConnected = true;
-            notifyActivity();
         }
 
         @Override
@@ -77,6 +76,13 @@ public class HyperionScreenService extends Service {
                 mStartError = getResources().getString(R.string.error_connection_lost);
                 stopSelf();
             }
+        }
+
+        @Override
+        public void onReceiveStatus(boolean isCapturing) {
+            if (DEBUG) Log.v(TAG, "Received grabber status, notifying activity. Status: " +
+                    String.valueOf(isCapturing));
+            notifyActivity();
         }
     };
 
@@ -97,6 +103,13 @@ public class HyperionScreenService extends Service {
                     if (currentEncoder() != null) {
                         if (DEBUG) Log.v(TAG, "Clearing current light data");
                         currentEncoder().clearLights();
+                    }
+                break;
+                case Intent.ACTION_CONFIGURATION_CHANGED:
+                    if (DEBUG) Log.v(TAG, "ACTION_CONFIGURATION_CHANGED intent received");
+                    if (currentEncoder() != null) {
+                        if (DEBUG) Log.v(TAG, "Configuration changed, checking orientation");
+                        currentEncoder().setOrientation(getResources().getConfiguration().orientation);
                     }
                 break;
             }
@@ -159,6 +172,7 @@ public class HyperionScreenService extends Service {
                             IntentFilter intentFilter = new IntentFilter();
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
                             intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                            intentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
@@ -255,12 +269,13 @@ public class HyperionScreenService extends Service {
                         density, options);
                 mHyperionEncoder = null;
             } else {
-                if (DEBUG) Log.v(TAG, "Starting the recorder with default grabber");
+                if (DEBUG) Log.v(TAG, "Starting the recorder");
                 mHyperionEncoder = new HyperionScreenEncoder(mHyperionThread.getReceiver(),
                         projection, metrics.widthPixels, metrics.heightPixels,
                         density, options);
                 mHyperionEncoderOGL = null;
             }
+            currentEncoder().sendStatus();
         }
     }
 
@@ -303,6 +318,12 @@ public class HyperionScreenService extends Service {
         Intent intent = new Intent(BROADCAST_FILTER);
         intent.putExtra(BROADCAST_TAG, isCapturing());
         intent.putExtra(BROADCAST_ERROR, mStartError);
+        if (DEBUG) {
+            Log.v(TAG, "Sending status broadcast - capturing: " + String.valueOf(isCapturing()));
+            if (mStartError != null) {
+                Log.v(TAG, "Startup error: " + mStartError);
+            }
+        }
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
@@ -310,5 +331,6 @@ public class HyperionScreenService extends Service {
 //        void onResponse(String response);
         void onConnected();
         void onConnectionError(int errorHash, String errorString);
+        void onReceiveStatus(boolean isCapturing);
     }
 }
