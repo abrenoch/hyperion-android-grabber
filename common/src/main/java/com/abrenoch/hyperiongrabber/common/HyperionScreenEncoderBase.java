@@ -111,6 +111,12 @@ public class HyperionScreenEncoderBase {
         mIsCapturing = isCapturing;
     }
 
+    public void sendStatus() {
+        if (mListener != null) {
+            mListener.sendStatus(isCapturing());
+        }
+    }
+
     public void stopRecording() {
         throw new RuntimeException("Stub!");
     }

@@ -12,10 +12,10 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 public class HyperionNotification {
-    private static final String NOTIFICATION_CHANNEL_ID = "com.abrenoch.hyperiongrabber.notification";
-    private static final String NOTIFICATION_CHANNEL_LABEL = "Hyperion Grabber Notifications";
-    private static final String NOTIFICATION_TITLE = "Hyperion Grabber";
-    private static final String NOTIFICATION_DESCRIPTION = "Currently grabbing screen content";
+    private final String NOTIFICATION_CHANNEL_ID = "com.abrenoch.hyperiongrabber.notification";
+    private final String NOTIFICATION_CHANNEL_LABEL;
+    private final String NOTIFICATION_TITLE;
+    private final String NOTIFICATION_DESCRIPTION;
     private final NotificationManager mNotificationManager;
     private final Context mContext;
     private Notification.Action mAction = null;
@@ -24,6 +24,9 @@ public class HyperionNotification {
     HyperionNotification (Context ctx, NotificationManager manager) {
         mNotificationManager = manager;
         mContext = ctx;
+        NOTIFICATION_TITLE = mContext.getString(R.string.notification_title);
+        NOTIFICATION_DESCRIPTION = mContext.getString(R.string.notification_description);
+        NOTIFICATION_CHANNEL_LABEL = mContext.getString(R.string.notification_channel_label);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mNotificationManager.createNotificationChannel(makeChannel());
         }

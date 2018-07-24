@@ -46,7 +46,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         if (DEBUG) Log.d(TAG, "Preparing encoder");
 
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
-                "Capturing Display",
+                TAG,
                 mWidthScaled, mHeightScaled, mDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 null, mDisplayCallback, null);
@@ -56,7 +56,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @Override
     public void stopRecording() {
-        if (DEBUG) Log.d(TAG, "stopRecording Called");
+        if (DEBUG) Log.i(TAG, "stopRecording Called");
         setCapturing(false);
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
@@ -67,7 +67,9 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @Override
     public void resumeRecording() {
+        if (DEBUG) Log.i(TAG, "resumeRecording Called");
         if (!isCapturing() && mImageReader != null) {
+            if (DEBUG) Log.i(TAG, "Resuming reading images");
             Image img = mImageReader.acquireNextImage();
             setCapturing(true);
             if (img != null) {

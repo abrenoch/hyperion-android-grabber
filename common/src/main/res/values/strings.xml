@@ -5,7 +5,10 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
 
-    <!-- notification button -->
+    <!-- notifications -->
+    <string name="notification_title">Hyperion Grabber</string>
+    <string name="notification_channel_label">Hyperion Grabber Notifications</string>
+    <string name="notification_description">Currently grabbing screen content</string>
     <string name="notification_exit_button">Exit</string>
 
     <!-- Network scanner -->
