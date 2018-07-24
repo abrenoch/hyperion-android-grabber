@@ -16,29 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/grabberStartedText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/pill_background"
-            android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_info_white_24dp"
-            android:gravity="center"
-            android:paddingBottom="8dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:text="@string/message_service_started"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/appCompatImageView"
             android:layout_width="wrap_content"
@@ -75,6 +52,29 @@
             app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
             app:layout_constraintTop_toTopOf="@+id/appCompatImageView"
             app:srcCompat="@drawable/ic_power_black_72dp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/grabberStartedText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/pill_background"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_info_white_24dp"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:text="@string/message_service_started"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

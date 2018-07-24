@@ -61,6 +61,13 @@ public class HyperionThread extends Thread {
                 }
             }
         }
+
+        @Override
+        public void sendStatus(boolean isGrabbing) {
+            if (mSender != null) {
+                mSender.onReceiveStatus(isGrabbing);
+            }
+        }
     };
 
     public HyperionThread(HyperionScreenService.HyperionThreadBroadcaster listener, final String host,
@@ -110,5 +117,6 @@ public class HyperionThread extends Thread {
         void sendFrame(byte[] data, int width, int height);
         void clear();
         void disconnect();
+        void sendStatus(boolean isGrabbing);
     }
 }
