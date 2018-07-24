@@ -43,7 +43,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void prepare() throws MediaCodec.CodecException {
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
-                "Capturing Display",
+                TAG,
                 mWidthScaled, mHeightScaled, mDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 null, mDisplayCallback, null);
@@ -54,7 +54,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @Override
     public void stopRecording() {
         if (DEBUG) Log.i(TAG, "stopRecording Called");
-        mIsCapturing = false;
+        setCapturing(false);
         mVirtualDisplay.release();
         mHandler.getLooper().quit();
         clearAndDisconnect();
@@ -64,9 +64,11 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @Override
     public void resumeRecording() {
+        if (DEBUG) Log.i(TAG, "resumeRecording Called");
         if (!isCapturing() && mImageReader != null) {
+            if (DEBUG) Log.i(TAG, "Resuming reading images");
             Image img = mImageReader.acquireNextImage();
-            mIsCapturing = true;
+            setCapturing(true);
             if (img != null) {
                 img.close();
             }
@@ -78,7 +80,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         public void onPaused() {
             if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onPaused triggered");
             super.onPaused();
-            mIsCapturing = false;
+            setCapturing(false);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
@@ -93,7 +95,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         public void onStopped() {
             if (DEBUG) Log.d("DEBUG", "HyperionScreenEncoder.displayCallback.onStopped triggered");
             super.onStopped();
-            mIsCapturing = false;
+            setCapturing(false);
         }
     };
 
@@ -103,7 +105,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
-        mIsCapturing = true;
+        setCapturing(true);
     }
 
     private OnImageAvailableListener imageAvailableListener = new OnImageAvailableListener() {
