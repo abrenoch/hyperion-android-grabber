@@ -52,21 +52,24 @@ public class HyperionNotification {
     }
 
     public Notification buildNotification() {
+        PendingIntent pIntent = null;
         Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
         if (intent != null) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            pIntent = PendingIntent.getActivity(mContext, PENDING_INTENT_REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
-        PendingIntent pIntent = PendingIntent.getActivity(mContext, PENDING_INTENT_REQUEST_CODE, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder = new Notification.Builder(mContext, NOTIFICATION_CHANNEL_ID)
                     .setOngoing(true)
                     .setSmallIcon(R.drawable.ic_notification_icon)
-                    .setContentIntent(pIntent)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
             if (mAction != null) {
                 builder.addAction(mAction);
+            }
+            if (pIntent != null) {
+                builder.setContentIntent(pIntent);
             }
             return builder.build();
         } else {
@@ -76,9 +79,11 @@ public class HyperionNotification {
                     .setOngoing(true)
                     .setPriority(Notification.PRIORITY_MAX)
                     .setSmallIcon(R.drawable.ic_notification_icon)
-                    .setContentIntent(pIntent)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
+            if (pIntent != null) {
+                builder.setContentIntent(pIntent);
+            }
             return builder.build();
         }
     }
