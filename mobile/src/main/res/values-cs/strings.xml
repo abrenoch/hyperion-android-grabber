@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="settings">Nastavení</string>
+  <string name="quick_tile_label">Přepnout Grabber</string>
+  <string name="quick_tile_toast_setup_required">Před použitím záložky rychlé nastavení se prosím ujistěte, že je Hyperion Grabber nastaven</string>
+</resources>
