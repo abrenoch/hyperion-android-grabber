@@ -12,6 +12,7 @@
     <application
         android:banner="@drawable/banner"
         android:theme="@style/Theme.Leanback">
+
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleTop">
@@ -21,6 +22,19 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.abrenoch.hyperiongrabber.common.ToggleActivity"
+            android:icon="@drawable/ic_notification_icon"
+            android:theme="@style/Theme.Transparent"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.NetworkScanActivity"
             android:exported="true"
