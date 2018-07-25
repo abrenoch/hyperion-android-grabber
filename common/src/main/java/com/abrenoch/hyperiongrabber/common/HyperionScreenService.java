@@ -105,6 +105,13 @@ public class HyperionScreenService extends Service {
                         currentEncoder().clearLights();
                     }
                 break;
+                case Intent.ACTION_CONFIGURATION_CHANGED:
+                    if (DEBUG) Log.v(TAG, "ACTION_CONFIGURATION_CHANGED intent received");
+                    if (currentEncoder() != null) {
+                        if (DEBUG) Log.v(TAG, "Configuration changed, checking orientation");
+                        currentEncoder().setOrientation(getResources().getConfiguration().orientation);
+                    }
+                break;
             }
         }
     };
@@ -165,6 +172,7 @@ public class HyperionScreenService extends Service {
                             IntentFilter intentFilter = new IntentFilter();
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
                             intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                            intentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
