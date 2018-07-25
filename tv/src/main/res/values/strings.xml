@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="toggle_activity_label">Toggle Hyperion Grabber</string>
 
     <!-- Strings related to guided sequence activity -->
     <string name="guidedstep_basic_settings_title">Tip</string>

@@ -24,6 +24,7 @@
         </activity>
 
         <activity
+            android:label="@string/toggle_activity_label"
             android:name="com.abrenoch.hyperiongrabber.common.ToggleActivity"
             android:icon="@drawable/ic_notification_icon"
             android:theme="@style/Theme.Transparent"
@@ -31,7 +32,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
