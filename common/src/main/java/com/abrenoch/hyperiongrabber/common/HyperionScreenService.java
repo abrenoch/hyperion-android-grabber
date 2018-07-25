@@ -60,6 +60,7 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             hasConnected = true;
+            notifyActivity();
         }
 
         @Override
@@ -222,17 +223,6 @@ public class HyperionScreenService extends Service {
         stopSelf();
     }
 
-    private Intent buildStopStartButtons() {
-        Intent notificationIntent = new Intent(this, this.getClass());
-        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (isCapturing()) {
-            notificationIntent.setAction(ACTION_EXIT);
-        } else {
-            notificationIntent.setAction(ACTION_START);
-        }
-        return notificationIntent;
-    }
-
     private Intent buildExitButton() {
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
@@ -314,12 +304,17 @@ public class HyperionScreenService extends Service {
         return currentEncoder() != null && currentEncoder().isCapturing();
     }
 
+    boolean isCommunicating() {
+        return isCapturing() && hasConnected;
+    }
+
     private void notifyActivity() {
         Intent intent = new Intent(BROADCAST_FILTER);
-        intent.putExtra(BROADCAST_TAG, isCapturing());
+        intent.putExtra(BROADCAST_TAG, isCommunicating());
         intent.putExtra(BROADCAST_ERROR, mStartError);
         if (DEBUG) {
-            Log.v(TAG, "Sending status broadcast - capturing: " + String.valueOf(isCapturing()));
+            Log.v(TAG, "Sending status broadcast - communicating: " +
+                    String.valueOf(isCommunicating()));
             if (mStartError != null) {
                 Log.v(TAG, "Startup error: " + mStartError);
             }
