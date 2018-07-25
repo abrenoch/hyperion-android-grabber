@@ -14,31 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 public class ToggleActivity extends AppCompatActivity {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
 
-//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-//    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            boolean running = intent.getBooleanExtra(HyperionScreenService.BROADCAST_TAG, false);
-//            if (running){
-//                stopService();
-//                finish();
-//            } else {
-//               requestPermission();
-//            }
-//
-//            // we are not interested in updates anymore
-//            LocalBroadcastManager.getInstance(ToggleActivity.this).unregisterReceiver(this);
-//
-//        }
-//    };
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        LocalBroadcastManager.getInstance(this).registerReceiver(
-//                mMessageReceiver, new IntentFilter(BROADCAST_FILTER));
 
         boolean serviceRunning = checkForInstance();
 
