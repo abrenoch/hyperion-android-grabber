@@ -7,6 +7,9 @@
 - New connection wizard
 - New settings/connection page (tv build)
 - Quick settings tile to toggle grabber (mobile build)
+- Screen orientation change updates grabber
+- Configurable grabber image quality
+- Pressing the notification will now return to the app's main activity
 
 ### Fixed
 - Grabber would fail to resume when waking device
@@ -14,6 +17,7 @@
 - Default grabber failing to send data the first time it is turned on
 - Grabber not stoping when the host is unreachable
 - Aspect ratio of grabbed image being slightly off
+- OOM bug
 
 ## [v0.3-alpha]
 ### Changes
