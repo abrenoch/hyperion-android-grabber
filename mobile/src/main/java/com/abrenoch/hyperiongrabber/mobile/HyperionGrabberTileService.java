@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.support.annotation.RequiresApi;
@@ -20,7 +21,9 @@ import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class HyperionGrabberTileService extends TileService {
+    private final int REMOVE_LISTENER_DELAY = 1000 * 10; // 10 second delay to remove listener
     private static boolean mIsListening = false;
+    private Handler mHandle = new Handler();
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -39,9 +42,12 @@ public class HyperionGrabberTileService extends TileService {
     @Override
     public void onStartListening() {
         super.onStartListening();
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
-        mIsListening = true;
+        mHandle.removeCallbacksAndMessages(null);
+        if (!mIsListening) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                    mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
+            mIsListening = true;
+        }
         if (isServiceRunning()) {
             Intent intent = new Intent(this, HyperionScreenService.class);
             intent.setAction(HyperionScreenService.GET_STATUS);
@@ -56,8 +62,7 @@ public class HyperionGrabberTileService extends TileService {
     @Override
     public void onStopListening() {
         super.onTileRemoved();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
-        mIsListening = false;
+        mHandle.postDelayed(unregisterReceiverRunner, REMOVE_LISTENER_DELAY);
     }
 
     @Override
@@ -107,6 +112,11 @@ public class HyperionGrabberTileService extends TileService {
         }
         return false;
     }
+
+    private Runnable unregisterReceiverRunner = () -> {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        mIsListening = false;
+    };
 
     public static boolean isListening() { return mIsListening; }
 
