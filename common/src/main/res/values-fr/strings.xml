@@ -17,7 +17,7 @@
   <string name="scanner_title">Salut !</string>
   <string name="scanner_description">Le Grabber Hyperion peut analyser votre réseau à la recherche de serveurs en cours d\'exécution. Ainsi, vous n\'aurez pas à manipuler votre télécommande pour indiquer une adresse IP.</string>
   <string name="scanner_start_scan_button">Lancer la recherche</string>
-  <string name="scanner_scan_in_progress_text">Recherche de serveurs Hyperion sur votre réseau local</string>
+  <string name="scanner_scan_in_progress_text">Recherche de serveurs Hyperion sur votre réseau local %s</string>
   <string name="scanner_scan_in_progress_button">Recherche...</string>
   <string name="scanner_no_results">Aucun résultat trouvé %s</string>
   <string name="scanner_retry_button">réessayer</string>
