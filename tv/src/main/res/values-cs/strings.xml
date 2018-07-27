@@ -4,8 +4,6 @@
   <string name="guidedstep_basic_settings_title">Tip</string>
   <string name="guidedstep_basic_settings_description">Stáhněte si oficiální aplikaci Android TV Remote do telefonu pro snadné zadávání čísel a textu</string>
   <string name="guidedstep_second_title">Test připojení</string>
-  <string name="guidedstep_second_description">Podívejme, jak ta světla září</string>
-  <string name="guidedstep_second_breadcrumb">Kroky 2\/2</string>
   <string name="guidedstep_section_advanced_title">Pokročilé nastavení</string>
   <string name="guidedstep_section_advanced_description">Níže uvedená nastavení mohou být bezpečně ponechána na výchozích hodnotách</string>
   <string name="guidedstep_save">Uložit</string>
