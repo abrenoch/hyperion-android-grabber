@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
             boolean checked = intent.getBooleanExtra(HyperionScreenService.BROADCAST_TAG, false);
             mRecorderRunning = checked;
             String error = intent.getStringExtra(HyperionScreenService.BROADCAST_ERROR);
-            if (error != null) {
+            if (error != null &&
+                    (Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
+                            !HyperionGrabberTileService.isListening())) {
                 Toast.makeText(getBaseContext(), error, Toast.LENGTH_LONG).show();
             }
             setImageViews(checked, checked);
