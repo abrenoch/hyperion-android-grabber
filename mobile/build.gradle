@@ -27,11 +27,8 @@ android {
         applicationId "com.abrenoch.hyperiongrabber"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1004
-        versionName "ALPHA 3"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
+        versionCode 1008
+        versionName "ALPHA 4"
     }
     buildTypes {
         release {

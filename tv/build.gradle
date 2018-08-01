@@ -26,14 +26,11 @@ repositories {
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.abrenoch.hyperiongrabber.tv"
+        applicationId "com.abrenoch.hyperiongrabber"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 2004
-        versionName "ALPHA 3"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
+        versionCode 2008
+        versionName "ALPHA 4"
     }
     buildTypes {
         release {
