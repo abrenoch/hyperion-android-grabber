@@ -1,4 +1,4 @@
-## [v0.4-alpha (unreleased)]
+## [v0.4-alpha]
 ### Changes
 - Start grabber on device boot
 - Added some eye candy for when grabber is started
