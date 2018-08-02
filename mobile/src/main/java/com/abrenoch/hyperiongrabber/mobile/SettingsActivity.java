@@ -40,6 +40,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         switch (prefResourceID) {
            case R.string.pref_key_port:
            case R.string.pref_key_reconnect_delay:
+           case R.string.pref_key_priority:
            case R.string.pref_key_x_led:
            case R.string.pref_key_y_led:
            case R.string.pref_key_framerate:
@@ -140,6 +141,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_port)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_priority)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_framerate)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_reconnect_delay)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_x_led)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_y_led)));
         }
 
         @Override
