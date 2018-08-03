@@ -15,7 +15,7 @@
 - Grabber would fail to resume when waking device
 - OpenGL grabber sometimes halting immediately after starting screen grab
 - Default grabber failing to send data the first time it is turned on
-- Grabber not stoping when the host is unreachable
+- Grabber not stopping when the host is unreachable
 - Aspect ratio of grabbed image being slightly off
 - OOM bug
 
