@@ -34,4 +34,7 @@
         <item>30</item>
         <item>60</item>
     </string-array>
+
+    <string name="pref_key_use_avg_color" translatable="false">pref_key_use_avg_color</string>
+    <bool name="pref_default_use_avg_color" translatable="false">false</bool>
 </resources>
