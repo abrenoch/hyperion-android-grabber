@@ -14,7 +14,7 @@
   <string name="guidedstep_test_unknown_error">Résultat : erreur inconnue</string>
   <string name="guidedstep_continue">Continuer</string>
   <string name="guidedstep_letsdoit">Allons-y</string>
-  <string name="guidedstep_nevermind"></string>
+  <string name="guidedstep_nevermind">Cela ne fait rien</string>
   <string name="guidedstep_cancel">Annuler</string>
   <string name="guidedstep_required">Obligatoire</string>
 </resources>
