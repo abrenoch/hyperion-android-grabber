@@ -47,7 +47,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 TAG,
-                mWidthScaled, mHeightScaled, mDensity,
+                getGrabberWidth(), getGrabberHeight(), mDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 null, mDisplayCallback, null);
 
@@ -78,6 +78,18 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void setOrientation(int orientation) {
+        if (mVirtualDisplay != null && orientation != mCurrentOrientation) {
+            mCurrentOrientation = orientation;
+            mIsCapturing = false;
+            mVirtualDisplay.resize(getGrabberWidth(), getGrabberHeight(), mDensity);
+            mImageReader.close();
+            setImageReader();
+        }
+    }
+
     private VirtualDisplay.Callback mDisplayCallback = new VirtualDisplay.Callback() {
         @Override
         public void onPaused() {
@@ -105,8 +117,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
         if (DEBUG) Log.d(TAG, "Setting image reader  " + String.valueOf(isCapturing()));
-
-        mImageReader = ImageReader.newInstance(mWidthScaled, mHeightScaled,
+        mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());

@@ -16,10 +16,10 @@ public class HyperionNotification {
     private final String NOTIFICATION_CHANNEL_LABEL;
     private final String NOTIFICATION_TITLE;
     private final String NOTIFICATION_DESCRIPTION;
+    private final int PENDING_INTENT_REQUEST_CODE = 0;
     private final NotificationManager mNotificationManager;
     private final Context mContext;
     private Notification.Action mAction = null;
-
 
     HyperionNotification (Context ctx, NotificationManager manager) {
         mNotificationManager = manager;
@@ -52,6 +52,13 @@ public class HyperionNotification {
     }
 
     public Notification buildNotification() {
+        PendingIntent pIntent = null;
+        Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+        if (intent != null) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            pIntent = PendingIntent.getActivity(mContext, PENDING_INTENT_REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder = new Notification.Builder(mContext, NOTIFICATION_CHANNEL_ID)
                     .setOngoing(true)
@@ -60,6 +67,9 @@ public class HyperionNotification {
                     .setContentText(NOTIFICATION_DESCRIPTION);
             if (mAction != null) {
                 builder.addAction(mAction);
+            }
+            if (pIntent != null) {
+                builder.setContentIntent(pIntent);
             }
             return builder.build();
         } else {
@@ -71,6 +81,9 @@ public class HyperionNotification {
                     .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_DESCRIPTION);
+            if (pIntent != null) {
+                builder.setContentIntent(pIntent);
+            }
             return builder.build();
         }
     }

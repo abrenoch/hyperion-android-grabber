@@ -1,5 +1,6 @@
 package com.abrenoch.hyperiongrabber.common;
 
+import android.content.res.Configuration;
 import android.media.projection.MediaProjection;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -13,6 +14,7 @@ public class HyperionScreenEncoderBase {
     static final boolean DEBUG = false;
     private static final String TAG = "ScreenEncoderBase";
     private final int CLEAR_COMMAND_DELAY_MS = 100;
+    private final int INIT_ORIENTATION;
 
     final boolean mRemoveBorders = false; // enables detecting borders for standard grabbing - disabled for now
     final boolean mAvgColor;
@@ -20,10 +22,11 @@ public class HyperionScreenEncoderBase {
     final int mFrameRate;
     final int mHeightScaled;
     final int mDensity;
+    boolean mIsCapturing = false;
+    int mCurrentOrientation;
+
     BorderProcessor mBorderProcessor;
     Handler mHandler;
-
-    boolean mIsCapturing = false;
     MediaProjection mMediaProjection;
     HyperionThread.HyperionThreadListener mListener;
 
@@ -40,6 +43,9 @@ public class HyperionScreenEncoderBase {
 
         int blackThreshold = options.getBlackThreshold();
         mBorderProcessor = new BorderProcessor(blackThreshold);
+
+        mCurrentOrientation = INIT_ORIENTATION = width > height ? Configuration.ORIENTATION_LANDSCAPE :
+                Configuration.ORIENTATION_PORTRAIT;
 
         if (DEBUG) {
             Log.d(TAG, "Density: " + String.valueOf(mDensity));
@@ -123,5 +129,17 @@ public class HyperionScreenEncoderBase {
 
     public void resumeRecording() {
         throw new RuntimeException("Stub!");
+    }
+
+    int getGrabberWidth() {
+        return INIT_ORIENTATION != mCurrentOrientation ? mHeightScaled : mWidthScaled;
+    }
+
+    int getGrabberHeight() {
+        return INIT_ORIENTATION != mCurrentOrientation ? mWidthScaled : mHeightScaled;
+    }
+
+    public void setOrientation(int orientation) {
+        mCurrentOrientation = orientation;
     }
 }

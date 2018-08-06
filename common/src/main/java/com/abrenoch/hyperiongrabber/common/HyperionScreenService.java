@@ -61,6 +61,7 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             hasConnected = true;
+            notifyActivity();
         }
 
         @Override
@@ -104,6 +105,13 @@ public class HyperionScreenService extends Service {
                     if (currentEncoder() != null) {
                         if (DEBUG) Log.v(TAG, "Clearing current light data");
                         currentEncoder().clearLights();
+                    }
+                break;
+                case Intent.ACTION_CONFIGURATION_CHANGED:
+                    if (DEBUG) Log.v(TAG, "ACTION_CONFIGURATION_CHANGED intent received");
+                    if (currentEncoder() != null) {
+                        if (DEBUG) Log.v(TAG, "Configuration changed, checking orientation");
+                        currentEncoder().setOrientation(getResources().getConfiguration().orientation);
                     }
                 break;
             }
@@ -167,6 +175,7 @@ public class HyperionScreenService extends Service {
                             IntentFilter intentFilter = new IntentFilter();
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
                             intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                            intentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
@@ -214,17 +223,6 @@ public class HyperionScreenService extends Service {
     private void haltStartup() {
         startForeground(NOTIFICATION_ID, getNotification());
         stopSelf();
-    }
-
-    private Intent buildStopStartButtons() {
-        Intent notificationIntent = new Intent(this, this.getClass());
-        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (isCapturing()) {
-            notificationIntent.setAction(ACTION_EXIT);
-        } else {
-            notificationIntent.setAction(ACTION_START);
-        }
-        return notificationIntent;
     }
 
     private Intent buildExitButton() {
@@ -308,12 +306,17 @@ public class HyperionScreenService extends Service {
         return currentEncoder() != null && currentEncoder().isCapturing();
     }
 
+    boolean isCommunicating() {
+        return isCapturing() && hasConnected;
+    }
+
     private void notifyActivity() {
         Intent intent = new Intent(BROADCAST_FILTER);
-        intent.putExtra(BROADCAST_TAG, isCapturing());
+        intent.putExtra(BROADCAST_TAG, isCommunicating());
         intent.putExtra(BROADCAST_ERROR, mStartError);
         if (DEBUG) {
-            Log.v(TAG, "Sending status broadcast - capturing: " + String.valueOf(isCapturing()));
+            Log.v(TAG, "Sending status broadcast - communicating: " +
+                    String.valueOf(isCommunicating()));
             if (mStartError != null) {
                 Log.v(TAG, "Startup error: " + mStartError);
             }

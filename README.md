@@ -19,5 +19,3 @@ https://play.google.com/apps/testing/com.abrenoch.hyperiongrabber
 **Playstore link (currently only visible to testers):**
 
 https://play.google.com/store/apps/details?id=com.abrenoch.hyperiongrabber
-
-_Android TV through the play store is coming soon (currently only supports mobile)!_
