@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.abrenoch.hyperiongrabber.common.BootActivity;
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
@@ -19,22 +21,33 @@ import com.abrenoch.hyperiongrabber.common.util.Preferences;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class HyperionGrabberTileService extends TileService {
+    private final int REMOVE_LISTENER_DELAY = 1000 * 10; // 10 second delay to remove listener
+    private static boolean mIsListening = false;
+    private Handler mHandle = new Handler();
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Tile tile = getQsTile();
             boolean running = intent.getBooleanExtra(HyperionScreenService.BROADCAST_TAG, false);
+            String error = intent.getStringExtra(HyperionScreenService.BROADCAST_ERROR);
             tile.setState(running ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
             tile.updateTile();
+            if (error != null) {
+                Toast.makeText(getBaseContext(), error, Toast.LENGTH_LONG).show();
+            }
         }
     };
 
     @Override
     public void onStartListening() {
         super.onStartListening();
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
+        mHandle.removeCallbacksAndMessages(null);
+        if (!mIsListening) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                    mMessageReceiver, new IntentFilter(HyperionScreenService.BROADCAST_FILTER));
+            mIsListening = true;
+        }
         if (isServiceRunning()) {
             Intent intent = new Intent(this, HyperionScreenService.class);
             intent.setAction(HyperionScreenService.GET_STATUS);
@@ -49,7 +62,13 @@ public class HyperionGrabberTileService extends TileService {
     @Override
     public void onStopListening() {
         super.onTileRemoved();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        mHandle.postDelayed(unregisterReceiverRunner, REMOVE_LISTENER_DELAY);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mIsListening = false;
     }
 
     @Override
@@ -93,6 +112,13 @@ public class HyperionGrabberTileService extends TileService {
         }
         return false;
     }
+
+    private Runnable unregisterReceiverRunner = () -> {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        mIsListening = false;
+    };
+
+    public static boolean isListening() { return mIsListening; }
 
     /** Starts the Settings Activity if connection settings are missing
      *
