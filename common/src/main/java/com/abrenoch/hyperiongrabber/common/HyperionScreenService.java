@@ -50,6 +50,7 @@ public class HyperionScreenService extends Service {
     private int mFrameRate;
     private int mHorizontalLEDCount;
     private int mVerticalLEDCount;
+    private boolean mSendAverageColor;
     private HyperionScreenEncoder mHyperionEncoder;
     private HyperionScreenEncoderOGL mHyperionEncoderOGL;
     private NotificationManager mNotificationManager;
@@ -132,6 +133,7 @@ public class HyperionScreenService extends Service {
         mFrameRate = prefs.getInt(R.string.pref_key_framerate);
         mHorizontalLEDCount = prefs.getInt(R.string.pref_key_x_led);
         mVerticalLEDCount = prefs.getInt(R.string.pref_key_y_led);
+        mSendAverageColor = prefs.getBoolean(R.string.pref_key_use_avg_color);
         OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber);
         RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect);
         int delay = prefs.getInt(R.string.pref_key_reconnect_delay);
@@ -250,7 +252,7 @@ public class HyperionScreenService extends Service {
             window.getDefaultDisplay().getRealMetrics(metrics);
             final int density = metrics.densityDpi;
             HyperionGrabberOptions options = new HyperionGrabberOptions(mHorizontalLEDCount,
-                    mVerticalLEDCount, mFrameRate);
+                    mVerticalLEDCount, mFrameRate, mSendAverageColor);
 
             if (OGL_GRABBER) {
                 if (DEBUG) Log.v(TAG, "Starting the recorder with openGL grabber");

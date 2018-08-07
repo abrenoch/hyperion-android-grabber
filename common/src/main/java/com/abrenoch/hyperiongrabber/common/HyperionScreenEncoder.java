@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
+import com.abrenoch.hyperiongrabber.common.util.BorderProcessor;
 import com.abrenoch.hyperiongrabber.common.util.HyperionGrabberOptions;
 
 import java.io.ByteArrayOutputStream;
@@ -42,6 +43,8 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void prepare() throws MediaCodec.CodecException {
+        if (DEBUG) Log.d(TAG, "Preparing encoder");
+
         mVirtualDisplay = mMediaProjection.createVirtualDisplay(
                 TAG,
                 getGrabberWidth(), getGrabberHeight(), mDensity,
@@ -113,6 +116,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
+        if (DEBUG) Log.d(TAG, "Setting image reader  " + String.valueOf(isCapturing()));
         mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
                 PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
@@ -132,7 +136,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
                     long now = System.nanoTime();
                     Image img = reader.acquireLatestImage();
                     if (img != null && now - lastFrame >= min_nano_time) {
-                        mListener.sendFrame(savePixels(img), getGrabberWidth(), getGrabberHeight());
+                        sendImage(img);
                         img.close();
                         lastFrame = now;
                     } else if (img != null) {
@@ -145,28 +149,93 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     };
 
-    private byte[] savePixels(Image image) throws IllegalStateException {
-        Image.Plane plane = image.getPlanes()[0];
-        ByteBuffer buffer = plane.getBuffer();
-
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int pixelStride = plane.getPixelStride();
-        int rowPadding = plane.getRowStride() - width * pixelStride;
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream(width * height * 3);
-
+    private byte[] getPixels(ByteBuffer buffer, int width, int height, int rowStride,
+                             int pixelStride, int firstX, int firstY){
+        int rowPadding = rowStride - width * pixelStride;
         int offset = 0;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                bao.write(buffer.get(offset)); // R
-                bao.write(buffer.get(offset + 1)); // G
-                bao.write(buffer.get(offset + 2)); // B
-                offset += pixelStride;
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream(
+                (width - firstX * 2) * (height - firstY * 2) * 3
+        );
+
+        for (int y = 0, compareHeight = height - firstY - 1; y < height; y++, offset += rowPadding) {
+            if (y < firstY || y > compareHeight) {
+                offset += width * pixelStride;
+                continue;
             }
-            offset += rowPadding;
+            for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
+                if (x < firstX || x > compareWidth) continue;
+                bao.write(buffer.get(offset) & 0xff); // R
+                bao.write(buffer.get(offset + 1) & 0xff); // G
+                bao.write(buffer.get(offset + 2) & 0xff); // B
+            }
         }
 
         return bao.toByteArray();
+    }
+
+    private byte[] getAverageColor(ByteBuffer buffer, int width, int height, int rowStride,
+                                   int pixelStride, int firstX, int firstY) {
+        long totalRed = 0, totalGreen = 0, totalBlue = 0;
+        int rowPadding = rowStride - width * pixelStride;
+        int pixelCount = 0;
+        int offset = 0;
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream(3);
+
+        for (int y = 0, compareHeight = height - firstY - 1; y < height; y++, offset += rowPadding) {
+            if (y < firstY || y > compareHeight) {
+                offset += width * pixelStride;
+                continue;
+            }
+            for (int x = 0, compareWidth = width - firstX - 1; x < width; x++, offset += pixelStride) {
+                if (x < firstX || x > compareWidth) continue;
+                totalRed += buffer.get(offset) & 0xff; // R
+                totalGreen += buffer.get(offset + 1) & 0xff; // G
+                totalBlue += buffer.get(offset + 2) & 0xff; // B
+                pixelCount++;
+            }
+        }
+
+        bao.write((int) totalRed / pixelCount);
+        bao.write((int) totalGreen / pixelCount);
+        bao.write((int) totalBlue / pixelCount);
+
+        return bao.toByteArray();
+    }
+
+    private void sendImage(Image img) {
+        Image.Plane plane = img.getPlanes()[0];
+        ByteBuffer buffer = plane.getBuffer();
+
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int pixelStride = plane.getPixelStride();
+        int rowStride = plane.getRowStride();
+        int firstX = 0;
+        int firstY = 0;
+
+        if (mRemoveBorders || mAvgColor) {
+            mBorderProcessor.parseBorder(buffer, width, height, rowStride, pixelStride);
+            BorderProcessor.BorderObject border = mBorderProcessor.getCurrentBorder();
+            if (border != null && border.isKnown()) {
+                firstX = border.getHorizontalBorderIndex();
+                firstY = border.getVerticalBorderIndex();
+            }
+        }
+
+        if (mAvgColor) {
+            mListener.sendFrame(
+                    getAverageColor(buffer, width, height, rowStride, pixelStride, firstX, firstY),
+                    1,
+                    1
+            );
+        } else {
+            mListener.sendFrame(
+                    getPixels(buffer, width, height, rowStride, pixelStride, firstX, firstY),
+                    width - firstX * 2,
+                    height - firstY * 2
+            );
+        }
     }
 }

@@ -81,6 +81,12 @@
     <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
     <bool name="pref_default_ogl_grabber">false</bool>
 
+    <string name="pref_key_use_avg_color">pref_key_use_avg_color</string>
+    <string name="pref_title_use_avg_color">Send Average Screen Color</string>
+    <string name="pref_summary_use_avg_color">Sends the average color of your device\'s screen rather than an image of it</string>
+    <bool name="pref_default_use_avg_color">false</bool>
+
+
     <!-- General settings -->
     <string name="pref_group_general">General</string>
     <string name="pref_key_boot">pref_key_start_on_boot</string>
