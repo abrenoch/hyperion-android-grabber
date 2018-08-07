@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="settings">Instellingen</string>
+  <string name="quick_tile_label">Hyperion Grabbber</string>
+  <string name="quick_tile_toast_setup_required">Hyperion Grabber moet ingesteld worden voordat deze tegel gebruikt kan worden</string>
+</resources>
