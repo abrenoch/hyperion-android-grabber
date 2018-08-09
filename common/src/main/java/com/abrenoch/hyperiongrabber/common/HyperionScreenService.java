@@ -114,6 +114,11 @@ public class HyperionScreenService extends Service {
                         currentEncoder().setOrientation(getResources().getConfiguration().orientation);
                     }
                 break;
+                case Intent.ACTION_SHUTDOWN:
+                case Intent.ACTION_REBOOT:
+                    if (DEBUG) Log.v(TAG, "ACTION_SHUTDOWN|ACTION_REBOOT intent received");
+                    stopScreenRecord();
+                break;
             }
         }
     };
@@ -176,6 +181,8 @@ public class HyperionScreenService extends Service {
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
                             intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
                             intentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
+                            intentFilter.addAction(Intent.ACTION_REBOOT);
+                            intentFilter.addAction(Intent.ACTION_SHUTDOWN);
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
