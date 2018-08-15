@@ -69,4 +69,6 @@
   <string name="error_no_host_name_extra">Zvláštní, tady má být hostname</string>
   <string name="notification_channel_label">Hyperion Grabber notifikace</string>
   <string name="notification_description">Momentálně se grabuje obsah obrazovky</string>
+  <string name="pref_title_use_avg_color">Odeslat průměrnou barvu obrazovky</string>
+  <string name="pref_summary_use_avg_color">Odesílá průměrnou barvu obrazovky vašeho zařízení namísto přesného obrazu</string>
 </resources>
