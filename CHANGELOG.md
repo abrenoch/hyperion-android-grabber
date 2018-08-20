@@ -1,3 +1,16 @@
+## [v0.5-beta (unreleased)]
+### Changes
+- Added the ability to send only the average color of the screen
+- French translation
+- Norwegian translation
+- Czech translation
+- German translation
+- Dutch translation
+
+### Fixed
+- Lights now clear (if running) when shutting down
+- OOM bug
+
 ## [v0.4-alpha]
 ### Changes
 - Start grabber on device boot
