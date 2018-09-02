@@ -161,8 +161,8 @@ public class HyperionScreenService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (DEBUG) Log.v(TAG, "Start command received");
         super.onStartCommand(intent, flags, startId);
-        if (null == intent || null == intent.getAction()) {
-            String nullItem = (null == intent ? "intent" : "action");
+        if (intent == null || intent.getAction() == null) {
+            String nullItem = (intent == null ? "intent" : "action");
             if (DEBUG) Log.v(TAG, "Null " + nullItem + " provided to start command");
         } else  {
             final String action = intent.getAction();
