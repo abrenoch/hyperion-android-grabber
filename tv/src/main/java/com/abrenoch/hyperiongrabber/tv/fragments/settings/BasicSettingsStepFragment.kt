@@ -256,10 +256,16 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
             val color = TEST_COLORS[colorIdx]
             testCounter++
 
-            val host = assertStringValue(ACTION_HOST_NAME)
-            val port = assertIntValue(ACTION_PORT)
-            val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
-            testHyperionColor(host, port, priority, color)
+            try {
+                val host = assertStringValue(ACTION_HOST_NAME)
+                val port = assertIntValue(ACTION_PORT)
+                val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
+                testHyperionColor(host, port, priority, color)
+            } catch (ignored: AssertionError) {
+            }
+
+            return
+
         }
 
         super.onGuidedActionClicked(action)
