@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="settings">Paramètres</string>
+  <string name="quick_tile_label">Activer/désactiver Grabber</string>
+  <string name="quick_tile_toast_setup_required">assurez-vous que le Grabber Hyperion est configuré avant d´utiliser l´outil de paramétrage rapide</string>
+</resources>

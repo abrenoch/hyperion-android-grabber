@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Tips</string>
+  <string name="guidedstep_basic_settings_description">Last ned den offisielle Android TV Remote appen på telefonen for enkel inntasting av tall og tekst</string>
+  <string name="guidedstep_second_title">Test tilkoblingen</string>
+  <string name="guidedstep_section_advanced_title">Avanserte innstillinger</string>
+  <string name="guidedstep_section_advanced_description">Innstillingene nedenfor kan trygt kjøres på sine standardverdier</string>
+  <string name="guidedstep_save">Lagre</string>
+  <string name="guidedstep_test">Test</string>
+  <string name="guidedstep_test_description">Kjør på</string>
+  <string name="guidedstep_test_success">Resultat: OK. Ingen lys? Prøv en lavere prioritetsverdi</string>
+  <string name="guidedstep_test_host_unreachable">Resultat: Kunne ikke koble til. Vennligst sjekk vertsnavn og port</string>
+  <string name="guidedstep_test_unknown_error">Resultat: ukjent feil</string>
+  <string name="guidedstep_continue">Fortsett</string>
+  <string name="guidedstep_letsdoit">La oss gjøre det</string>
+  <string name="guidedstep_nevermind">Glem det</string>
+  <string name="guidedstep_cancel">Avbryt</string>
+  <string name="guidedstep_required">Påkrevd</string>
+</resources>

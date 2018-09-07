@@ -1,27 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="toggle_activity_label">Hyperion Grabber (Toggle)</string>
-
-    <!-- Strings related to guided sequence activity -->
-    <string name="guidedstep_basic_settings_title">Tip</string>
-    <string name="guidedstep_basic_settings_description">Download the official Android TV Remote app on your phone for easy entry of numbers and text</string>
-    <string name="guidedstep_second_title">Connection test</string>
-    <string name="guidedstep_second_description">let\'s see those lights shine</string>
-    <string name="guidedstep_second_breadcrumb">Steps 2\/2</string>
-    <string name="guidedstep_section_advanced_title">Advanced settings</string>
-    <string name="guidedstep_section_advanced_description">The settings below can safely be left at their defaults</string>
-    <string name="guidedstep_save">Save</string>
-    <string name="guidedstep_test">Test</string>
-    <string name="guidedstep_test_description">Shine on</string>
-    <string name="guidedstep_test_success">Result: OK. LEDs not lighting up? Try a lower priority value</string>
-    <string name="guidedstep_test_host_unreachable">Result: Could not connect. Please check host and port</string>
-    <string name="guidedstep_test_unknown_error">Result: unknown error</string>
-    <string name="guidedstep_continue">Continue</string>
-    <string name="guidedstep_letsdoit">Let\'s do it</string>
-    <string name="guidedstep_nevermind">Never mind</string>
-    <string name="guidedstep_cancel">Cancel</string>
-    <string name="guidedstep_required">Required</string>
-    <string name="header_icon">Header icon</string>
-
-
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Tip</string>
+  <string name="guidedstep_basic_settings_description">Download the official Android TV Remote app on your phone for easy entry of numbers and text</string>
+  <string name="guidedstep_second_title">Connection test</string>
+  <string name="guidedstep_section_advanced_title">Advanced settings</string>
+  <string name="guidedstep_section_advanced_description">The settings below can safely be left at their defaults</string>
+  <string name="guidedstep_save">Save</string>
+  <string name="guidedstep_test">Test</string>
+  <string name="guidedstep_test_description">Shine on</string>
+  <string name="guidedstep_test_success">Result: OK. LEDs not lighting up? Try a lower priority value</string>
+  <string name="guidedstep_test_host_unreachable">Result: Could not connect. Please check host and port</string>
+  <string name="guidedstep_test_unknown_error">Result: unknown error</string>
+  <string name="guidedstep_continue">Continue</string>
+  <string name="guidedstep_letsdoit">Let\'s do it</string>
+  <string name="guidedstep_nevermind">Never mind</string>
+  <string name="guidedstep_cancel">Cancel</string>
+  <string name="guidedstep_required">Required</string>
 </resources>

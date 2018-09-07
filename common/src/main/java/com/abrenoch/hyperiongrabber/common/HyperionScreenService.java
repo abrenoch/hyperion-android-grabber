@@ -50,6 +50,7 @@ public class HyperionScreenService extends Service {
     private int mFrameRate;
     private int mHorizontalLEDCount;
     private int mVerticalLEDCount;
+    private boolean mSendAverageColor;
     private HyperionScreenEncoder mHyperionEncoder;
     private HyperionScreenEncoderOGL mHyperionEncoderOGL;
     private NotificationManager mNotificationManager;
@@ -60,6 +61,7 @@ public class HyperionScreenService extends Service {
         public void onConnected() {
             Log.d(TAG, "CONNECTED TO HYPERION INSTANCE");
             hasConnected = true;
+            notifyActivity();
         }
 
         @Override
@@ -105,6 +107,18 @@ public class HyperionScreenService extends Service {
                         currentEncoder().clearLights();
                     }
                 break;
+                case Intent.ACTION_CONFIGURATION_CHANGED:
+                    if (DEBUG) Log.v(TAG, "ACTION_CONFIGURATION_CHANGED intent received");
+                    if (currentEncoder() != null) {
+                        if (DEBUG) Log.v(TAG, "Configuration changed, checking orientation");
+                        currentEncoder().setOrientation(getResources().getConfiguration().orientation);
+                    }
+                break;
+                case Intent.ACTION_SHUTDOWN:
+                case Intent.ACTION_REBOOT:
+                    if (DEBUG) Log.v(TAG, "ACTION_SHUTDOWN|ACTION_REBOOT intent received");
+                    stopScreenRecord();
+                break;
             }
         }
     };
@@ -124,6 +138,7 @@ public class HyperionScreenService extends Service {
         mFrameRate = prefs.getInt(R.string.pref_key_framerate);
         mHorizontalLEDCount = prefs.getInt(R.string.pref_key_x_led);
         mVerticalLEDCount = prefs.getInt(R.string.pref_key_y_led);
+        mSendAverageColor = prefs.getBoolean(R.string.pref_key_use_avg_color);
         OGL_GRABBER = prefs.getBoolean(R.string.pref_key_ogl_grabber);
         RECONNECT = prefs.getBoolean(R.string.pref_key_reconnect);
         int delay = prefs.getInt(R.string.pref_key_reconnect_delay);
@@ -151,8 +166,11 @@ public class HyperionScreenService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (DEBUG) Log.v(TAG, "Start command received");
         super.onStartCommand(intent, flags, startId);
-        final String action = intent.getAction();
-        if (action != null) {
+        if (intent == null || intent.getAction() == null) {
+            String nullItem = (intent == null ? "intent" : "action");
+            if (DEBUG) Log.v(TAG, "Null " + nullItem + " provided to start command");
+        } else  {
+            final String action = intent.getAction();
             if (DEBUG) Log.v(TAG, "Start command action: " + String.valueOf(action));
             switch (action) {
                 case ACTION_START:
@@ -165,6 +183,9 @@ public class HyperionScreenService extends Service {
                             IntentFilter intentFilter = new IntentFilter();
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
                             intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                            intentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
+                            intentFilter.addAction(Intent.ACTION_REBOOT);
+                            intentFilter.addAction(Intent.ACTION_SHUTDOWN);
 
                             registerReceiver(mEventReceiver, intentFilter);
                         } else {
@@ -214,17 +235,6 @@ public class HyperionScreenService extends Service {
         stopSelf();
     }
 
-    private Intent buildStopStartButtons() {
-        Intent notificationIntent = new Intent(this, this.getClass());
-        notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (isCapturing()) {
-            notificationIntent.setAction(ACTION_EXIT);
-        } else {
-            notificationIntent.setAction(ACTION_START);
-        }
-        return notificationIntent;
-    }
-
     private Intent buildExitButton() {
         Intent notificationIntent = new Intent(this, this.getClass());
         notificationIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
@@ -252,7 +262,7 @@ public class HyperionScreenService extends Service {
             window.getDefaultDisplay().getRealMetrics(metrics);
             final int density = metrics.densityDpi;
             HyperionGrabberOptions options = new HyperionGrabberOptions(mHorizontalLEDCount,
-                    mVerticalLEDCount, mFrameRate);
+                    mVerticalLEDCount, mFrameRate, mSendAverageColor);
 
             if (OGL_GRABBER) {
                 if (DEBUG) Log.v(TAG, "Starting the recorder with openGL grabber");
@@ -306,12 +316,17 @@ public class HyperionScreenService extends Service {
         return currentEncoder() != null && currentEncoder().isCapturing();
     }
 
+    boolean isCommunicating() {
+        return isCapturing() && hasConnected;
+    }
+
     private void notifyActivity() {
         Intent intent = new Intent(BROADCAST_FILTER);
-        intent.putExtra(BROADCAST_TAG, isCapturing());
+        intent.putExtra(BROADCAST_TAG, isCommunicating());
         intent.putExtra(BROADCAST_ERROR, mStartError);
         if (DEBUG) {
-            Log.v(TAG, "Sending status broadcast - capturing: " + String.valueOf(isCapturing()));
+            Log.v(TAG, "Sending status broadcast - communicating: " +
+                    String.valueOf(isCommunicating()));
             if (mStartError != null) {
                 Log.v(TAG, "Startup error: " + mStartError);
             }

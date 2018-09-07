@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.widget.Toast;
+import java.lang.reflect.Field;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -33,11 +34,43 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * to reflect its new value.
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
+        final int prefResourceID = getResourceId(preference.getKey(), R.string.class);
+
+        // verify we have a valid int value for the following preference keys
+        switch (prefResourceID) {
+           case R.string.pref_key_port:
+           case R.string.pref_key_reconnect_delay:
+           case R.string.pref_key_priority:
+           case R.string.pref_key_x_led:
+           case R.string.pref_key_y_led:
+           case R.string.pref_key_framerate:
+               try {
+                   Integer.parseInt(value.toString());
+               } catch (NumberFormatException e) {
+                   e.printStackTrace();
+                   return false;
+               }
+               break;
+        }
+
         String stringValue = value.toString();
             preference.setSummary(stringValue);
 
         return true;
     };
+
+    /**
+     * Returns the resource ID of the provided string
+     */
+    public static int getResourceId(String resourceName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(resourceName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -108,6 +141,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_port)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_priority)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_framerate)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_reconnect_delay)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_x_led)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_y_led)));
         }
 
         @Override

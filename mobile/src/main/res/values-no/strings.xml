@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="settings">Innstillinger</string>
+  <string name="quick_tile_label">Aktiver Grabber</string>
+  <string name="quick_tile_toast_setup_required">Vennligst sjekk at Hyperion Grabber er satt opp riktig før hurtiginstillinger benyttes</string>
+</resources>

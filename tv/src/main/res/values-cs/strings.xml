@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Tip</string>
+  <string name="guidedstep_basic_settings_description">Stáhněte si oficiální aplikaci Android TV Remote do telefonu pro snadné zadávání čísel a textu</string>
+  <string name="guidedstep_second_title">Test připojení</string>
+  <string name="guidedstep_section_advanced_title">Pokročilé nastavení</string>
+  <string name="guidedstep_section_advanced_description">Níže uvedená nastavení mohou být bezpečně ponechána na výchozích hodnotách</string>
+  <string name="guidedstep_save">Uložit</string>
+  <string name="guidedstep_test">Test</string>
+  <string name="guidedstep_test_description">Rozsvítit</string>
+  <string name="guidedstep_test_success">Výsledek: OK. LED nesvítí? Zkuste nižší hodnotu priority</string>
+  <string name="guidedstep_test_host_unreachable">Výsledek: Nelze se připojit. Zkontrolujte prosím položky Host a Port</string>
+  <string name="guidedstep_test_unknown_error">Výsledek: neznámá chyba</string>
+  <string name="guidedstep_continue">Pokračovat</string>
+  <string name="guidedstep_letsdoit">Pojďme na to</string>
+  <string name="guidedstep_nevermind">Nevadí</string>
+  <string name="guidedstep_cancel">Zrušit</string>
+  <string name="guidedstep_required">Vyžadováno</string>
+</resources>
