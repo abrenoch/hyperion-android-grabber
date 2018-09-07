@@ -1,5 +1,6 @@
 package com.abrenoch.hyperiongrabber.common.network;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
@@ -8,6 +9,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,7 +22,7 @@ import java.util.List;
 public class NetworkScanner {
     public static final int PORT = 19445;
     /** The amount of milliseconds we try to connect to a given ip before giving up */
-    public static final int ATTEMPT_TIMEOUT_MS = 50;
+    private static final int ATTEMPT_TIMEOUT_MS = 50;
 
     private final String[] ipsToTry;
     private int lastTriedIndex = -1;
@@ -47,7 +49,6 @@ public class NetworkScanner {
         Socket socket = new Socket();
         String ip = ipsToTry[++lastTriedIndex];
         try {
-            // timeout after 100ms, should be enough for local network
             socket.connect(new InetSocketAddress(ip, PORT), ATTEMPT_TIMEOUT_MS);
 
             if (socket.isConnected()){
@@ -84,14 +85,15 @@ public class NetworkScanner {
     }
 
     /**
-     * Get IP address from first non-localhost interface
+     * Get IP addresses for non-localhost interfaces
      * @param useIPv4   true=return ipv4, false=return ipv6
-     * @return  address or null
+     * @return  a list of found addresses (may be empty)
      *
      * https://stackoverflow.com/a/13007325
      */
-    @Nullable
-    private static String getIPAddress(boolean useIPv4) {
+    @NonNull
+    private static List<String> getIPAddresses(boolean useIPv4) {
+        List<String> foundAddresses = new ArrayList<>();
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
@@ -104,11 +106,12 @@ public class NetworkScanner {
 
                         if (useIPv4) {
                             if (isIPv4)
-                                return sAddr;
+                                foundAddresses.add(sAddr);
                         } else {
                             if (!isIPv4) {
                                 int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                                String v6Addr = delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                                foundAddresses.add(v6Addr);
                             }
                         }
                     }
@@ -118,35 +121,47 @@ public class NetworkScanner {
             // for now eat exceptions
             Log.e("HYPERION SCANNER", "Could not get ip address", e);
         }
-        return null;
+        return foundAddresses;
     }
 
     private String[] getIPsToTry(){
         try {
-            String localIpV4 = getIPAddress(true);
+            List<String> localIpV4Addresses = getIPAddresses(true);
+            String[] allIpsToTry = new String[localIpV4Addresses.size() * 254];
 
-            String[] ipParts = localIpV4.split("\\.");
+            for (int localIpIdx = 0; localIpIdx < localIpV4Addresses.size(); localIpIdx++) {
+                String localIpV4Address = localIpV4Addresses.get(localIpIdx);
+                String[] ipsToTry = new String[254];
 
-            String ipPrefix = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".";
-            String[] ipsToTry = new String[254];
-            for (int i = 1; i< 255 ; i++){
-                ipsToTry[i-1] = ipPrefix + i;
-            }
+                String[] ipParts = localIpV4Address.split("\\.");
 
-            int localNumberInSubnet = Integer.parseInt(ipParts[3]);
+                String ipPrefix = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".";
+                for (int i = 1; i< 255 ; i++){
+                    ipsToTry[i-1] = ipPrefix + i;
+                }
 
-            // sort in such a way that ips close to the local ip will be tried first
-            Arrays.sort(ipsToTry, new Comparator<String>() {
-                @Override
-                public int compare(String lhs, String rhs) {
+                int localNumberInSubnet = Integer.parseInt(ipParts[3]);
+
+                // sort in such a way that ips close to the local ip will be tried first
+                Arrays.sort(ipsToTry, (lhs, rhs) -> {
                     int lhsNumberInSubnet = Integer.parseInt(lhs.split("\\.")[3]);
                     int rhsNumberInSubnet = Integer.parseInt(rhs.split("\\.")[3]);
                     int lhsDistance = Math.abs(lhsNumberInSubnet - localNumberInSubnet);
                     int rhsDistance = Math.abs(rhsNumberInSubnet - localNumberInSubnet);
                     return lhsDistance - rhsDistance;
+                });
+
+                for (int i = 0; i < ipsToTry.length; i++) {
+                    // interleave with previously found ip addresses
+                    int allIndex = (localIpV4Addresses.size() * i) + localIpIdx;
+                    allIpsToTry[allIndex] = ipsToTry[i];
                 }
-            });
-            return ipsToTry;
+
+
+            }
+
+
+            return allIpsToTry;
         } catch (Exception e){
             // for now eat exceptions
             Log.e("HYPERION SCANNER", "Error while building list of subnet ip", e);
