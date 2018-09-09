@@ -29,7 +29,7 @@ public class HyperionScreenService extends Service {
     public static final String BROADCAST_ERROR = "SERVICE_ERROR";
     public static final String BROADCAST_TAG = "SERVICE_STATUS";
     public static final String BROADCAST_FILTER = "SERVICE_FILTER";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = "HyperionScreenService";
 
     private static final String BASE = "com.abrenoch.hyperiongrabber.service.";
