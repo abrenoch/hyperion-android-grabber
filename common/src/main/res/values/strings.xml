@@ -71,4 +71,26 @@
   <string name="notification_description">Currently grabbing screen content</string>
   <string name="pref_title_use_avg_color">Send Average Screen Color</string>
   <string name="pref_summary_use_avg_color">Sends the average color of your device\\'s screen rather than an image of it</string>
+  <!-- About activity -->
+
+
+
+  <!-- Resources -->
+  <string name="resource_hyperion_project"><a href="https://hyperion-project.org">Hyperion Project</a></string>
+  <string name="resource_git"><a href="https://github.com/abrenoch/hyperion-android-grabber">Hyperion Android Grabber Github</a></string>
+  <string name="resource_help"><a href="https://github.com/abrenoch/hyperion-android-grabber/wiki">Help &amp; FAQs</a></string>
+  <!-- Developers -->
+  <string-array name="names_developers" translatable="false">
+    <item><a href="https://github.com/abrenoch">Dave Anderson</a></item>
+    <item><a href="https://github.com/ninovanhooff">Nino van Hooff</a></item>
+    <item><a href="https://github.com/Paulchen-Panther">Paulchen Panther</a></item>
+  </string-array>
+  <!-- Translators -->
+  <string-array name="names_translators">
+    <item>{your name} (Norwegian)</item>
+    <item>{your name} (French)</item>
+    <item>{your name} (Czech)</item>
+  </string-array>
+
+
 </resources>
