@@ -2,17 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.abrenoch.hyperiongrabber.mobile">
 
-    <application
-        android:theme="@style/AppTheme"
-        >
-        <activity android:name=".MainActivity"
+    <application android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings"
@@ -21,13 +20,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
-        <activity android:name="com.abrenoch.hyperiongrabber.common.BootActivity"
-            android:finishOnTaskLaunch ="true"
-            android:noHistory="true"
+        <activity
+            android:name="com.abrenoch.hyperiongrabber.common.BootActivity"
+            android:clearTaskOnLaunch="true"
+            android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
-            android:clearTaskOnLaunch="true">
-        </activity>
+            android:noHistory="true"></activity>
 
         <service
             android:name=".HyperionGrabberTileService"
@@ -35,10 +33,11 @@
             android:label="@string/quick_tile_label"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
-                <action
-                    android:name="android.service.quicksettings.action.QS_TILE"/>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>

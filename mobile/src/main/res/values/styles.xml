@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AboutActivityText">
+        <item name="android:textColor">@android:color/black</item>
+        <!--<item name="android:fontFamily">@f</item>-->
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">36sp</item>
+    </style>
 </resources>
