@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Zachytávání obsahu</string>
   <string name="pref_title_framerate">Frekvence snímání</string>
   <string name="pref_summary_framerate">Počet snímků za sekundu, ve kterém chcete odesílat data na Hyperionu</string>
-  <string name="pref_group_grabber">Grabber</string>
-  <string name="pref_summary_grabber">Metoda zachycení obsahu, kterou chcete použít</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">Výchozí grabber</string>
-  <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
-  <string name="pref_summary_ogl_grabber">Použít alternativní grabber pro zachycení obsahu obrazovky</string>
   <!-- General settings -->
   <string name="pref_group_general">Obecné</string>
   <string name="pref_summary_boot">Spustit grabování při spuštení zařízení</string>
@@ -71,4 +65,10 @@
   <string name="notification_description">Momentálně se grabuje obsah obrazovky</string>
   <string name="pref_title_use_avg_color">Odeslat průměrnou barvu obrazovky</string>
   <string name="pref_summary_use_avg_color">Odesílá průměrnou barvu obrazovky vašeho zařízení namísto přesného obrazu</string>
+  <string name="pref_group_grabber"></string>
+  <string name="pref_summary_grabber"></string>
+  <string name="pref_title_media_grabber"></string>
+  <string name="pref_summary_media_grabber"></string>
+  <string name="pref_title_ogl_grabber"></string>
+  <string name="pref_summary_ogl_grabber"></string>
 </resources>
