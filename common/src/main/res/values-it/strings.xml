@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Acquisizione in corso</string>
   <string name="pref_title_framerate">Velocità di acquisizione</string>
   <string name="pref_summary_framerate">Fotogrammi al secondo in cui inviare i dati a hyperion</string>
-  <string name="pref_group_grabber">Grabber</string>
-  <string name="pref_summary_grabber">Il metodo di acquisizione da usare</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">Il grabber predefinito</string>
-  <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
-  <string name="pref_summary_ogl_grabber">Utilizzare uno strumento di acquisizione alternativo per leggere il contenuto dello schermo</string>
   <!-- General settings -->
   <string name="pref_group_general">Generale</string>
   <string name="pref_summary_boot">Avvia lo screen grabber all\'avvio del dispositivo</string>
