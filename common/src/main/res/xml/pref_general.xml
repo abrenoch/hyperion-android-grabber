@@ -102,12 +102,6 @@
             android:title="@string/pref_title_use_avg_color"
             android:summary="@string/pref_summary_use_avg_color" />
 
-        <CheckBoxPreference
-            android:defaultValue="@bool/pref_default_ogl_grabber"
-            android:key="@string/pref_key_ogl_grabber"
-            android:title="@string/pref_title_ogl_grabber"
-            android:summary="@string/pref_summary_ogl_grabber" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
