@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Opname</string>
   <string name="pref_title_framerate">Opname-snelheid</string>
   <string name="pref_summary_framerate">Aantal keer per seconde dat het beeld naar Hyperion gestuurd wordt</string>
-  <string name="pref_group_grabber">Schermopname</string>
-  <string name="pref_summary_grabber">Schermopname-methode</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">Standaard schermopname</string>
-  <string name="pref_title_ogl_grabber">OpenGL Schermopname</string>
-  <string name="pref_summary_ogl_grabber">Gebruik een alternatieve manier voor schermopname</string>
   <!-- General settings -->
   <string name="pref_group_general">Algemeen</string>
   <string name="pref_summary_boot">Start schermopname wanneer uw apparaat start</string>
@@ -71,4 +65,10 @@
   <string name="notification_description">Scherminhoud wordt doorgestuurd</string>
   <string name="pref_title_use_avg_color">Stuur Gemiddelde Schermkleur</string>
   <string name="pref_summary_use_avg_color">Stuurt de gemiddelde kleur van het scherm in plaats van een beeld van het</string>
+  <string name="pref_group_grabber"></string>
+  <string name="pref_summary_grabber"></string>
+  <string name="pref_title_media_grabber"></string>
+  <string name="pref_summary_media_grabber"></string>
+  <string name="pref_title_ogl_grabber"></string>
+  <string name="pref_summary_ogl_grabber"></string>
 </resources>
