@@ -28,7 +28,8 @@
             android:name="com.abrenoch.hyperiongrabber.common.ToggleActivity"
             android:icon="@drawable/ic_notification_icon"
             android:theme="@style/Theme.Transparent"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
