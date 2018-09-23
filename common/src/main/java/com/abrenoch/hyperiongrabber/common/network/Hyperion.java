@@ -141,7 +141,7 @@ public class Hyperion {
         int size = (header[0]<<24) | (header[1]<<16) | (header[2]<<8) | (header[3]);
 
         HyperionReply reply = null;
-        if (size > 0) {
+        if (size > 0 && size == input.available()) {
             byte[] data = new byte[size];
             input.read(data, 0, size);
             reply = HyperionReply.parseFrom(data);
