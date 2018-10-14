@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Consejo</string>
+  <string name="guidedstep_second_title">Prueba de conexión</string>
+  <string name="guidedstep_section_advanced_title">Configuración avanzada</string>
+  <string name="guidedstep_save">Guardar</string>
+  <string name="guidedstep_test">Prueba</string>
+  <string name="guidedstep_test_host_unreachable">Resultado: No se pudo conectar. Por favor, compruebe el host y el puerto</string>
+  <string name="guidedstep_test_unknown_error">Resultado: error desconocido</string>
+  <string name="guidedstep_continue">Continuar</string>
+  <string name="guidedstep_nevermind">No importa</string>
+  <string name="guidedstep_cancel">Cancelar</string>
+</resources>
