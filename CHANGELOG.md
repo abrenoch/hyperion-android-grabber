@@ -6,8 +6,8 @@
 - Czech translation
 - German translation
 - Dutch translation
-- Partial Russion translation
-- Partion Spanish translation
+- Partial Russian translation
+- Partial Spanish translation
 - Removed openGL grabber option
 - Added toggle grabber activity shortcut
 - LEDs will now be cleared when rebooting or shutting down
