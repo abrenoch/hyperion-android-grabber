@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Aufnahme</string>
   <string name="pref_title_framerate">Aufnahmefrequenz</string>
   <string name="pref_summary_framerate">Wie schnell neue Bilder an den Server gesendet werden sollen</string>
-  <string name="pref_group_grabber">Aufnahmemethode</string>
-  <string name="pref_summary_grabber">Die zu verwendende Aufnahmemethode</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">Die Standard Aufnahmemethode</string>
-  <string name="pref_title_ogl_grabber">OpenGL</string>
-  <string name="pref_summary_ogl_grabber">Eine alternative Aufnahmemethode</string>
   <!-- General settings -->
   <string name="pref_group_general">Allgemein</string>
   <string name="pref_summary_boot">Hyperion Grabber mit Android starten</string>

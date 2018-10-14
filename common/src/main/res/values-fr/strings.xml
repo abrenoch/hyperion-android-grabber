@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Capture</string>
   <string name="pref_title_framerate">Fréquence de capture</string>
   <string name="pref_summary_framerate">Images par seconde envoyées au serveur Hyperion</string>
-  <string name="pref_group_grabber">Grabber</string>
-  <string name="pref_summary_grabber">La méthode de capture à utiliser</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">Le grabber par défaut</string>
-  <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
-  <string name="pref_summary_ogl_grabber">Utilise un grabber alternatif</string>
   <!-- General settings -->
   <string name="pref_group_general">Général</string>
   <string name="pref_summary_boot">Lancer le grabber au démarrage de l\'appareil</string>
