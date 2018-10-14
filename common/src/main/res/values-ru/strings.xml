@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="pref_list_framerate">
+    <item>10 кадров в секунду</item>
+    <item>15 кадров в секунду</item>
+    <item>24 кадра в секунду</item>
+    <item>30 кадров в секунду</item>
+    <item>60 кадров в секунду</item>
+  </string-array>
+  <string name="pref_title">Настройки</string>
+  <string name="enabled">Включено</string>
+  <!-- notification button -->
+  <string name="notification_exit_button">Выход </string>
+  <string name="scanner_scan_in_progress_button">сканирование...</string>
+  <string name="pref_title_priority">Приоритет сообщений</string>
+  <string name="pref_title_reconnect">Заново</string>
+  <string name="pref_summary_reconnect">Автоматическо заново соедините к hyperion припотеряли связи</string>
+  <string name="pref_title_reconnect_delay">Задержка повторного подключения</string>
+  <string name="pref_summary_reconnect_delay">Количество секунд ожидания до попытки повторного подключения</string>
+  <!-- Capturing settings -->
+  <string name="pref_group_capturing">Захват</string>
+  <string name="pref_title_framerate">Частота захвата</string>
+  <!-- General settings -->
+  <string name="pref_group_general">Общие</string>
+  <string name="pref_summary_boot">Запуск захвата экрана при запуске устройства</string>
+  <string name="pref_title_boot">захват при загрузке</string>
+  <string name="pref_error_missing_field">%s не должно быть пустым</string>
+  <string name="pref_error_invalid_field" formatted="false">%s недействительно для %s</string>
+  <string name="error_empty_host">Настройка хоста не должна быть пустой</string>
+  <string name="error_empty_port">Настройка порта не должна быть пустой</string>
+  <string name="error_connection_lost">Соединение с вашим сервером hyperion было потеряно. Грабер останавливаться</string>
+  <string name="toast_must_give_permission">Разрешение должно быть предоставлено для записи экрана данных.</string>
+  <string name="message_service_started">Нажмите «Назад», чтобы закрыть приложение. Содержимое вашего экрана будет по-прежнему отправляться в Hyperion</string>
+</resources>
