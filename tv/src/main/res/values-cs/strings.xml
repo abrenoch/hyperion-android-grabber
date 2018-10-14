@@ -17,4 +17,6 @@
   <string name="guidedstep_nevermind">Nevadí</string>
   <string name="guidedstep_cancel">Zrušit</string>
   <string name="guidedstep_required">Vyžadováno</string>
+  <!--This is the title for a custom launcher activity - hence including the app's name, with the action noted (toggle the grabber)-->
+  <string name="toggle_activity_label"></string>
 </resources>

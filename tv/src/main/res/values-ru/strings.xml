@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title"></string>
+  <string name="guidedstep_basic_settings_description"></string>
+  <string name="guidedstep_second_title">Проверка соединения</string>
+  <string name="guidedstep_section_advanced_title">Дополнительные параметры</string>
+  <string name="guidedstep_section_advanced_description"></string>
+  <string name="guidedstep_save">Сохранить</string>
+  <string name="guidedstep_test">Тест</string>
+  <string name="guidedstep_test_description">Да будет свет</string>
+  <string name="guidedstep_test_success"></string>
+  <string name="guidedstep_test_host_unreachable"></string>
+  <string name="guidedstep_test_unknown_error">Результат: неизвестная ошибка</string>
+  <string name="guidedstep_continue">Продолжать</string>
+  <string name="guidedstep_letsdoit"></string>
+  <string name="guidedstep_nevermind"></string>
+  <string name="guidedstep_cancel">Отмена</string>
+  <string name="guidedstep_required">Требуется</string>
+  <!--This is the title for a custom launcher activity - hence including the app's name, with the action noted (toggle the grabber)-->
+  <string name="toggle_activity_label"></string>
+</resources>
