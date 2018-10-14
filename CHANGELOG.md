@@ -1,4 +1,4 @@
-## [v0.5-beta (unreleased)]
+## [v0.5-beta]
 ### Changes
 - Added the ability to send only the average color of the screen
 - French translation
