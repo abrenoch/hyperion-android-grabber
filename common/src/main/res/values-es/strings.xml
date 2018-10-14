@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="pref_list_framerate">
+    <item>10 fps</item>
+    <item>15 fps</item>
+    <item>24 fps</item>
+    <item>30 fps</item>
+    <item>60 fps</item>
+  </string-array>
+  <string name="app_name">Hyperion Grabber</string>
+  <string name="pref_title">Configuraciones</string>
+  <string name="enabled">Habilitado</string>
+  <string name="disabled">Discapacitado</string>
+  <!-- notification button -->
+  <string name="notification_exit_button">Salida</string>
+  <!-- Network scanner -->
+  <string name="scanner_title">¡Hola!</string>
+  <string name="scanner_start_scan_button">Iniciar escaneoe</string>
+  <string name="scanner_scan_in_progress_button">Exploración…</string>
+  <string name="scanner_no_results">No se encontraron resultados %s</string>
+  <string name="scanner_retry_button">reintento</string>
+  <!-- Network Scanner result -->
+  <string name="scan_result_title">Y el ganador es…</string>
+  <string name="scan_result_confirm_button_text">Me encanta!</string>
+  <string name="scan_result_alternative_color_button_text">Odio a púrpura</string>
+  <!-- Connection settings -->
+  <string name="pref_group_connection">Conexión</string>
+  <string name="pref_title_host">Host de Hyperion</string>
+  <string name="pref_summary_host">Host que está ejecutando la instancia de Hyperion</string>
+  <string name="pref_title_port">Hyperion Protobuf puerto</string>
+  <string name="pref_title_priority">Prioridad del mensaje</string>
+  <string name="pref_summary_priority">Canal de prioridad de mensajes a utilizar</string>
+  <string name="pref_title_framerate">Tasa de captura</string>
+  <!-- General settings -->
+  <string name="pref_group_general">General</string>
+  <string name="error_empty_host">La configuración del host no debe estar vacía</string>
+  <string name="error_empty_port">El puerto no debe estar vacío</string>
+  <string name="toast_must_give_permission">Permiso debe concederse a la pantalla de registro de datos</string>
+</resources>
