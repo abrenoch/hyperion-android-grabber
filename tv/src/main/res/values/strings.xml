@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <string name="toggle_activity_label">Hyperion Grabber (Toggle)</string>
-
   <!-- Strings related to guided sequence activity -->
   <string name="guidedstep_basic_settings_title">Tip</string>
   <string name="guidedstep_basic_settings_description">Download the official Android TV Remote app on your phone for easy entry of numbers and text</string>
@@ -19,4 +17,6 @@
   <string name="guidedstep_nevermind">Never mind</string>
   <string name="guidedstep_cancel">Cancel</string>
   <string name="guidedstep_required">Required</string>
+  <!--This is the title for a custom launcher activity - hence including the app's name, with the action noted (toggle the grabber)-->
+  <string name="toggle_activity_label">Hyperion Grabber (Toggle)</string>
 </resources>
