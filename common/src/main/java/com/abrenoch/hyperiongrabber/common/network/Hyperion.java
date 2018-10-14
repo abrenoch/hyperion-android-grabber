@@ -1,10 +1,10 @@
 package com.abrenoch.hyperiongrabber.common.network;
 
-import com.example.android.screencapture.HyperionProto.ClearRequest;
-import com.example.android.screencapture.HyperionProto.ColorRequest;
-import com.example.android.screencapture.HyperionProto.HyperionReply;
-import com.example.android.screencapture.HyperionProto.HyperionRequest;
-import com.example.android.screencapture.HyperionProto.ImageRequest;
+import com.abrenoch.hyperiongrabber.common.HyperionProto.ClearRequest;
+import com.abrenoch.hyperiongrabber.common.HyperionProto.ColorRequest;
+import com.abrenoch.hyperiongrabber.common.HyperionProto.HyperionReply;
+import com.abrenoch.hyperiongrabber.common.HyperionProto.HyperionRequest;
+import com.abrenoch.hyperiongrabber.common.HyperionProto.ImageRequest;
 import com.google.protobuf.ByteString;
 
 import java.io.BufferedInputStream;
