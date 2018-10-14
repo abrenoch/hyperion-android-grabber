@@ -17,4 +17,6 @@
   <string name="guidedstep_nevermind">Laat maar</string>
   <string name="guidedstep_cancel">Annuleren</string>
   <string name="guidedstep_required">Vereist</string>
+  <!--This is the title for a custom launcher activity - hence including the app's name, with the action noted (toggle the grabber)-->
+  <string name="toggle_activity_label"></string>
 </resources>
