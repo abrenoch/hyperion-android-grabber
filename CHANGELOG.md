@@ -6,9 +6,16 @@
 - Czech translation
 - German translation
 - Dutch translation
+- Partial Russion translation
+- Partion Spanish translation
+- Removed openGL grabber option
+- Added toggle grabber activity shortcut
+- LEDs will now be cleared when rebooting or shutting down
 
 ### Fixed
 - Lights now clear (if running) when shutting down
+- Assertion bug in TV settings
+- Possible null intent when starting grabber
 - OOM bug
 
 ## [v0.4-alpha]
