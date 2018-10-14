@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Tip</string>
+  <string name="guidedstep_basic_settings_description">Download de officiële Android TV Remote app op uw telefoon om nummers en tekst eenvoudig in te voeren</string>
+  <string name="guidedstep_second_title">Verbindingstest</string>
+  <string name="guidedstep_section_advanced_title">Geavanceerde instellingen</string>
+  <string name="guidedstep_section_advanced_description">De onderstaande instellingen staan voor de meeste situaties al goed</string>
+  <string name="guidedstep_save">Opslaan</string>
+  <string name="guidedstep_test">Test</string>
+  <string name="guidedstep_test_description">Laat ze stralen</string>
+  <string name="guidedstep_test_success">Resultaat: OK. Lichten de LED\'s niet op? Probeer een lagere prioriteitswaarde</string>
+  <string name="guidedstep_test_host_unreachable">Resultaat: Kon geen verbinding maken. Controleer de host en poort</string>
+  <string name="guidedstep_test_unknown_error">Resultaat: onbekende fout</string>
+  <string name="guidedstep_continue">Doorgaan</string>
+  <string name="guidedstep_letsdoit">Lekker bezig!</string>
+  <string name="guidedstep_nevermind">Laat maar</string>
+  <string name="guidedstep_cancel">Annuleren</string>
+  <string name="guidedstep_required">Vereist</string>
+</resources>

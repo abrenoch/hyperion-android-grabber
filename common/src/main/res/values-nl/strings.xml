@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="pref_list_framerate">
+    <item>10 fps</item>
+    <item>15 fps</item>
+    <item>24 fps</item>
+    <item>30 fps</item>
+    <item>60 fps</item>
+  </string-array>
+  <string name="app_name">Hyperion Grabber</string>
+  <string name="pref_title">Instellingen</string>
+  <string name="enabled">Ingeschakeld</string>
+  <string name="disabled">Uitgeschakeld</string>
+  <!-- notification button -->
+  <string name="notification_exit_button">Afsluiten</string>
+  <!-- Network scanner -->
+  <string name="scanner_title">Hallo daar!</string>
+  <string name="scanner_description">Hyperion Grabber kan uw netwerk scannen op draaiende servers, zodat u niet hoeft te knoeien met uw afstandsbediening om een ​​ip-adres in te voeren.</string>
+  <string name="scanner_start_scan_button">Scan starten</string>
+  <string name="scanner_scan_in_progress_text">Uw lokale netwerk scannen op Hyperion servers %s</string>
+  <string name="scanner_scan_in_progress_button">Scannen...</string>
+  <string name="scanner_no_results">Geen resultaten gevonden %s</string>
+  <string name="scanner_retry_button">opnieuw proberen</string>
+  <string name="scanner_manual_setup_button">Handmatig instellen</string>
+  <!-- Network Scanner result -->
+  <string name="scan_result_title">En de winnaar is…</string>
+  <string name="scan_result_description">Om dit te vieren, hebben we al je LED\'s paars gemaakt %s </string>
+  <string name="scan_result_confirm_button_text">Mooi hoor!</string>
+  <string name="scan_result_alternative_color_button_text">Ik haat paars</string>
+  <!-- Connection settings -->
+  <string name="pref_group_connection">Verbinding</string>
+  <string name="pref_title_host">Hyperion Hostnaam</string>
+  <string name="pref_summary_host">Host waar uw Hyperion server op draait</string>
+  <string name="pref_title_port">Hyperion Protobuf-poort</string>
+  <string name="pref_summary_port">De Protobuf-poort van uw hyperion-server</string>
+  <string name="pref_title_y_led">Verticale LED\'s</string>
+  <string name="pref_summary_y_led">Het verticale aantal LED\'s van uw apparaat</string>
+  <string name="pref_title_x_led">Horizontale LED\'s</string>
+  <string name="pref_summary_x_led">Het horizontale aantal LED\'s van uw apparaat</string>
+  <string name="pref_title_priority">Hyperion-prioriteit</string>
+  <string name="pref_summary_priority">1 is hoogste, 900 is laagste</string>
+  <string name="pref_title_reconnect">Verloren verbinding herstellen</string>
+  <string name="pref_summary_reconnect">Automatisch opnieuw verbinding maken met Hyperion bij verloren verbinding</string>
+  <string name="pref_title_reconnect_delay">Vertraging voor opnieuw verbinden</string>
+  <string name="pref_summary_reconnect_delay">Het aantal seconden voordat wordt geprobeerd opnieuw verbinding te maken</string>
+  <!-- Capturing settings -->
+  <string name="pref_group_capturing">Opname</string>
+  <string name="pref_title_framerate">Opname-snelheid</string>
+  <string name="pref_summary_framerate">Aantal keer per seconde dat het beeld naar Hyperion gestuurd wordt</string>
+  <!-- General settings -->
+  <string name="pref_group_general">Algemeen</string>
+  <string name="pref_summary_boot">Start schermopname wanneer uw apparaat start</string>
+  <string name="pref_title_boot">Direct starten</string>
+  <string name="pref_error_missing_field">%s mag niet leeg zijn</string>
+  <string name="pref_error_invalid_field" formatted="false">%s is niet geldig voor %s</string>
+  <string name="error_empty_host">Hostinstelling mag niet leeg zijn</string>
+  <string name="error_empty_port">Poortinstelling mag niet leeg zijn</string>
+  <string name="error_invalid_led_counts">Het aantal horizontale &amp; verticale LEDs  moet groter zijn dan 0</string>
+  <string name="error_server_unreachable">Kon geen verbinding maken met de Hyperion-server. Controleer uw instellingen en zorg ervoor dat Hyperion actief is</string>
+  <string name="error_connection_lost">De verbinding met uw Hyperion-server is verbroken, schermopname wordt gestopt</string>
+  <string name="toast_must_give_permission">Er moet toestemming worden verleend om scherminhoud door te sturen</string>
+  <string name="message_service_started">Druk op Terug om de app te sluiten. Uw scherminhoud wordt nog steeds naar Hyperion verzonden</string>
+  <string name="error_no_host_name_extra">Dat is raar, ik verwachtte hier een hostnaam</string>
+  <string name="notification_channel_label">Hyperion Grabber Notificaties</string>
+  <string name="notification_description">Scherminhoud wordt doorgestuurd</string>
+  <string name="pref_title_use_avg_color">Stuur Gemiddelde Schermkleur</string>
+  <string name="pref_summary_use_avg_color">Stuurt de gemiddelde kleur van het scherm in plaats van een beeld van het</string>
+</resources>
