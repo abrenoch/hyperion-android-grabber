@@ -23,7 +23,7 @@ import android.support.v4.app.FragmentActivity;
 import com.abrenoch.hyperiongrabber.tv.fragments.settings.BasicSettingsStepFragment;
 
 /**
- * Allows to set all preferences anually
+ * Allows to set all preferences manually
  */
 public class ManualSetupActivity extends FragmentActivity {
 

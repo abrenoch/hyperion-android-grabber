@@ -9,6 +9,10 @@ import com.abrenoch.hyperiongrabber.common.network.NetworkScanner;
 import java.lang.ref.WeakReference;
 
 
+/**
+ * Starts a network scan for a running Hyperion server
+ * and posts progress and results
+ */
 public class HyperionScannerTask extends AsyncTask<Void, Float, String> {
     private WeakReference<Listener> weakListener;
 

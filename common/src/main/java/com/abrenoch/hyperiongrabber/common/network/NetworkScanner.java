@@ -47,7 +47,7 @@ public class NetworkScanner {
         Socket socket = new Socket();
         String ip = ipsToTry[++lastTriedIndex];
         try {
-            // timeout after 100ms, should be enough for local network
+            // timeout after ATTEMPT_TIMEOUT_MS, should be enough for local network
             socket.connect(new InetSocketAddress(ip, PORT), ATTEMPT_TIMEOUT_MS);
 
             if (socket.isConnected()){
@@ -76,7 +76,7 @@ public class NetworkScanner {
         return lastTriedIndex / (float)ipsToTry.length;
     }
 
-    /** True if not all up's have been tried yet
+    /** True if not all ip's have been tried yet
      *
      */
     public boolean hasNextAttempt(){
@@ -149,7 +149,7 @@ public class NetworkScanner {
             return ipsToTry;
         } catch (Exception e){
             // for now eat exceptions
-            Log.e("HYPERION SCANNER", "Error while building list of subnet ip", e);
+            Log.e("HYPERION SCANNER", "Error while building list of subnet ip's", e);
             return new String[]{};
         }
     }

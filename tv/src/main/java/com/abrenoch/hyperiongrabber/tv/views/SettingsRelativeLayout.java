@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
  * Repositioning child views in PreDraw callback in {@link GuidanceStylist} was interfering with
  * fragment transition. To avoid that, we do that in the onLayout pass.
  *
- * Copied from Leanback code, changed to align icon botrtom with description bottom
+ * Nino: Copied from Leanback code, changed to align icon bottom with description bottom
  */
 class SettingsRelativeLayout extends RelativeLayout {
     private float mTitleKeylinePercent;

@@ -40,6 +40,7 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MainActivity.REQUEST_INITIAL_SETUP){
             if (resultCode == RESULT_OK){
+                // when the setup completed successfully, we completed successfully.
                 setResult(RESULT_OK);
                 finish();
             }

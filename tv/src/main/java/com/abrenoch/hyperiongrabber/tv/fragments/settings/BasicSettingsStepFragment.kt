@@ -311,6 +311,9 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
         private val TEST_COLORS = intArrayOf(Color.RED, Color.GREEN, Color.BLUE, Color.WHITE)
 
+        /**
+         * Tries to connect to Hyperion and set all LEDs to a single color
+         */
         class TestTask(context: Context): AsyncTask<TestSpec, Int, Int>(){
 
 
