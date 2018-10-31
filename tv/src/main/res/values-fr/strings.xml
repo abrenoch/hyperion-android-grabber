@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">Astuce</string>
+  <string name="guidedstep_basic_settings_description">Téléchargez l\'application officielle \"Android TV Remote\" sur votre téléphone pour une saisie simplifié des numéros et du texte.</string>
+  <string name="guidedstep_second_title">Test de connexion</string>
+  <string name="guidedstep_section_advanced_title">Paramètres avancés</string>
+  <string name="guidedstep_section_advanced_description">Les paramètres ci-dessous peuvent être laissés à leurs valeurs par défaut</string>
+  <string name="guidedstep_save">Sauvegarder</string>
+  <string name="guidedstep_test">Tester</string>
+  <string name="guidedstep_test_description">Allumer</string>
+  <string name="guidedstep_test_success">Résultat: OK. Les LEDs ne s\'allument pas? Essayez une valeur de priorité inférieure</string>
+  <string name="guidedstep_test_host_unreachable">Résultat : Impossible de se connecter. Veuillez vérifier l\'hôte et le port</string>
+  <string name="guidedstep_test_unknown_error">Résultat : erreur inconnue</string>
+  <string name="guidedstep_continue">Continuer</string>
+  <string name="guidedstep_letsdoit">Allons-y</string>
+  <string name="guidedstep_nevermind">Cela ne fait rien</string>
+  <string name="guidedstep_cancel">Annuler</string>
+  <string name="guidedstep_required">Obligatoire</string>
+</resources>

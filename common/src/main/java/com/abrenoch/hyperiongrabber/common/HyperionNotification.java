@@ -24,7 +24,7 @@ public class HyperionNotification {
     HyperionNotification (Context ctx, NotificationManager manager) {
         mNotificationManager = manager;
         mContext = ctx;
-        NOTIFICATION_TITLE = mContext.getString(R.string.notification_title);
+        NOTIFICATION_TITLE = mContext.getString(R.string.app_name);
         NOTIFICATION_DESCRIPTION = mContext.getString(R.string.notification_description);
         NOTIFICATION_CHANNEL_LABEL = mContext.getString(R.string.notification_channel_label);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

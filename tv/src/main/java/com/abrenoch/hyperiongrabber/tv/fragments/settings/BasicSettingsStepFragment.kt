@@ -135,47 +135,14 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 frameRateLabels,
                 frameRateValues,
                 selectedCaptureRate
-
         )
 
-        val useOgl = prefs.getBoolean(R.string.pref_key_ogl_grabber)
-
-
-        val mediaProjection = ValueGuidedAction.Companion.Builder(context)
-                .id(ACTION_GRABBER_MEDIA)
-                .value(false)
-                .title(R.string.pref_title_media_grabber)
-                .description(getString(R.string.pref_summary_media_grabber))
-                .checkSetId(ACTION_GRABBER_SET_ID)
-                .checked(!useOgl)
-                .build()
-
-        val ogl = ValueGuidedAction.Companion.Builder(context)
-                .id(ACTION_GRABBER_OGL)
-                .value(true)
-                .title(R.string.pref_title_ogl_grabber)
-                .description(R.string.pref_summary_ogl_grabber)
-                .checkSetId(ACTION_GRABBER_SET_ID)
-                .checked(useOgl)
-                .build()
-
-        val grabberDescription =
-            if (prefs.contains(R.string.pref_key_ogl_grabber)){
-                if (useOgl){
-                    R.string.pref_title_ogl_grabber
-                } else {
-                    R.string.pref_title_media_grabber
-                }
-            } else {
-                R.string.pref_summary_grabber
-            }
-
-
-        val grabberGroup = GuidedAction.Builder(context)
-                .id(ACTION_GRABBER_GROUP)
-                .title(getString(R.string.pref_group_grabber))
-                .description(grabberDescription)
-                .subActions(listOf(mediaProjection, ogl))
+        val averageColor = GuidedAction.Builder(context)
+                .id(ACTION_AVERAGE_COLOR)
+                .title(getString(R.string.pref_title_use_avg_color))
+                .description(R.string.pref_summary_use_avg_color)
+                .checkSetId(GuidedAction.CHECKBOX_CHECK_SET_ID)
+                .checked(prefs.getBoolean(R.string.pref_key_use_avg_color))
                 .build()
 
         actions.add(enterHost)
@@ -187,7 +154,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         actions.add(priority)
         actions.add(reconnectGroup)
         actions.add(captureRate)
-        actions.add(grabberGroup)
+        actions.add(averageColor)
 
     }
 
@@ -214,9 +181,9 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 val startOnBootEnabled = findActionById(ACTION_START_ON_BOOT).isChecked
                 val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
                 val frameRate = assertSubActionValue(ACTION_CAPTURE_RATE, String::class.java)
-                val useOgl = assertSubActionValue(ACTION_GRABBER_GROUP, Boolean::class.java)
                 val reconnect = findSubActionById(ACTION_RECONNECT)!!.isChecked
                 val reconnectDelay = assertIntValue(ACTION_RECONNECT_DELAY)
+                val useAverageColor = findActionById(ACTION_AVERAGE_COLOR)!!.isChecked
 
                 prefs.putString(R.string.pref_key_host, host)
                 prefs.putInt(R.string.pref_key_port, port)
@@ -227,7 +194,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.putInt(R.string.pref_key_reconnect_delay, reconnectDelay)
                 prefs.putString(R.string.pref_key_framerate, frameRate)
                 prefs.putBoolean(R.string.pref_key_reconnect, reconnect)
-                prefs.putBoolean(R.string.pref_key_ogl_grabber, useOgl)
+                prefs.putBoolean(R.string.pref_key_use_avg_color, useAverageColor)
 
                 val activity = activity
                 activity.setResult(Activity.RESULT_OK)
@@ -243,10 +210,16 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
             val color = TEST_COLORS[colorIdx]
             testCounter++
 
-            val host = assertStringValue(ACTION_HOST_NAME)
-            val port = assertIntValue(ACTION_PORT)
-            val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
-            testHyperionColor(host, port, priority, color)
+            try {
+                val host = assertStringValue(ACTION_HOST_NAME)
+                val port = assertIntValue(ACTION_PORT)
+                val priority = assertIntValue(ACTION_MESSAGE_PRIORITY)
+                testHyperionColor(host, port, priority, color)
+            } catch (ignored: AssertionError) {
+            }
+
+            return
+
         }
 
         super.onGuidedActionClicked(action)
@@ -266,15 +239,6 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
 
                 return !action.isChecked
-            }
-            action.id == ACTION_GRABBER_MEDIA -> {
-                findActionById(ACTION_GRABBER_GROUP).description = getString(R.string.pref_title_media_grabber)
-                notifyActionIdChanged(ACTION_GRABBER_GROUP)
-
-            }
-            action.id == ACTION_GRABBER_OGL -> {
-                findActionById(ACTION_GRABBER_GROUP).description = getString(R.string.pref_title_ogl_grabber)
-                notifyActionIdChanged(ACTION_GRABBER_GROUP)
             }
             action is ValueGuidedAction && action.parentId != null -> {
                 findActionById(action.parentId).description = action.title
@@ -303,11 +267,10 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
         private const val ACTION_MESSAGE_PRIORITY = 300L
         private const val ACTION_CAPTURE_RATE = 400L
         private const val ACTION_CAPTURE_RATE_SET_ID = 1500
-        private const val ACTION_GRABBER_GROUP = 500L
-        private const val ACTION_GRABBER_SET_ID = 550
-        private const val ACTION_GRABBER_MEDIA = 560L
-        private const val ACTION_GRABBER_OGL = 570L
-        private const val ACTION_TEST = 600L
+        private const val ACTION_AVERAGE_COLOR = 600L
+
+
+        private const val ACTION_TEST = 700L
 
         private val TEST_COLORS = intArrayOf(Color.RED, Color.GREEN, Color.BLUE, Color.WHITE)
 

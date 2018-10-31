@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="pref_list_framerate">
+    <item>10 fps</item>
+    <item>15 fps</item>
+    <item>24 fps</item>
+    <item>30 fps</item>
+    <item>60 fps</item>
+  </string-array>
+  <string name="app_name">Hyperion Grabber</string>
+  <string name="pref_title">Nastavení</string>
+  <string name="enabled">Povoleno</string>
+  <string name="disabled">Zakázáno</string>
+  <!-- notification button -->
+  <string name="notification_exit_button">Ukončit</string>
+  <!-- Network scanner -->
+  <string name="scanner_title">Ahoj!</string>
+  <string name="scanner_description">Hyperion Grabber může vyhledat spuštěné Hyperion servery ve vaší lokální síti, abyste nemuseli zadávat IP adresu vaším dálkovým ovladačem.</string>
+  <string name="scanner_start_scan_button">Spustit hledání</string>
+  <string name="scanner_scan_in_progress_text">Hledání spuštěných Hyperion serverů ve vaší lokální síti %s</string>
+  <string name="scanner_scan_in_progress_button">Hledání...</string>
+  <string name="scanner_no_results">Nebyly nalezeny žádné výsledky %s</string>
+  <string name="scanner_retry_button">opakovat</string>
+  <string name="scanner_manual_setup_button">Ruční nastavení</string>
+  <!-- Network Scanner result -->
+  <string name="scan_result_title">A vítězem se stává...</string>
+  <string name="scan_result_description">Abychom to oslavili, nastavili jsme všechny LED na fialovou %s</string>
+  <string name="scan_result_confirm_button_text">Miluju to!</string>
+  <string name="scan_result_alternative_color_button_text">Nesnáším fialovou</string>
+  <!-- Connection settings -->
+  <string name="pref_group_connection">Připojení</string>
+  <string name="pref_title_host">Hyperion Host</string>
+  <string name="pref_summary_host">Host, ne kterém je spuštěn váš Hyperion server</string>
+  <string name="pref_title_port">Hyperion Protobuf Port</string>
+  <string name="pref_summary_port">Protobuf port vašeho Hyperion serveru</string>
+  <string name="pref_title_y_led">Vertikální počet LED</string>
+  <string name="pref_summary_y_led">Vertikální počet LED na vašem pásku</string>
+  <string name="pref_title_x_led">Horizontální počet LED</string>
+  <string name="pref_summary_x_led">Horizontální počet LED na vašem pásku</string>
+  <string name="pref_title_priority">Priorita komunikace</string>
+  <string name="pref_summary_priority">Priorita kanálu, který se použije pro odesílání dat</string>
+  <string name="pref_title_reconnect">Znovu připojit</string>
+  <string name="pref_summary_reconnect">Automatické opětovné připojení k Hyperion serveru při ztrátě připojení</string>
+  <string name="pref_title_reconnect_delay">Zpoždění opětovného připojení</string>
+  <string name="pref_summary_reconnect_delay">Kolik vteřin čekat před pokusem o opětovné připojení</string>
+  <!-- Capturing settings -->
+  <string name="pref_group_capturing">Zachytávání obsahu</string>
+  <string name="pref_title_framerate">Frekvence snímání</string>
+  <string name="pref_summary_framerate">Počet snímků za sekundu, ve kterém chcete odesílat data na Hyperionu</string>
+  <!-- General settings -->
+  <string name="pref_group_general">Obecné</string>
+  <string name="pref_summary_boot">Spustit grabování při spuštení zařízení</string>
+  <string name="pref_title_boot">Grabování při Bootu</string>
+  <string name="pref_error_missing_field">%s by neměl být prázdný</string>
+  <string name="pref_error_invalid_field" formatted="false">%s neplatí pro %s</string>
+  <string name="error_empty_host">Pole nastavení Host by nemělo být prázdné</string>
+  <string name="error_empty_port">Pole nastavení portu by nemělo být prázdné</string>
+  <string name="error_invalid_led_counts">Horizontální a vertikální počet LED musí být nastaven a větší než 0</string>
+  <string name="error_server_unreachable">Nelze se připojit k Hyperion serveru. Zkontrolujte vaše nastavení a ujistěte se, že je Hyperion spuštěn</string>
+  <string name="error_connection_lost">Spojení s vaším Hyperion serverem bylo ztraceno, grabber se nyní ukončuje</string>
+  <string name="toast_must_give_permission">K zaznamenávání dat na obrazovce musí být uděleno oprávnění.</string>
+  <string name="message_service_started">Stikněte Zpět pro uzavření aplikace. Obsah obrazovky se bude nadále odesílat do Hyperionu.</string>
+  <string name="error_no_host_name_extra">Zvláštní, tady má být hostname</string>
+  <string name="notification_channel_label">Hyperion Grabber notifikace</string>
+  <string name="notification_description">Momentálně se grabuje obsah obrazovky</string>
+  <string name="pref_title_use_avg_color">Odeslat průměrnou barvu obrazovky</string>
+  <string name="pref_summary_use_avg_color">Odesílá průměrnou barvu obrazovky vašeho zařízení namísto přesného obrazu</string>
+</resources>
