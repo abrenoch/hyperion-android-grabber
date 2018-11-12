@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <!-- Strings related to guided sequence activity -->
+  <string name="guidedstep_basic_settings_title">تلميح</string>
+  <string name="guidedstep_basic_settings_description">قم بتنزيل تطبيق Android TV Remote الرسمي على هاتفك لإدخال الأرقام والنصوص بسهولة</string>
+  <string name="guidedstep_second_title">اختبار الاتصال</string>
+  <string name="guidedstep_section_advanced_title">إعدادات متقدمة</string>
+  <string name="guidedstep_section_advanced_description">يمكن أن تترك الإعدادات أدناه بأمان في الإعدادات الافتراضية</string>
+  <string name="guidedstep_save">حفظ</string>
+  <string name="guidedstep_test">اختبار</string>
+  <string name="guidedstep_test_description">تألق</string>
+  <string name="guidedstep_test_success">النتيجة: حسنًا. المصابيح لا تضيء؟ جرب قيمة أولوية أقل</string>
+  <string name="guidedstep_test_host_unreachable">النتيجة: تعذر الاتصال. يرجى التحقق من المضيف والمنفذ</string>
+  <string name="guidedstep_test_unknown_error">النتيجة: خطأ غير معروف</string>
+  <string name="guidedstep_continue">استمر</string>
+  <string name="guidedstep_letsdoit">دعونا نفعل ذلك</string>
+  <string name="guidedstep_nevermind">لا بأس</string>
+  <string name="guidedstep_cancel">إلغاء</string>
+  <string name="guidedstep_required">مطلوب</string>
+  <!--This is the title for a custom launcher activity - hence including the app's name, with the action noted (toggle the grabber)-->
+  <string name="toggle_activity_label">Hyperion Grabber (Toggle)</string>
+</resources>
