@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Fanger innhold</string>
   <string name="pref_title_framerate">Capture rate</string>
   <string name="pref_summary_framerate">Bilder per sekund (FPS) som skal sendes til Hyperion</string>
-  <string name="pref_group_grabber">Grabber</string>
-  <string name="pref_summary_grabber">Grabber-metoden som skal benyttes</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">Standard grabber</string>
-  <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
-  <string name="pref_summary_ogl_grabber">Bruk en alternativ grabber til å lese skjerminnholdet</string>
   <!-- General settings -->
   <string name="pref_group_general">Generelt</string>
   <string name="pref_summary_boot">Start screen grabber når enheten starter</string>

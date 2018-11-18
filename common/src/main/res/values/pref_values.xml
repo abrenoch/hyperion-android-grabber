@@ -19,9 +19,6 @@
     <string name="pref_key_reconnect_delay" translatable="false">pref_key_reconnect_delay</string>
     <integer name="pref_default_reconnect_delay" translatable="false">5</integer>
 
-    <string name="pref_key_ogl_grabber" translatable="false">pref_key_ogl_grabber</string>
-    <bool name="pref_default_ogl_grabber" translatable="false">false</bool>
-
     <string name="pref_key_boot" translatable="false">pref_key_start_on_boot</string>
     <bool name="pref_default_boot" translatable="false">false</bool>
 

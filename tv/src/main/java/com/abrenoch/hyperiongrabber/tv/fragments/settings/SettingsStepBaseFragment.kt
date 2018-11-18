@@ -84,6 +84,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
      * returns that value. If it is not filled, a toast is shown and this
      * fun @throws a [AssertionError]
      */
+    @Throws(AssertionError::class)
     protected fun assertStringValue(actionId: Long): String {
         with(stringValueForAction(actionId)){
             if (isEmpty()){
@@ -94,6 +95,11 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
         }
     }
 
+    /** makes sure a value is filled for the GuidedAction and
+     * returns that value. If it is not filled, a toast is shown and this
+     * fun @throws a [AssertionError]
+     */
+    @Throws(AssertionError::class)
     protected fun assertIntValue(actionId: Long): Int {
         return assertStringValue(actionId).let{
             try {

@@ -1,7 +1,7 @@
 package com.abrenoch.hyperiongrabber.common.network;
 
 import com.abrenoch.hyperiongrabber.common.HyperionScreenService;
-import com.example.android.screencapture.HyperionProto;
+import com.abrenoch.hyperiongrabber.common.HyperionProto;
 
 import java.io.IOException;
 

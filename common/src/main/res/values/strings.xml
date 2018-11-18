@@ -47,12 +47,6 @@
   <string name="pref_group_capturing">Capturing</string>
   <string name="pref_title_framerate">Capture Rate</string>
   <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
-  <string name="pref_group_grabber">Grabber</string>
-  <string name="pref_summary_grabber">The capturing method to use</string>
-  <string name="pref_title_media_grabber">MediaProjection</string>
-  <string name="pref_summary_media_grabber">The default grabber</string>
-  <string name="pref_title_ogl_grabber">OpenGL Grabber</string>
-  <string name="pref_summary_ogl_grabber">Use an alternative grabber to read the screen content</string>
   <!-- General settings -->
   <string name="pref_group_general">General</string>
   <string name="pref_summary_boot">Start screen grabber when device starts</string>
@@ -70,6 +64,7 @@
   <string name="notification_channel_label">Hyperion Grabber Notifications</string>
   <string name="notification_description">Currently grabbing screen content</string>
   <string name="pref_title_use_avg_color">Send Average Screen Color</string>
+  <string name="pref_summary_use_avg_color">Sends the average color of your device\'s screen rather than an image of it</string>
   <string name="pref_summary_use_avg_color">Sends the average color of your device\\'s screen rather than an image of it</string>
   <!-- About activity -->
 
