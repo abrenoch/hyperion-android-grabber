@@ -29,6 +29,7 @@ android {
         targetSdkVersion 26
         versionCode 1011
         versionName "BETA 1"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
