@@ -8,10 +8,37 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AboutActivityText">
+    <style name="AboutTitles">
         <item name="android:textColor">@android:color/black</item>
-        <!--<item name="android:fontFamily">@f</item>-->
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">36sp</item>
+        <item name="android:fontFamily"> </item>
+    </style>
+
+    <style name="AboutTitles.ResourceItem">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="AboutTitles.ResourceTitle" parent="AboutTitles.ResourceItem">
+        <item name="android:textSize">32dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="AboutTitles.ResourceLink" parent="AboutTitles.ResourceItem">
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="AboutTitles.ResourceLabel" parent="AboutTitles.ResourceItem">
+        <item name="android:textSize">24dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">gravity</item>
     </style>
 </resources>
