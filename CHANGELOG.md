@@ -1,4 +1,4 @@
-## [v0.5-beta (unreleased)]
+## [v0.5-beta]
 ### Changes
 - Added the ability to send only the average color of the screen
 - French translation
@@ -6,9 +6,16 @@
 - Czech translation
 - German translation
 - Dutch translation
+- Partial Russian translation
+- Partial Spanish translation
+- Removed openGL grabber option
+- Added toggle grabber activity shortcut
+- LEDs will now be cleared when rebooting or shutting down
 
 ### Fixed
 - Lights now clear (if running) when shutting down
+- Assertion bug in TV settings
+- Possible null intent when starting grabber
 - OOM bug
 
 ## [v0.4-alpha]

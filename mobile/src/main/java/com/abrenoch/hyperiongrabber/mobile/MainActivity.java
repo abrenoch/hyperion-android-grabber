@@ -118,11 +118,17 @@ public class MainActivity extends AppCompatActivity implements ImageView.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.settings:
-                Intent intent=new Intent(this,SettingsActivity.class);
-                startActivity(intent);
+                intent = new Intent(this, SettingsActivity.class);
                 break;
+            case R.id.about:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+        }
+        if (intent != null) {
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

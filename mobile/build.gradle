@@ -9,8 +9,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.3'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.6'
     }
 }
 
@@ -27,8 +27,9 @@ android {
         applicationId "com.abrenoch.hyperiongrabber"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1010
-        versionName "ALPHA 4"
+        versionCode 1011
+        versionName "0.5-beta"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {

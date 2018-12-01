@@ -65,4 +65,39 @@
   <string name="notification_description">Currently grabbing screen content</string>
   <string name="pref_title_use_avg_color">Send Average Screen Color</string>
   <string name="pref_summary_use_avg_color">Sends the average color of your device\'s screen rather than an image of it</string>
+
+  <!-- About activity -->
+
+  <string name="about_title">About</string>
+  <string name="resources_label">Resources</string>
+  <string name="developers_label">Developers</string>
+  <string name="translators_label">Translators</string>
+  <string name="full_version_label">v %s (%s)</string>
+
+  <!-- Resources -->
+  <string-array name="resource_links" translatable="false">
+    <item><![CDATA[<a href="https://github.com/abrenoch/hyperion-android-grabber/wiki">Help &amp; FAQs</a>]]></item>
+    <item><![CDATA[<a href="https://hyperion-project.org">Hyperion Project</a>]]></item>
+    <item><![CDATA[<a href="https://github.com/abrenoch/hyperion-android-grabber">Hyperion Android Grabber Github</a>]]></item>
+  </string-array>
+
+  <!-- Developers -->
+  <string-array name="names_developers" translatable="false">
+    <item><![CDATA[<a href="https://github.com/abrenoch">Dave Anderson</a>]]></item>
+    <item><![CDATA[<a href="https://github.com/ninovanhooff">Nino van Hooff</a>]]></item>
+    <item><![CDATA[<a href="https://github.com/Paulchen-Panther">Paulchen Panther</a>]]></item>
+  </string-array>
+
+  <!-- Translators -->
+  <string-array name="names_translators">
+    <item>{your name} (Arabic)</item>
+    <item>{your name} (Czech)</item>
+    <!--<item>{your name} (Dutch)</item>-->
+    <item>{your name} (French)</item>
+    <!--<item>{your name} (German</item>-->
+    <item>{your name} (Italian)</item>
+    <item>{your name} (Norwegian)</item>
+    <item>{your name} (Russian)</item>
+    <item>{your name} (Spanish)</item>
+  </string-array>
 </resources>
