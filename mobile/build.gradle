@@ -28,7 +28,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1011
-        versionName "BETA 1"
+        versionName "0.5-beta"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

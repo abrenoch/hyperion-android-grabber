@@ -30,7 +30,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 2011
-        versionName "BETA 1"
+        versionName "0.5-beta"
     }
     buildTypes {
         release {
