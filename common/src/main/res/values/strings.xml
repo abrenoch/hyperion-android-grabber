@@ -72,6 +72,7 @@
   <string name="resources_label">Resources</string>
   <string name="developers_label">Developers</string>
   <string name="translators_label">Translators</string>
+  <string name="full_version_label">v %s (%s)</string>
 
   <!-- Resources -->
   <string-array name="resource_links" translatable="false">
