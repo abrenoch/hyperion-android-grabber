@@ -41,4 +41,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">gravity</item>
     </style>
+
+    <style name="AboutTitles.Version" parent="AboutTitles.ResourceItem">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textAlignment">center</item>
+    </style>
 </resources>
