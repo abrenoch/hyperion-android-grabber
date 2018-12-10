@@ -98,20 +98,20 @@
                     android:theme="@style/AboutTitles.ResourceLabel" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/translatorsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/translatorsLayout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/translators_label"
-                    android:theme="@style/AboutTitles.ResourceLabel" />
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:id="@+id/textView9"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/translators_label"-->
+                    <!--android:theme="@style/AboutTitles.ResourceLabel" />-->
+            <!--</LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>

@@ -46,11 +46,11 @@ public class AboutActivity extends AppCompatActivity {
 
         mResourcesLinearLayout = findViewById(R.id.resourcesLayout);
         mDevelopersLinearLayout = findViewById(R.id.developersLayout);
-        mTranslatorsLinearLayout = findViewById(R.id.translatorsLayout);
+//        mTranslatorsLinearLayout = findViewById(R.id.translatorsLayout);
 
         fillValues(R.array.resource_links, mResourcesLinearLayout);
         fillValues(R.array.names_developers, mDevelopersLinearLayout);
-        fillValues(R.array.names_translators, mTranslatorsLinearLayout);
+//        fillValues(R.array.names_translators, mTranslatorsLinearLayout);
     }
 
     private void fillValues(int resourceID, LinearLayout target) {
