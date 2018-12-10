@@ -1,10 +1,10 @@
-package com.abrenoch.hyperiongrabber.mobile;
+package com.abrenoch.hyperiongrabber.tv.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -12,7 +12,9 @@ import android.text.method.LinkMovementMethod;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AboutActivity extends AppCompatActivity {
+import com.abrenoch.hyperiongrabber.tv.R;
+
+public class AboutActivity extends Activity {
     LinearLayout mResourcesLinearLayout;
     LinearLayout mDevelopersLinearLayout;
     LinearLayout mTranslatorsLinearLayout;

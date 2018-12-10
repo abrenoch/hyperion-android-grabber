@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutActivity">
+    android:background="@android:color/white"
+    tools:context=".activities.AboutActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayoutTop"
@@ -46,7 +46,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -69,48 +69,52 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/AboutTitles.Version" />
 
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/resources_label"
+                android:theme="@style/AboutTitles.ResourceLabel" />
+
             <LinearLayout
                 android:id="@+id/resourcesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/resources_label"
-                    android:theme="@style/AboutTitles.ResourceLabel" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/developers_label"
+                android:theme="@style/AboutTitles.ResourceLabel" />
 
             <LinearLayout
                 android:id="@+id/developersLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/developers_label"
-                    android:theme="@style/AboutTitles.ResourceLabel" />
             </LinearLayout>
+
+            <!--<TextView-->
+                <!--android:id="@+id/textView9"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/translators_label"-->
+                <!--android:theme="@style/AboutTitles.ResourceLabel" />-->
 
             <!--<LinearLayout-->
                 <!--android:id="@+id/translatorsLayout"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="match_parent"-->
                 <!--android:layout_marginTop="8dp"-->
-                <!--android:orientation="vertical">-->
+                <!--android:orientation="horizontal">-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/textView9"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/translators_label"-->
-                    <!--android:theme="@style/AboutTitles.ResourceLabel" />-->
             <!--</LinearLayout>-->
 
         </LinearLayout>

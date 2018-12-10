@@ -2,6 +2,7 @@ package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.support.v17.leanback.widget.GuidedAction
 import android.widget.Toast
 import com.abrenoch.hyperiongrabber.common.network.Hyperion
 import com.abrenoch.hyperiongrabber.tv.R
+import com.abrenoch.hyperiongrabber.tv.activities.AboutActivity
 import java.lang.ref.WeakReference
 import java.net.UnknownHostException
 
@@ -167,6 +169,12 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 .build()
 
         )
+        actions.add(GuidedAction.Builder(context)
+                .id(ACTION_ABOUT)
+                .title(getString(R.string.about_title))
+                .description(R.string.about_description)
+                .build()
+        )
         actions.add(backAction())
     }
 
@@ -220,6 +228,11 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
             return
 
+        } else if (action.id == ACTION_ABOUT){
+            val intent = Intent(context, AboutActivity::class.java)
+            startActivity(intent)
+
+            return
         }
 
         super.onGuidedActionClicked(action)
@@ -271,6 +284,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
 
         private const val ACTION_TEST = 700L
+        private const val ACTION_ABOUT = 800L
 
         private val TEST_COLORS = intArrayOf(Color.RED, Color.GREEN, Color.BLUE, Color.WHITE)
 
