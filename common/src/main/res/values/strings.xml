@@ -69,6 +69,7 @@
   <!-- About activity -->
 
   <string name="about_title">About</string>
+  <string name="about_description">About the app</string>
   <string name="resources_label">Resources</string>
   <string name="developers_label">Developers</string>
   <string name="translators_label">Translators</string>
