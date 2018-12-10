@@ -48,6 +48,9 @@
             android:name=".activities.ManualSetupActivity"
             android:parentActivityName=".activities.MainActivity" />
 
+        <activity
+            android:name=".activities.AboutActivity"
+            android:parentActivityName=".activities.MainActivity" />
     </application>
 
 </manifest>

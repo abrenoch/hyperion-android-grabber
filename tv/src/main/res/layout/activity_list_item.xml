@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:linksClickable="true"
+    android:theme="@style/AboutTitles.ResourceLink"
+    android:clickable="true"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
