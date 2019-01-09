@@ -1,3 +1,10 @@
+## [v1.0]
+### Changes
+- Arabic translation
+
+### Fixed
+- Possible NPE when stopping the grabber
+
 ## [v0.5-beta]
 ### Changes
 - Added the ability to send only the average color of the screen
