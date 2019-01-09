@@ -13,8 +13,6 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:versionCode="2004"
-        android:versionName="ALPHA 3"
         tools:targetApi="lollipop">
         <service
             android:name=".HyperionScreenService"
