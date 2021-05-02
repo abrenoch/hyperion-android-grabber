@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 
+import com.abrenoch.hyperiongrabber.common.audio.HyperionAudioService;
+
 public class BootActivity extends AppCompatActivity {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
 
@@ -37,9 +39,9 @@ public class BootActivity extends AppCompatActivity {
     }
 
     public static void startScreenRecorder(Context context, int resultCode, Intent data) {
-        Intent intent = new Intent(context, HyperionScreenService.class);
-        intent.setAction(HyperionScreenService.ACTION_START);
-        intent.putExtra(HyperionScreenService.EXTRA_RESULT_CODE, resultCode);
+        Intent intent = new Intent(context, HyperionAudioService.class);
+        intent.setAction(HyperionAudioService.ACTION_START);
+        intent.putExtra(HyperionAudioService.EXTRA_RESULT_CODE, resultCode);
         intent.putExtras(data);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent);

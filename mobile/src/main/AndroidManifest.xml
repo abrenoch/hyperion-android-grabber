@@ -3,7 +3,7 @@
     package="com.abrenoch.hyperiongrabber.mobile">
 
     <application
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoActionBar"
         >
         <activity android:name=".MainActivity"
             android:launchMode="singleTop">

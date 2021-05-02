@@ -34,4 +34,31 @@
 
     <string name="pref_key_use_avg_color" translatable="false">pref_key_use_avg_color</string>
     <bool name="pref_default_use_avg_color" translatable="false">false</bool>
+
+    <string name="pref_key_sampling_method" translatable="false">pref_key_sampling_method</string>
+    <string name="pref_default_sampling_method" translatable="false">Waveform</string>
+    <string-array name="pref_list_sampling_method_values" translatable="false">
+        <item>Waveform</item>
+        <item>FFT</item>
+    </string-array>
+
+    <string name="pref_key_sampling_rate" translatable="false">pref_key_sampling_rate</string>
+    <integer name="pref_default_sampling_rate" translatable="false">11111</integer>
+
+    <string name="pref_key_effect" translatable="false">pref_key_effect</string>
+    <string name="pref_default_effect" translatable="false">Rainbow swirl</string>
+    <string-array name="pref_list_effect_values" translatable="false">
+        <item>Rainbow swirl</item>
+        <item>Plasma</item>
+        <item>Rainbow mod</item>
+        <item>IceBlue</item>
+        <item>RGB white</item>
+    </string-array>
+
+    <string name="pref_key_turnaround_rate" translatable="false">pref_key_turnaround_rate</string>
+    <integer name="pref_default_turnaround_rate" translatable="false">200</integer>
+
+    <string name="pref_key_turnaround_offset" translatable="false">pref_key_turnaround_offset</string>
+    <integer name="pref_default_turnaround_offset" translatable="false">111</integer>
+
 </resources>

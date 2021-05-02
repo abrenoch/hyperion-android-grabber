@@ -27,8 +27,8 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

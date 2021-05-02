@@ -21,7 +21,7 @@ public class HyperionNotification {
     private final Context mContext;
     private Notification.Action mAction = null;
 
-    HyperionNotification (Context ctx, NotificationManager manager) {
+    public HyperionNotification (Context ctx, NotificationManager manager) {
         mNotificationManager = manager;
         mContext = ctx;
         NOTIFICATION_TITLE = mContext.getString(R.string.app_name);

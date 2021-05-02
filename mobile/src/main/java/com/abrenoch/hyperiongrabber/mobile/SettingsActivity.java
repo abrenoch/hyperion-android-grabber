@@ -38,12 +38,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         // verify we have a valid int value for the following preference keys
         switch (prefResourceID) {
-           case R.string.pref_key_port:
-           case R.string.pref_key_reconnect_delay:
-           case R.string.pref_key_priority:
-           case R.string.pref_key_x_led:
-           case R.string.pref_key_y_led:
-           case R.string.pref_key_framerate:
+            case R.string.pref_key_port:
+            case R.string.pref_key_reconnect_delay:
+            case R.string.pref_key_priority:
+            case R.string.pref_key_x_led:
+            case R.string.pref_key_y_led:
+            case R.string.pref_key_framerate:
+            case R.string.pref_key_sampling_rate:
+            case R.string.pref_key_turnaround_rate:
+            case R.string.pref_key_turnaround_offset:
                try {
                    Integer.parseInt(value.toString());
                } catch (NumberFormatException e) {
@@ -144,6 +147,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_reconnect_delay)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_x_led)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_y_led)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_sampling_rate)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_turnaround_rate)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_turnaround_offset)));
         }
 
         @Override

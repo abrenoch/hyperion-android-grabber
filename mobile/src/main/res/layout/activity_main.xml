@@ -11,10 +11,15 @@
         android:layout_height="match_parent"
         >
 
-        <com.abrenoch.hyperiongrabber.common.views.SweepGradientView
-            android:id="@+id/sweepGradientView"
+<!--        <com.abrenoch.hyperiongrabber.common.views.SweepGradientView-->
+<!--            android:id="@+id/sweepGradientView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+        <com.abrenoch.hyperiongrabber.common.audio.AudioGradientView
+            android:id="@+id/audioGradientView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/appCompatImageView"
@@ -31,6 +36,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_toggle_image_middle" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/previous_effect"
+            android:layout_width="wrap_content"
+            android:layout_height="73dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+
+            android:background="@drawable/image_button_background"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView"
+            app:layout_constraintEnd_toEndOf="@+id/power_toggle"
+            app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
+            app:layout_constraintTop_toTopOf="@+id/appCompatImageView"
+            app:srcCompat="@android:drawable/ic_media_previous"
+            android:visibility="invisible"/>
+
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/power_toggle"
@@ -52,6 +80,28 @@
             app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
             app:layout_constraintTop_toTopOf="@+id/appCompatImageView"
             app:srcCompat="@drawable/ic_power_black_72dp" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/next_effect"
+            android:layout_width="wrap_content"
+            android:layout_height="73dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+
+            android:background="@drawable/image_button_background"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatImageView"
+            app:layout_constraintStart_toStartOf="@+id/power_toggle"
+            app:layout_constraintTop_toTopOf="@+id/appCompatImageView"
+            app:srcCompat="@android:drawable/ic_media_next"
+            android:visibility="invisible"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/grabberStartedText"

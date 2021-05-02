@@ -47,6 +47,19 @@
   <string name="pref_group_capturing">Capturing</string>
   <string name="pref_title_framerate">Capture Rate</string>
   <string name="pref_summary_framerate">Frames per second in which to send data to hyperion</string>
+  <!-- Capturing settings -->
+  <string name="pref_group_audioeffect">Audio</string>
+  <string name="pref_title_sampling_method">Sampling Method</string>
+  <string name="pref_summary_sampling_method">Audio Capture Method</string>
+  <string name="pref_title_sampling_rate">Sampling Rate</string>
+  <string name="pref_title_summary_sampling_rate">Number of samples per second</string>
+  <string name="pref_title_effect">Effect</string>
+  <string name="pref_summary_effect">Start effect</string>
+  <string name="pref_title_turnaround_rate">Effect Tempo</string>
+  <string name="pref_summary_turnaround_rate">Floating number to turnaround effect transition</string>
+  <string name="pref_title_turnaround_offset">Effect Offset</string>
+  <string name="pref_summary_turnaround_offset">Number LEDs of effect start</string>
+
   <!-- General settings -->
   <string name="pref_group_general">General</string>
   <string name="pref_summary_boot">Start screen grabber when device starts</string>
