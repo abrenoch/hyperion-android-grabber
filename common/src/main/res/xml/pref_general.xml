@@ -105,6 +105,63 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/pref_group_audioeffect">
+
+        <ListPreference
+            android:defaultValue="@string/pref_default_sampling_method"
+            android:entries="@array/pref_list_sampling_method_values"
+            android:entryValues="@array/pref_list_sampling_method_values"
+            android:key="@string/pref_default_sampling_method"
+            android:summary="@string/pref_summary_sampling_method"
+            android:title="@string/pref_title_sampling_method" />
+
+        <EditTextPreference
+            android:defaultValue="@integer/pref_default_sampling_rate"
+            android:hint="@integer/pref_default_sampling_rate"
+            android:maxLines="1"
+            android:key="@string/pref_key_sampling_rate"
+            android:summary="@string/pref_title_summary_sampling_rate"
+            android:numeric="integer"
+            android:inputType="phone"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_sampling_rate" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_default_effect"
+            android:entries="@array/pref_list_effect_values"
+            android:entryValues="@array/pref_list_effect_values"
+            android:key="@string/pref_default_effect"
+            android:summary="@string/pref_summary_effect"
+            android:title="@string/pref_title_effect" />
+
+        <EditTextPreference
+            android:defaultValue="@integer/pref_default_turnaround_rate"
+            android:hint="@integer/pref_default_turnaround_rate"
+            android:maxLines="1"
+            android:key="@string/pref_key_turnaround_rate"
+            android:summary="@string/pref_summary_turnaround_rate"
+            android:numeric="integer"
+            android:inputType="phone"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_turnaround_rate" />
+
+        <EditTextPreference
+            android:defaultValue="@integer/pref_default_turnaround_offset"
+            android:hint="@integer/pref_default_turnaround_offset"
+            android:maxLines="1"
+            android:key="@string/pref_key_turnaround_offset"
+            android:summary="@string/pref_summary_turnaround_offset"
+            android:numeric="integer"
+            android:inputType="phone"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_turnaround_offset" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/pref_group_general">
 
     <CheckBoxPreference

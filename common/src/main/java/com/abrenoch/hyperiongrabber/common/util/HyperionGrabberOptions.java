@@ -14,6 +14,12 @@ public class HyperionGrabberOptions {
     private final boolean USE_AVERAGE_COLOR;
     private final int BLACK_THRESHOLD = 5; // The limit each RGB value must be under to be considered a black pixel [0-255]
 
+    private final String SAMPLING_METHOD;
+    private final int SAMPLING_RATE;
+    private final String START_EFFECT;
+    private final float TURNAROUND_RATE;
+    private final int TURNAROUND_OFFSET;
+
     public HyperionGrabberOptions(int horizontalLED, int verticalLED, int frameRate, boolean useAvgColor) {
 
         /*
@@ -26,16 +32,75 @@ public class HyperionGrabberOptions {
         FRAME_RATE = frameRate;
         USE_AVERAGE_COLOR = useAvgColor;
 
+        /*
+         * no input for videoMode
+        */
+        SAMPLING_METHOD = "NONE";
+        SAMPLING_RATE = 0;
+        START_EFFECT = "NONE";
+        TURNAROUND_RATE = 0.0f;
+        TURNAROUND_OFFSET = 0;
+
         if (DEBUG) {
+            Log.d(TAG, "Video Mode Options ");
             Log.d(TAG, "Horizontal LED Count: " + String.valueOf(horizontalLED));
             Log.d(TAG, "Vertical LED Count: " + String.valueOf(verticalLED));
             Log.d(TAG, "Minimum Image Packet: " + String.valueOf(MINIMUM_IMAGE_PACKET_SIZE));
         }
     }
 
+    //AudioMode
+    public HyperionGrabberOptions(int horizontalLED, int verticalLED, String samplingMethod, int samplingRate, String startEffect, float turnAroundRate, int turnaroundOffset) {
+        MINIMUM_IMAGE_PACKET_SIZE = horizontalLED * verticalLED * 3;
+        SAMPLING_METHOD = samplingMethod;
+        SAMPLING_RATE = samplingRate;
+        START_EFFECT = startEffect;
+        TURNAROUND_RATE = turnAroundRate;
+        TURNAROUND_OFFSET = turnaroundOffset;
+
+        /*
+         * no input for audioMode
+        */
+        FRAME_RATE = 0;
+        USE_AVERAGE_COLOR = false;
+
+        if (DEBUG) {
+            Log.d(TAG, "Audio Mode Options ");
+            Log.d(TAG, "Horizontal LED Count: " + String.valueOf(horizontalLED));
+            Log.d(TAG, "Vertical LED Count: " + String.valueOf(verticalLED));
+            Log.d(TAG, "Minimum Image Packet: " + String.valueOf(MINIMUM_IMAGE_PACKET_SIZE));
+            Log.d(TAG, "Sampling Rate: " + String.valueOf(SAMPLING_RATE));
+            Log.d(TAG, "Turnaround Rate: " + String.valueOf(TURNAROUND_RATE));
+        }
+    }
+
+    // pixelCount for AudioGradientView = scaledDimension
+    public HyperionGrabberOptions(int horizontalLED, int verticalLED) {
+        MINIMUM_IMAGE_PACKET_SIZE = horizontalLED * verticalLED * 3;
+
+        // no need here
+        FRAME_RATE = 0;
+        USE_AVERAGE_COLOR = false;
+        SAMPLING_METHOD = "NONE";
+        SAMPLING_RATE = 0;
+        START_EFFECT = "NONE";
+        TURNAROUND_RATE = 0.0f;
+        TURNAROUND_OFFSET = 0;
+    }
+
     public int getFrameRate() { return FRAME_RATE; }
 
     public boolean useAverageColor() { return USE_AVERAGE_COLOR; }
+
+    public String getSamplingMethod() { return SAMPLING_METHOD; }
+
+    public int getSamplingRate() { return SAMPLING_RATE; }
+
+    public String getStartEffect() { return START_EFFECT; }
+
+    public float getTurnaroundRate() { return TURNAROUND_RATE; }
+
+    public int getTurnaroundOffset() { return TURNAROUND_OFFSET; }
 
     /**
     * returns the divisor best suited to be used to meet the minimum image packet size
