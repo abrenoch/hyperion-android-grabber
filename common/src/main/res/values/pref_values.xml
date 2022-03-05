@@ -11,7 +11,7 @@
     <integer name="pref_default_x_led" translatable="false">60</integer>
 
     <string name="pref_key_priority" translatable="false">pref_key_priority</string>
-    <integer name="pref_default_priority" translatable="false">50</integer>
+    <integer name="pref_default_priority" translatable="false">150</integer>
 
     <string name="pref_key_reconnect" translatable="false">pref_key_reconnect</string>
     <bool name="pref_default_reconnect" translatable="false">true</bool>

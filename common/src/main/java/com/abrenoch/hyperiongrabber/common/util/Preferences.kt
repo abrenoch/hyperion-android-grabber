@@ -3,7 +3,7 @@ package com.abrenoch.hyperiongrabber.common.util
 import android.content.Context
 import android.content.res.Resources
 import android.preference.PreferenceManager
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 /** Wrapper around SharedPreferences which allows for default values defined in Resources
  * Main purpose is that defaults are defined in a centralized location and that preferences are

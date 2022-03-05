@@ -1,6 +1,6 @@
 package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
-import android.support.v17.leanback.widget.GuidanceStylist
+import androidx.leanback.widget.GuidanceStylist
 import com.abrenoch.hyperiongrabber.tv.R
 
 class SettingsStepStylist : GuidanceStylist() {

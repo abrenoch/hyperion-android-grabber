@@ -5,8 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v17.leanback.widget.GuidanceStylist
-import android.support.v17.leanback.widget.GuidedAction
+import androidx.leanback.widget.GuidanceStylist
+import androidx.leanback.widget.GuidedAction
 import android.widget.Toast
 import com.abrenoch.hyperiongrabber.common.network.Hyperion
 import com.abrenoch.hyperiongrabber.tv.R
@@ -25,7 +25,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
         val title = getString(R.string.guidedstep_basic_settings_title)
         val description = getString(R.string.guidedstep_basic_settings_description)
-        val icon = activity.getDrawable(R.drawable.ic_qr_android_tv_remote_short)
+        val icon = activity?.getDrawable(R.drawable.ic_qr_android_tv_remote_short)
         return GuidanceStylist.Guidance(title, description, null, icon)
     }
 
@@ -197,7 +197,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
                 prefs.putBoolean(R.string.pref_key_use_avg_color, useAverageColor)
 
                 val activity = activity
-                activity.setResult(Activity.RESULT_OK)
+                activity?.setResult(Activity.RESULT_OK)
                 finishGuidedStepSupportFragments()
 
             } catch (ignored: AssertionError) {
@@ -252,7 +252,7 @@ internal class BasicSettingsStepFragment : SettingsStepBaseFragment() {
 
     /** tries to connect to Hyperion and sets the given color for 5 seconds  */
     private fun testHyperionColor(hostName: String, port: Int, priority: Int, color: Int) {
-        TestTask(context).execute(TestSpec(hostName, port, priority, color))
+        TestTask(context!!).execute(TestSpec(hostName, port, priority, color))
     }
 
     companion object {

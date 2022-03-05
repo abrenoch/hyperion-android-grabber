@@ -1,7 +1,7 @@
 package com.abrenoch.hyperiongrabber.common.util;
 
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.NetworkScanner;

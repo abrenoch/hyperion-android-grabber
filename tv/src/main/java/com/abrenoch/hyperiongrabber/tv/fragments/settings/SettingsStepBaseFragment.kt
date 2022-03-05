@@ -2,9 +2,9 @@ package com.abrenoch.hyperiongrabber.tv.fragments.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v17.leanback.app.GuidedStepSupportFragment
-import android.support.v17.leanback.widget.GuidanceStylist
-import android.support.v17.leanback.widget.GuidedAction
+import androidx.leanback.app.GuidedStepSupportFragment
+import androidx.leanback.widget.GuidanceStylist
+import androidx.leanback.widget.GuidedAction
 import android.text.InputType
 import android.widget.Toast
 import com.abrenoch.hyperiongrabber.common.util.Preferences
@@ -18,9 +18,8 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
     lateinit var prefs: Preferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prefs = Preferences(context)
+        prefs = Preferences(super.requireContext())
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateGuidanceStylist(): GuidanceStylist {
@@ -64,7 +63,7 @@ internal abstract class SettingsStepBaseFragment : GuidedStepSupportFragment() {
 
     protected fun radioListAction(id: Long, title: String, description: String?, setId: Int, optionLabels: Array<String>, optionValues: Array<out Any>, selected: Any?): GuidedAction {
         val subActions = optionLabels.zip(optionValues).map {
-            ValueGuidedAction.Companion.Builder(context)
+            ValueGuidedAction.Companion.Builder(context!!)
                     .parentId(id)
                     .checkSetId(setId)
                     .title(it.first)
