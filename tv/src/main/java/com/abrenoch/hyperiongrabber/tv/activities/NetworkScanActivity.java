@@ -3,7 +3,7 @@ package com.abrenoch.hyperiongrabber.tv.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +40,7 @@ public class NetworkScanActivity extends LeanbackActivity implements HyperionSca
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MainActivity.REQUEST_INITIAL_SETUP){
             if (resultCode == RESULT_OK){
+                // when the setup completed successfully, we completed successfully.
                 setResult(RESULT_OK);
                 finish();
             }

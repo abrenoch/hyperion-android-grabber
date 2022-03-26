@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 
-public class FadingImageView extends android.support.v7.widget.AppCompatImageView {
+public class FadingImageView extends androidx.appcompat.widget.AppCompatImageView {
     private Context c;
 
     public FadingImageView(Context c, AttributeSet attrs, int defStyle) {

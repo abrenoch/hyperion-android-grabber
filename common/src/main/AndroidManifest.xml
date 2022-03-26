@@ -13,13 +13,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:versionCode="2004"
-        android:versionName="ALPHA 3"
         tools:targetApi="lollipop">
         <service
-            android:name=".HyperionScreenService"
-            android:exported="false"
-            android:launchMode="singleTask" />
+            android:name="com.abrenoch.hyperiongrabber.common.HyperionScreenService"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="com.abrenoch.hyperiongrabber.common.HyperionScreenService" />
+                <action android:name="com.abrenoch.hyperiongrabber.service.ACTION_START" />
+                <action android:name="com.abrenoch.hyperiongrabber.service.ACTION_STOP" />
+                <action android:name="com.abrenoch.hyperiongrabber.service.ACTION_STATUS" />
+                <action android:name="com.abrenoch.hyperiongrabber.service.ACTION_EXIT" />
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".HyperionGrabberBootReceiver"
@@ -29,7 +35,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".BootActivity" android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".BootActivity" android:theme="@style/Theme.Transparent" android:exported="true"/>
     </application>
 
 </manifest>

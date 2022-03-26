@@ -1,7 +1,7 @@
 package com.abrenoch.hyperiongrabber.common;
 
 import android.annotation.TargetApi;
-import android.graphics.PixelFormat;
+import android.graphics.ImageFormat;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.Image;
@@ -10,7 +10,7 @@ import android.media.ImageReader.OnImageAvailableListener;
 import android.media.MediaCodec;
 import android.media.projection.MediaProjection;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
 
 import com.abrenoch.hyperiongrabber.common.network.HyperionThread;
@@ -120,7 +120,7 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     private void setImageReader() {
         if (DEBUG) Log.d(TAG, "Setting image reader  " + String.valueOf(isCapturing()));
         mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
-                PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
+                ImageFormat.FLEX_RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
         setCapturing(true);

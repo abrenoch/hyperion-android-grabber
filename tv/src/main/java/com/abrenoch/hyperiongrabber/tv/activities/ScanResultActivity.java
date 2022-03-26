@@ -23,6 +23,7 @@ import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
 
+/** Shows the result of a network scan and allows to save the result to Preferences */
 public class ScanResultActivity extends LeanbackActivity {
     public static final String EXTRA_RESULT_HOST_NAME = "EXTRA_RESULT_HOST_NAME";
     public static final String EXTRA_RESULT_PORT = "EXTRA_RESULT_PORT";
@@ -47,8 +48,9 @@ public class ScanResultActivity extends LeanbackActivity {
         setContentView(R.layout.activity_scan_result);
         ButterKnife.bind(this);
 
-        emojiText.setText("\uD83D\uDC4F"); // 👏
-        descriptionText.setText(getResources().getString(R.string.scan_result_description, "\uD83C\uDF89"));
+        emojiText.setText("\uD83D\uDC4F"); // 👏Clapping Hands
+        String partyPopper = "\uD83C\uDF89";
+        descriptionText.setText(getResources().getString(R.string.scan_result_description, partyPopper));
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             hostName = extras.getString(EXTRA_RESULT_HOST_NAME);
@@ -58,6 +60,7 @@ public class ScanResultActivity extends LeanbackActivity {
             hostNameText.setText(R.string.error_no_host_name_extra);
         }
 
+        // Animate the appearance of the scan result
         Animator fadeInAnimator = ObjectAnimator.ofFloat(hostNameText, "alpha", 0f, 1f);
         Animator scaleXAnimator = ObjectAnimator
                 .ofFloat(hostNameText, "scaleX", .8f, 1f);

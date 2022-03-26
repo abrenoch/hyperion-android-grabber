@@ -17,13 +17,13 @@
 package com.abrenoch.hyperiongrabber.tv.activities;
 
 import android.os.Bundle;
-import android.support.v17.leanback.app.GuidedStepSupportFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.leanback.app.GuidedStepSupportFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.abrenoch.hyperiongrabber.tv.fragments.settings.BasicSettingsStepFragment;
 
 /**
- * Allows to set all preferences anually
+ * Allows to set all preferences manually
  */
 public class ManualSetupActivity extends FragmentActivity {
 

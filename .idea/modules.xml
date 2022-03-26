@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hyperion-android-grabber.iml" filepath="$PROJECT_DIR$/hyperion-android-grabber.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tv/tv.iml" filepath="$PROJECT_DIR$/tv/tv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hyperion-android-grabber.iml" filepath="$PROJECT_DIR$/.idea/modules/hyperion-android-grabber.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/hyperion-android-grabber.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/hyperion-android-grabber.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile/hyperion-android-grabber.mobile.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile/hyperion-android-grabber.mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tv/hyperion-android-grabber.tv.iml" filepath="$PROJECT_DIR$/.idea/modules/tv/hyperion-android-grabber.tv.iml" />
     </modules>
   </component>
 </project>

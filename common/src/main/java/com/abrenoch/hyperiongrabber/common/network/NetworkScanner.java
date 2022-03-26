@@ -1,8 +1,8 @@
 package com.abrenoch.hyperiongrabber.common.network;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 
 import java.net.InetAddress;
@@ -12,7 +12,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /** Scans the local network for running Hyperion servers
@@ -77,7 +76,7 @@ public class NetworkScanner {
         return lastTriedIndex / (float)ipsToTry.length;
     }
 
-    /** True if not all up's have been tried yet
+    /** True if not all ip's have been tried yet
      *
      */
     public boolean hasNextAttempt(){
@@ -164,7 +163,7 @@ public class NetworkScanner {
             return allIpsToTry;
         } catch (Exception e){
             // for now eat exceptions
-            Log.e("HYPERION SCANNER", "Error while building list of subnet ip", e);
+            Log.e("HYPERION SCANNER", "Error while building list of subnet ip's", e);
             return new String[]{};
         }
     }
