@@ -174,8 +174,8 @@ public class HyperionScreenService extends Service {
                     if (mHyperionThread == null) {
                         boolean isPrepared = prepared();
                         if (isPrepared) {
-                            startScreenRecord(intent);
                             startForeground(NOTIFICATION_ID, getNotification());
+                            startScreenRecord(intent);
 
                             IntentFilter intentFilter = new IntentFilter();
                             intentFilter.addAction(Intent.ACTION_SCREEN_ON);

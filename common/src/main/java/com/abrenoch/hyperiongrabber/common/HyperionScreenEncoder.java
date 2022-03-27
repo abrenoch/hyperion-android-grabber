@@ -1,7 +1,8 @@
 package com.abrenoch.hyperiongrabber.common;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.graphics.ImageFormat;
+import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.Image;
@@ -116,11 +117,12 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
         }
     };
 
+    @SuppressLint("WrongConstant") // incorrectly reports PixelFormat.RGBA_8888 as incompatible
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
         if (DEBUG) Log.d(TAG, "Setting image reader  " + String.valueOf(isCapturing()));
         mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
-                ImageFormat.FLEX_RGBA_8888, MAX_IMAGE_READER_IMAGES);
+                PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
         setCapturing(true);

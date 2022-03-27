@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -13,10 +14,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:targetApi="lollipop">
+        tools:targetApi="r">
         <service
-            android:name="com.abrenoch.hyperiongrabber.common.HyperionScreenService"
+            android:name=".HyperionScreenService"
             android:exported="true"
+            android:foregroundServiceType="mediaProjection"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="com.abrenoch.hyperiongrabber.common.HyperionScreenService" />
@@ -29,7 +31,8 @@
 
         <receiver
             android:name=".HyperionGrabberBootReceiver"
-            android:label="HyperionGrabberBootReceiver">
+            android:label="HyperionGrabberBootReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
