@@ -3,6 +3,7 @@ package com.abrenoch.hyperiongrabber.common;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.PixelFormat;
+import android.hardware.HardwareBuffer;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.Image;
@@ -121,8 +122,13 @@ public class HyperionScreenEncoder extends HyperionScreenEncoderBase {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     private void setImageReader() {
         if (DEBUG) Log.d(TAG, "Setting image reader  " + String.valueOf(isCapturing()));
-        mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
-                PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
+                    PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES, HardwareBuffer.USAGE_CPU_READ_OFTEN);
+        } else {
+            mImageReader = ImageReader.newInstance(getGrabberWidth(), getGrabberHeight(),
+                    PixelFormat.RGBA_8888, MAX_IMAGE_READER_IMAGES);
+        }
         mImageReader.setOnImageAvailableListener(imageAvailableListener, mHandler);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
         setCapturing(true);
