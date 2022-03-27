@@ -91,7 +91,7 @@ public class HyperionGrabberTileService extends TileService {
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
                             |Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                             |Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startActivity(i);
+                    startActivityAndCollapse(i);
                 }
 
             };
