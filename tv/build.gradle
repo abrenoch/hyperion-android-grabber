@@ -29,8 +29,8 @@ android {
         applicationId "com.abrenoch.hyperiongrabber"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 2012
-        versionName "1.0"
+        versionCode 2013
+        versionName "1.1 BETA 1"
     }
     buildTypes {
         release {
