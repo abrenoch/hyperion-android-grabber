@@ -1,3 +1,8 @@
+## [v1.1-beta_1]
+### Changes
+- Dependencies updated & fixes associated
+- Added hardware usage flag for supported API levels
+
 ## [v1.0]
 ### Changes
 - Arabic translation
