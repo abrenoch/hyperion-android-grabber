@@ -14,18 +14,25 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ToggleActivity extends AppCompatActivity {
     public static final int REQUEST_MEDIA_PROJECTION = 1;
 
+    private static final String EXTRA_TOGGLE_INTENT = "com.abrenoch.hyperiongrabber.TOGGLE_INTENT";
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Boolean toggleIntent = getToggleIntent();
         boolean serviceRunning = checkForInstance();
 
         if (serviceRunning) {
-            stopService();
-            finish();
+            if (toggleIntent == null || !toggleIntent) {
+                stopService();
+                finish();
+            }
         } else {
-            requestPermission();
+            if (toggleIntent == null || toggleIntent) {
+                requestPermission();
+            }
         }
 
     }
@@ -87,10 +94,17 @@ public class ToggleActivity extends AppCompatActivity {
     }
 
     /** stop recording & stop service */
-
-     private void stopService() {
+    private void stopService() {
         Intent stopIntent = new Intent(ToggleActivity.this, HyperionScreenService.class);
         stopIntent.setAction(HyperionScreenService.ACTION_EXIT);
         startService(stopIntent);
+    }
+
+    private Boolean getToggleIntent() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey(EXTRA_TOGGLE_INTENT)) {
+            return extras.getBoolean(EXTRA_TOGGLE_INTENT);
+        }
+        return null;
     }
 }
